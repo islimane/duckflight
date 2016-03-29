@@ -11,7 +11,6 @@ mizzao:sharejs-ace
 accounts-base
 accounts-password
 mizzao:bootstrap-3
-reywood:font-awesome-sass
 momentjs:moment
 blaze
 reactive-var
@@ -38,3 +37,4 @@ service-configuration
 http
 standard-minifier-css
 standard-minifier-js
+fortawesome:fontawesome

@@ -28,6 +28,7 @@ ecmascript-runtime@0.2.8
 ejson@1.0.9
 email@1.0.10
 fastclick@1.0.9
+fortawesome:fontawesome@4.5.0
 fourseven:scss@2.1.1
 geojson-utils@1.0.6
 handlebars@1.0.5
@@ -81,7 +82,6 @@ reactive-dict@1.1.5
 reactive-var@1.0.7
 reload@1.1.6
 retry@1.0.5
-reywood:font-awesome-sass@4.3.0_1
 reywood:publish-composite@1.4.2
 richsilv:owl-carousel@0.1.0
 routepolicy@1.0.8
