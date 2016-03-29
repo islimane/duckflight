@@ -1,0 +1,642 @@
+<template name="formAwesome">
+    {{> Template.dynamic template=formType}}
+</template>
+
+<template name="conversationSubmitForm">
+    <form class="awesome-form conversation-form">
+        <section>
+            <p class="title-section">Subject:</p>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-xs-12 form-field">
+                        <input name="subject" autocomplete="off" type="text" placeholder="Please, write a subject" required/>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <p class="title-section">Members:</p>
+            <div class="row">
+                {{>inputMemberBox storageDynamic="true"}}
+            </div>
+        </section>
+        <section>
+            <p class="title-section">Message:</p>
+            <div class="row">
+                <div id="inputMessageBox" class="col-xs-12 section-content">
+                    {{>inputMessageBox}}
+                </div>
+            </div>
+        </section>
+
+        <div class="form-group">
+            <div class="row text-center">
+                <div class="col-xs-12">
+                    <button class="submit-button" type="submit"><i class="fa fa-paper-plane"></i> Send</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</template>
+
+<template name="inputMemberBox">
+    <div id="inputMembersBox" class="col-xs-12 section-content">
+        <ul class="users-choosed-list">
+            {{#each members}}
+                {{>member}}
+            {{/each}}
+            <li><button class="add-member" type="button"><i class="fa fa-plus"></i></button></li>
+            {{#if editMembersAllow}}
+                <li><button class="edit-members" type="button"><i class="fa fa-pencil"></i></button></li>
+            {{/if}}
+        </ul>
+    </div>
+    <div class="col-xs-12 section-content">
+        {{> autoCompleteContacts feedDynamic="false"}}
+    </div>
+</template>
+
+<template name="inputMessageBox">
+    <div class="input-message-box">
+        <img class="author-avatar" src="{{avatar}}">
+        <div class="input-box-wrapper">
+            <div class="arrow"></div>
+            <div class="actions">
+                <ul>
+                    <li><button id="emoticons-target" type="button"><i class="fa fa-smile-o"></i></button></li>
+                    <li><button id="link-target" type="button"><i class="fa fa-link"></i></button></li>
+                </ul>
+            </div>
+            <div id="message-input" contenteditable="true"></div>
+        </div>
+        <div id="emoticons-panel" class="popover-panel">
+            <div class="body">
+                <button id="close-emoticons" class="close-panel pull-right" type="button"><i class="fa fa-times"></i></button>
+                <div class="arrow"></div>
+                <div class="emoticons-list">
+                    {{#emoji}}
+                        <span>:smile:</span>
+                        <span>:smiley:</span>
+                        <span>:heart_eyes:</span>
+                        <span>:flushed:</span>
+                        <span>:grin:</span>
+                        <span>:worried:</span>
+                        <span>:blush:</span>
+                        <span>:kissing_heart:</span>
+                        <span>:open_mouth:</span>
+                        <span>:joy:</span>
+
+                        <span>:unamused:</span>
+                        <span>:disappointed_relieved:</span>
+                        <span>:disappointed:</span>
+                        <span>:weary:</span>
+                        <span>:confounded:</span>
+                        <span>:sweat:</span>
+                        <span>:fearful:</span>
+                        <span>:cold_sweat:</span>
+
+                        <span>:scream:</span>
+                        <span>:sob:</span>
+                        <span>:sleepy:</span>
+                        <span>:sleeping:</span>
+                        <span>:neutral_face:</span>
+                        <span>:angry:</span>
+                        <span>:rage:</span>
+                        <span>:triumph:</span>
+                        <span>:innocent:</span>
+                        <span>:zzz:</span>
+                        <span>:boom:</span>
+
+                    {{/emoji}}
+                </div>
+
+            </div>
+
+        </div>
+        <div id="link-panel" class="popover-panel">
+            <div class="body">
+                <span><i class="fa fa-link"></i> Url</span>
+                <button id="close-link" class="close-panel pull-right" type="button"><i class="fa fa-times"></i></button>
+                <div class="arrow"></div>
+                <form id="link-input">
+                    <span>http:// </span><input type="text" name="link" autocomplete="off">
+                    <button type="submit"><i class="fa fa-check"></i></button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</template>
+
+<template name="member">
+    <li rel="tooltip">
+        <div class="image-member">
+            <img src="{{avatar}}">
+            {{#if isPossibleToDelete}}
+                <button class="delete-member-button" type="button"><i class="fa fa-times-circle"></i></button>
+            {{/if}}
+        </div>
+        <p class="username-tooltip">{{username}}</p>
+        <div class="arrow-down"></div>
+    </li>
+</template>
+
+<template name="memberToChoose">
+    <li class="member-to-choose {{active}}" rel="tooltip">
+        <div class="image-member">
+            <img src="{{avatar}}">
+            <div class="choosed-cover">
+                <i class="fa fa-check"></i>
+            </div>
+        </div>
+        <p class="username-tooltip">{{username}}</p>
+        <div class="arrow-down"></div>
+    </li>
+</template>
+
+<template name="memberResult">
+    <div class="contact-result text-left">
+        <img src="{{avatar}}">
+        <span>{{username}}</span>
+        {{#if inMembers}}
+            <span class="in-contacts pull-right"><i class="fa fa-check-circle"></i></span>
+        {{else}}
+            <span class="add-member-button pull-right">
+                <i class="fa fa-user-plus"></i>
+            </span>
+        {{/if}}
+    </div>
+</template>
+
+
+<template name="formProfileEdit">
+    <form class="awesome-form form-editable">
+        <!--avatar-->
+        {{#if avatar}}
+            <section id="avatar-section">
+                <p class="title-section">Avatar <span class="edit-button"><i class="fa fa-pencil"></i> edit</span></p>
+                <div class="edited-block text-center">
+                    <img class="avatar avatar-img" src="{{avatar}}"/>
+                    <img class="avatar avatar-img-medium" src="{{avatar}}"/>
+                    <img class="avatar avatar-img-circle" src="{{avatar}}"/>
+                </div>
+                <div class="edit-block">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="checkbox-list">
+                                <div class="checkbox-item">
+                                    <label><i class="fa fa-circle-o"></i> default</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <label class="checkbox-awesome"><i class="fa fa-circle-o"></i> url</label>
+                                    <input type="text" autocomplete="off" placeholder="insert a url" disabled/>
+                                </div>
+                                <div class="checkbox-item">
+                                    <label><i class="fa fa-circle-o"></i> file</label>
+                                    <input type="file" placeholder="file" disabled/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="actions text-center">
+                        <span class="action-button save">save</span>
+                        <span class="action-button discard">discard</span>
+                    </div>
+                </div>
+            </section>
+        {{/if}}
+
+        <!--banner-->
+        {{#if banner}}
+        <section id="banner-section">
+            <p class="title-section">Banner <span class="edit-button"><i class="fa fa-pencil"></i> edit</span></p>
+            <div class="edited-block">
+                <img class="banner-img" src="{{banner}}"/>
+            </div>
+            <div class="edit-block">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="checkbox-list">
+                            <div class="checkbox-item">
+                                <label><i class="fa fa-circle-o"></i> default</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <label><i class="fa fa-circle-o"></i> url</label>
+                                <input type="text" autocomplete="off" placeholder="insert a url" disabled/>
+                            </div>
+                            <div class="checkbox-item">
+                                <label><i class="fa fa-circle-o"></i> file</label>
+                                <input type="file" placeholder="file" disabled/>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="actions text-center">
+                    <span class="action-button save">save</span>
+                    <span class="action-button discard">discard</span>
+                </div>
+            </div>
+        </section>
+        {{/if}}
+        {{#if description}}
+            <section id="description-section">
+                <p class="title-section">Description <span class="edit-button"><i class="fa fa-pencil"></i> edit</span></p>
+                <div class="edited-block">
+                    {{#if description}}
+                        <p>{{description}}</p>
+                    {{else}}
+                        <p>No description</p>
+                    {{/if}}
+
+                </div>
+                <div class="edit-block">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-xs-12 form-field no-label">
+                                <textarea name="description" style="resize: none"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="actions text-center">
+                        <span class="action-button save">save</span>
+                        <span class="action-button discard">discard</span>
+                    </div>
+                </div>
+            </section>
+        {{/if}}
+        <!--description-->
+        {{#if tagsAllow}}
+            <section id="tags-section">
+                <p class="title-section">Tags <span class="edit-button"><i class="fa fa-pencil"></i> edit</span></p>
+                <div class="edited-block">
+                    <ul>
+                        {{#each tags}}
+                            <li><i class="fa fa-tag"></i> {{name}}</li>
+                        {{/each}}
+                    </ul>
+                </div>
+                <div class="edit-block">
+
+                    {{> tagsInput}}
+
+                    <div class="actions text-center">
+                        <span class="action-button save">save</span>
+                        <span class="action-button discard">discard</span>
+                    </div>
+                </div>
+            </section>
+        {{/if}}
+        {{#if sectionConfigAllow}}
+            <section id="sections-config-section">
+                <p class="title-section">Sections <span class="edit-button"><i class="fa fa-pencil"></i> edit</span></p>
+                <div class="edited-block">
+                    <ul>
+                        {{#each sections}}
+                            <li><i class="fa fa-bookmark"></i> {{title}}</li>
+                        {{/each}}
+                    </ul>
+                </div>
+                <div class="edit-block">
+                    {{> changeOrderSections}}
+                    <div class="actions text-center">
+                        <span class="action-button save">save</span>
+                        <span class="action-button discard">discard</span>
+                    </div>
+                </div>
+            </section>
+        {{/if}}
+        {{#if editConversation}}
+            <section id="subject-section">
+                <p class="title-section">Title
+                    {{#if isLeader}}
+                        <span class="edit-button"><i class="fa fa-pencil"></i> edit</span>
+                    {{/if}}
+                </p>
+                <div class="edited-block">
+                    <p>{{subject}}</p>
+                </div>
+                <div class="edit-block">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-xs-12 form-field no-label">
+                                <input name="subject" autocomplete="off" type="text" value="{{subject}}" required/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="actions text-center">
+                        <span class="action-button save">save</span>
+                        <span class="action-button discard">discard</span>
+                    </div>
+                </div>
+            </section>
+            <section id="leader-section">
+                <p class="title-section">Leader
+                    {{#if isLeader}}
+                        <span class="edit-button"><i class="fa fa-pencil"></i> edit</span>
+                    {{/if}}
+                </p>
+                <div class="edited-block">
+                    <img class="avatar avatar-img-circle" src="{{leaderAvatar}}"><span>{{leaderName}}</span>
+                </div>
+                <div class="edit-block">
+                    {{> chooseLeaderBox}}
+                    <div class="actions text-center">
+                        <span class="action-button save">save</span>
+                        <span class="action-button discard">discard</span>
+                    </div>
+                </div>
+            </section>
+            <section id="members-section">
+                <p class="title-section">Members <span class="edit-button"><i class="fa fa-users"></i> edit</span></p>
+                <div class="edited-block">
+                    {{>memberList}}
+                </div>
+                <div class="edit-block">
+                    {{>inputMemberBox storageDynamic="false"}}
+                    <div class="actions text-center">
+                        <span class="action-button save">save</span>
+                        <span class="action-button discard">discard</span>
+                    </div>
+                </div>
+            </section>
+        {{/if}}
+        <div class="form-group">
+            <div class="row text-center">
+                <div class="col-xs-12">
+                    <button class="submit-button" type="submit">Save</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</template>
+
+<template name="memberList">
+    <div id="memberList" class="col-xs-12 section-content">
+        <ul class="users-choosed-list">
+            {{#each members}}
+                {{> member}}
+            {{/each}}
+        </ul>
+    </div>
+</template>
+
+<template name="chooseLeaderBox">
+    <div id="chooseLeaderBox" class="col-xs-12 section-content">
+        <ul class="users-choosed-list">
+            {{#each members}}
+                {{> memberToChoose}}
+            {{/each}}
+        </ul>
+    </div>
+</template>
+
+<template name="changeOrderSections">
+    <div class="list-sections">
+        {{#each sections}}
+            {{> sectionItemEdit}}
+
+        {{/each}}
+    </div>
+</template>
+
+<template name="sectionItemEdit">
+    <div class="section-item-edit">
+        <div class="title-wrapper">
+            <p>{{title}}</p>
+        </div>
+        <div class="actions-wrapper">
+            {{#if isNotFirst}}
+                <button type='button' class="action up"><i class="fa fa-arrow-circle-o-up"></i></button>
+            {{/if}}
+            {{#if isNotLast}}
+                <button type='button' class="action down"><i class="fa fa-arrow-circle-o-down"></i></button>
+            {{/if}}
+        </div>
+    </div>
+</template>
+<!-- Editor config and create form -->
+<template name="formDoc">
+    <form class="awesome-form form-editor">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-xs-12 form-field">
+                        <label>Title</label>
+                        <input name="title" autocomplete="off" type="text" required/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-xs-12 form-field">
+                        <p class="section-form">Languages</p>
+                        <div>
+                            <ul>
+                                <li class="lang">coffee</li>
+                                <li class="lang">css</li>
+                                <li class="lang">html</li>
+                                <li class="lang">javascript</li>
+                                <li class="lang">json</li>
+                                <li class="lang">lua</li>
+                                <li class="lang">php</li>
+                                <li class="lang">xml</li>
+                                <li class="lang">xquery</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-xs-12 form-field">
+                        <p class="section-form">Themes</p>
+                        <div>
+                            <ul>
+                                <li class="theme">ambiance</li>
+                                <li class="theme">chaos</li>
+                                <li class="theme">chrome</li>
+                                <li class="theme">clouds</li>
+                                <li class="theme">clouds_midnight</li>
+                                <li class="theme">cobalt</li>
+                                <li class="theme">dawn</li>
+                                <li class="theme">eclipse</li>
+                                <li class="theme">github</li>
+                                <li class="theme">monokai</li>
+                                <li class="theme">tomorrow</li>
+                                <li class="theme">terminal</li>
+                                <li class="theme">twilight</li>
+                                <li class="theme">xcode</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <div class="row text-center">
+                <div class="col-xs-12">
+                    <button type="submit">save</button>
+                    <button id="cancel">cancel</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</template>
+
+<!-- CHANNEL FORM -->
+<template name="channelForm">
+    <form class="awesome-form">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-12 form-field">
+                    <label>Title</label>
+                    <input name="title" autocomplete="off" type="text" required/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-12 form-field">
+                    <label>Description</label>
+                    <textarea name="description" style="resize: none"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-12">
+                    <p>tags</p>
+                    {{>tagsInput}}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row text-center">
+                <div class="col-xs-12">
+                    <button class="submit-button" type="submit">Done</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</template>
+
+<template name="tagsInput">
+    <div class="tags-input-wrapper">
+        {{#if hasTags}}
+            <div class="tags-choosen">
+                <ul>
+                    {{#each tagsChoosen}}
+                           {{>tagChoosen}}
+                    {{/each}}
+                </ul>
+            </div>
+        {{/if}}
+
+        <div class="tags-input">
+            <div id="tags-input-box">
+                <div class="input-box">
+                    <input type="text" name="tags" autocomplete="off">
+                    {{#if searching}}<span><i class="fa fa-spinner fa-pulse"></i></span> {{/if}}
+                    <button id="eraser-button" type="button"><i class="fa fa-eraser"></i></button>
+                </div>
+                <button id="add-tag" type="button" class="pull-right"><i class="fa fa-plus"></i></button>
+            </div>
+            <div id="tags-list">
+                {{#if founded}}
+                    <ul>
+                        {{#each tagsFounded}}
+                            {{>tagResult}}
+                        {{/each}}
+                    </ul>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="tagResult">
+    <li><span class="tag {{choosen}}"><i class="fa fa-tag"></i> {{name}}</span></li>
+</template>
+
+<template name="tagChoosen">
+    <li><span class="tag-choosen"><i class="fa fa-tag"></i> {{name}} <i class="fa fa-times remove-tag"></i></span></li>
+</template>
+
+<!-- LESSON FORM -->
+<template name="lessonForm">
+    <form class="awesome-form">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-12 form-field required">
+                    <label>Title</label>
+                    <input name="title" autocomplete="off" type="text" required/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-12 form-field">
+                    <label>Description</label>
+                    <textarea name="description" style="resize: none"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-12">
+                    <p>tags</p>
+                    {{>tagsInput}}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row text-center">
+                <div class="col-xs-12">
+                    <button class="submit-button" type="submit">Done</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</template>
+
+<!-- TEAM FORM-->
+<template name="teamForm">
+    <form class="awesome-form">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-12 form-field">
+                    <label>Title</label>
+                    <input name="title" autocomplete="off" type="text" required/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-12 form-field">
+                    <label>Description</label>
+                    <textarea name="description" style="resize: none"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-12">
+                    <p>tags</p>
+                    {{>tagsInput}}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row text-center">
+                <div class="col-xs-12">
+                    <button class="submit-button" type="submit">Done</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</template>
+
+
+

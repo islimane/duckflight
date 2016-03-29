@@ -1,0 +1,113 @@
+<template name="channels">
+    <div class="content-wrapper fade-in">
+        <div class="content-header-wrapper fade-in">
+            <div class="content-header">
+                <div class="content-header-img">
+                    <img src="/channelImgDefault.jpg"/>
+                    <a href="{{pathFor 'channelSubmit'}}" class="button-circle inline"><i class="fa fa-plus"></i></a>
+                </div>
+                <h3>Channels</h3>
+            </div>
+        </div>
+
+        <div class="content-tab-wrapper type-2">
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row content-navbar">
+                        <div class="col-xs-12">
+                            <div class="display-options">
+                                <ul>
+                                    <li><i id="list" class="display-option active fa fa-th-list"></i></li>
+                                    <li><i class="display-option fa fa-th-large"></i></li>
+                                </ul>
+                            </div>
+                            <div class="filter-options">
+                                <ul class="tab-page">
+                                    <li id="recent-filter" class="filter active"><i class="fa fa-clock-o"></i> <span>Recent</span></li>
+                                    <li id="popular-filter" class="filter"><i class="fa fa-star"></i> <span>Popular</span></li>
+                                    <li id="search-filter" class="filter"><i class="fa fa-search"></i> <span>Search</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row text-center content-body">
+                        <div class="col-xs-12 text-center">
+                            {{#if searching}}
+                                {{>smartSearch}}
+                            {{/if}}
+
+                            {{#if listMode}}
+                                <div>
+                                    {{#each channels}}
+                                        {{>channelItemHorizontal}}
+                                    {{/each}}
+                                </div>
+                            {{else}}
+                                <div class="list-flex">
+                                    {{#each channels}}
+                                        {{> channelItemVertical}}
+                                    {{/each}}
+                                </div>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="channelItemHorizontal">
+    <div class="row text-left duckflight-card duckflight-card-horizontal fade-in">
+        <div class="col-xs-12 card-content">
+            <div class="absolute-col">
+                <div class="card-image">
+                    <div class="image-hover"><i class="fa fa-desktop"></i></div>
+                    <img src="{{img}}"/>
+                </div>
+            </div>
+            <div class="card-caption">
+                <ul>
+                    <li>{{order}}</li>
+                    <li class="card-title">{{title}}</li>
+                    <li>by <span class="card-author">{{authorName}}</span></li>
+                    <li class="card-counters">
+                        <span>{{dateFrom createdAt}} · </span>
+                        <span class="records-count fa fa-film"></span><span class="counter">{{records_count}}</span>
+                        <span class="comments-count fa fa-comments"></span><span class="counter">{{comments_count}}</span>
+                        <span class="votes-count fa fa-heart"></span><span class="counter">{{votes_count}}</span>
+                        <span class="subscriptions-count fa fa-user"></span><span class="counter">{{users_count}}</span>
+                    </li>
+                    <li class="card-description">{{shortDescription description 50}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="channelItemVertical">
+    <div class="text-left duckflight-card duckflight-card-vertical fade-in">
+        <div class="card-image">
+            <div class="image-hover"><i class="fa fa-desktop"></i></div>
+            <img src="{{img}}"/>
+        </div>
+        <div class="card-caption">
+            <ul>
+                <li>{{order}}</li>
+                <li class="card-title">{{ellipsis title 15}}</li>
+                <li>by <span class="card-author">{{authorName}}</span></li>
+                <li class="card-counters text-center">
+                    <span>{{dateFrom createdAt}} · </span>
+                    <span class="records-count fa fa-film"></span><span class="counter">{{records_count}}</span>
+                    <span class="comments-count fa fa-comments"></span><span class="counter">{{comments_count}}</span>
+                    <span class="votes-count fa fa-heart"></span><span class="counter">{{votes_count}}</span>
+                    <span class="subscriptions-count fa fa-user"></span><span class="counter">{{users_count}}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+<template name="duckFlightCardCounters">
+
+</template>

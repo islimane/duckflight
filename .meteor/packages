@@ -1,0 +1,40 @@
+# Meteor packages used by this project, one per line.
+# Check this file (and the other files in this directory) into your repository.
+#
+# 'meteor add' and 'meteor remove' will edit this file for you,
+# but you can also edit it by hand.
+
+insecure
+underscore
+iron:router
+mizzao:sharejs-ace
+accounts-base
+accounts-password
+mizzao:bootstrap-3
+reywood:font-awesome-sass
+momentjs:moment
+blaze
+reactive-var
+mizzao:user-status
+mizzao:jquery-ui
+reywood:publish-composite
+meteor-base
+mobile-experience
+mongo
+blaze-html-templates
+session
+jquery
+tracker
+logging
+reload
+random
+ejson
+spacebars
+check
+fourseven:scss@2.0.0
+davidfrancisco:twemoji
+richsilv:owl-carousel
+service-configuration
+http
+standard-minifier-css
+standard-minifier-js

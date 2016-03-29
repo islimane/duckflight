@@ -1,0 +1,49 @@
+<template name="mainPage">
+  {{#if currentUser}}
+	   {{>startPage}}
+  {{else}}
+      <div id="main-page-wrapper">
+          <div id="main-page-content">
+              <div class="container-fluid">
+                  <div class="row text-center">
+                      <div class="col-xs-12">
+                          <div class="center-container-box">
+                              <div class="main-box">
+                                  <img id="main-logo" src="/duck_icon.ico"/>
+                                  <h3>DuckFlight</h3>
+                                  <h4>>_ The definitive live site for developers</h4>
+                                  <button data-toggle="modal" data-target="#loginForm" class="upAndDown"><span><i class="fa fa-power-off"></i></span><span class="action">Start</span></button>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div id="footer-page">
+              <div class="container-fluid">
+                  <div class="row">
+                      <div class="col-xs-4">
+                          Features
+                          <ul>
+                              <li>Team Manager</li>
+                              <li>Rec on Editor</li>
+                              <li>Lessons & Tutorials</li>
+                          </ul>
+                      </div>
+                      <div class="col-xs-4">
+                          Integrations
+                          <ul>
+                              <li>GitHub</li>
+                              <li>SoundCloud</li>
+                              <li>PivotalTracker</li>
+                          </ul>
+                      </div>
+                      <div class="col-xs-4">
+
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  {{/if}}
+</template>

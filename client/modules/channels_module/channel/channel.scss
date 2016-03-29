@@ -1,0 +1,70 @@
+.page-banner-content-channel .banner-options{
+  bottom: auto !important;
+  top: 0 !important;
+}
+
+.channel-img{
+  position: absolute;
+  left: 20px;
+  cursor: pointer;
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+}
+
+.footer-creator-box{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  color: #C2C2C4;
+  width: 100%;
+  padding: 10px 10px;
+  padding-left:  65px;
+  background: rgba(0, 5, 1, 0.5);
+  span{
+    font-size: 12px;
+    &.username{
+      color: #C2C2C4;
+      font-size: 14px;
+      &:hover{color: white;}
+    }
+  }
+  p{
+    display: inline-block;
+    margin: auto;
+  }
+  img{
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
+    width: 50px;
+    height:50px;
+    border-radius: 50%;
+  }
+
+}
+
+.subscribe-button{
+  border-radius: 10px;
+  padding: 5px 10px 5px;
+  font-size: 14px;
+  margin-bottom: 2px;
+  background: #F25252;
+  cursor: pointer;
+  &:hover{
+    background: #F76363;
+  }
+}
+
+.vote-button{
+  font-size: 20px;
+  line-height: 30px;
+  color: #A4A4A4;
+  vertical-align: middle;
+  &:hover{
+    color: #E7E7E9;
+  }
+  &.active{
+    color: #F76363;
+  }
+}

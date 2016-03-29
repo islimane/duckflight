@@ -1,0 +1,140 @@
+<template name="record">
+    <div class="content-wrapper type-2">
+        <div class="player-wrapper">
+            <div class="container-fluid">
+                <div class="row header-player">
+                    <div class="col-xs-12 text-center title">
+                        <i class="fa fa-film"></i> {{title}}
+                    </div>
+
+                    <div class="col-xs-12 description">
+                        <span><i class="fa fa-info-circle"></i> description</span>
+                        <p>{{description}}</p>
+                        {{#if hasTags}}
+                            <div class="col-xs-12">
+                                <div class="banner-tags">
+                                    <p><i class="fa fa-tags"></i> Tags</p>
+                                    <ul>
+                                        {{#each tags}}
+                                            <li class="tag"><i class="fa fa-tag"></i> {{name}}</li>
+                                        {{/each}}
+                                    </ul>
+                                </div>
+                            </div>
+                        {{/if}}
+                        <div class="doc-actual-info">
+                            {{#if docActual}}
+                                {{#with docActual}}
+                                    <p>#{{title}} <span class="mode">{{mode}}</span></p>
+                                {{/with}}
+                            {{else}}
+                                <p><i class="fa fa-exclamation-triangle"></i> No document</p>
+                            {{/if}}
+                        </div>
+                        <div class="like-action">
+                            {{#if isALessonRecord}}
+                                <button id="show-play-list"><i class="fa fa-list"></i></button>
+                            {{/if}}
+                            <button id="like_button" class="like-button"><i class="fa fa-heart-o"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    {{>player playerObjectData}}
+
+                    <div class="col-xs-12 creator-box text-center">
+                        <img src="{{authorAvatar}}">
+                        <span class="username">{{username}}</span>
+                        <span class="date"><i class="fa fa-clock-o"></i> {{dateFrom createdAt}}</span>
+                        <div class="info">
+                            <span id="docs_counter"><i class="fa fa-file"></i> {{docs_count}}</span>
+                            <span id="comments_counter"><i class="fa fa-comments"> {{comments_count}}</i></span>
+                            <span id="votes_counter"><i class="fa fa-heart"></i> {{votes_count}}</span>
+                            <span id="replies_counter"><i class="fa fa-reply"></i> {{replies_count}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-xs-12">
+                        {{> navbarBanner tabs=tabNamesArray widthType='medium'}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-tab-wrapper type-2">
+            <div class="content">
+                <div class="container-fluid">
+                    {{> Template.dynamic template=sectionActive}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="repliesTabContent">
+    <div class="row content-navbar">
+        <div class="col-xs-12">
+            <div class="filter-options">
+                <ul class="tab-page">
+                    <li><span>Replies ({{replies_count}})</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row text-center content-body">
+        <div class="col-xs-12 text-left">
+                {{#each timeMarks}}
+                    {{>timeMarkList}}
+                {{/each}}
+        </div>
+    </div>
+</template>
+
+<template name="timeMarkList">
+    <div class="time-mark-list">
+        <div class="time-mark-line">
+            <div class="time-mark">
+                <span><i class="fa fa-map-marker"></i> {{timeMark}}</span>
+                <div></div>
+            </div>
+            <div class="line"></div>
+        </div>
+        <div class="list-flex">
+            {{#each records}}
+                {{> recordItemHorizontal}}
+            {{/each}}
+        </div>
+    </div>
+</template>
+<template name="relatedTabContent">
+    <div class="row content-navbar">
+        <div class="col-xs-12">
+            <div class="filter-options">
+                <ul class="tab-page">
+                    <li><span>Related ({{relatedCount}})</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row text-center content-body">
+        <div class="col-xs-12 text-left">
+            <div class="list">
+                {{#each relatedRecords}}
+                    {{> recordItemHorizontal}}
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="timeMarkReplies">
+    {{#each replies}}
+        {{> replyCard}}
+    {{/each}}
+</template>
+
+<template name="replyCard">
+    <p>soy un reply</p>
+</template>
+
+

@@ -1,0 +1,16 @@
+<template name="layout">
+    <div id="main-wrapper">
+        {{#if currentUser}}
+            {{> sidebar }}
+            <div id="page-wrapper">
+                {{> header}}
+                {{> yield }}
+
+            </div>
+            <!--{{> messagesNotifications}}-->
+        {{else}}
+            {{> yield}}
+            {{> loginModal }}
+        {{/if}}
+    </div>
+</template>

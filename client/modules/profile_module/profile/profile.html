@@ -1,0 +1,530 @@
+<template name="profile">
+    <div class="content-wrapper type-2">
+        <div class="page-banner type-2">
+            <div>
+                <div class="container-fluid">
+                    <div class="page-banner-content">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="banner-img">
+                                    <img class="profile-img" src={{avatar}}>
+                                    <img class="banner-bg-img" src={{banner}}>
+                                    {{#if isOwner}}
+                                        <div class="banner-edits">
+                                            <span id="edit-profile"><i class="fa fa-pencil pull-right"></i></span>
+                                        </div>
+                                    {{else}}
+                                        <div class="banner-options">
+                                            {{#if isMyContact}}
+                                                <span class="visitator-action" id="send-message"><i class="fa fa-envelope-o"></i></span>
+                                            {{else}}
+                                                <span class="visitator-action" id="add-contact"><i class="fa fa-user-plus"></i></span>
+                                            {{/if}}
+                                        </div>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 ">
+                                <div class="banner-description">
+                                    <p class="title">{{username}}</p>
+                                    <p class="description">{{description}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row text-center">
+                            <div class="col-xs-12">
+                                {{> navbarBanner tabs=tabNamesArray widthType='large'}}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="content-tab-wrapper type-2">
+            <div class="content">
+                <div class="container-fluid">
+                    {{> Template.dynamic template=sectionActive}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</template>
+
+<template name="navbarBanner">
+    <!--vertical view -->
+    <div class="banner-navbar-vertical {{widthType}}">
+        <button type="button" data-toggle="collapse" data-target="#menuTabCollapse" aria-expanded="false">
+            <i class="fa fa-bars"></i>
+        </button>
+        <div class="section-active">
+            <p><span>{{capitalize currentTabName}}</span></p>
+        </div>
+        <div class="collapse" id="menuTabCollapse">
+            <ul>
+            {{#each tabs}}
+                {{#if ownerOnly}}
+                    {{#if isOwner}}
+                        <li class="section"><i class="fa {{icon}}"></i> {{capitalize name}}</li>
+                    {{/if}}
+                {{else}}
+                    <li class="section"><i class="fa {{icon}}"></i> {{capitalize name}}</li>
+                {{/if}}
+            {{/each}}
+            </ul>
+        </div>
+    </div>
+
+    <!-- horizontal view -->
+    <div class="banner-navbar {{widthType}}">
+        <ul>
+        {{#each tabs}}
+            {{#if ownerOnly}}
+                {{#if isOwner}}
+                    <li id="{{name}}" class="section"><i class="fa {{icon}}"></i> {{capitalize name}}</li>
+                {{/if}}
+            {{else}}
+                <li id="{{name}}" class="section"><i class="fa {{icon}}"></i> {{capitalize name}}</li>
+            {{/if}}
+        {{/each}}
+        </ul>
+    </div>
+</template>
+
+<template name="recordsTabContent">
+    <div class="row content-navbar">
+        <div class="col-xs-12">
+            <div class="display-options">
+                <ul>
+                    <li><i id="list" class="display-option active fa fa-th-list"></i></li>
+                    <li><i id="large" class="display-option fa fa-th-large"></i></li>
+                </ul>
+            </div>
+            <div class="filter-options">
+                <ul class="tab-page">
+                    <li id="recent-filter" class="filter active"><i class="fa fa-clock-o"></i> <span>Recent</span></li>
+                    <li id="popular-filter" class="filter"><i class="fa fa-star"></i> <span>Popular</span></li>
+                    <li id="search-filter" class="filter"><i class="fa fa-search"></i> <span>Search</span></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="row text-center content-body">
+        <div class="col-xs-12 text-center">
+            {{#if searching}}
+                {{> smartSearch}}
+            {{else}}
+                {{#if allowCreate}}
+                    <div class="new-panel text-center">
+                        <a href="{{pathFor 'recordSubmit' query=queryParams}}"><i class="fa fa-plus-circle"></i></a>
+                        <p><i class="fa fa-film"></i> Create a new Record</p>
+                    </div>
+                {{/if}}
+            {{/if}}
+
+            <div class="list-flex">
+                {{#if hasItems}}
+                    {{#if listMode}}
+                        {{#each records}}
+                            {{>recordItemHorizontal}}
+                        {{/each}}
+                    {{else}}
+                        {{#each records}}
+                            {{>recordItemVertical}}
+                        {{/each}}
+                    {{/if}}
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="teamsTabContent">
+    <div class="row content-navbar">
+        <div class="col-xs-12">
+            <div class="display-options">
+                <ul>
+                    <li><i id="list" class="display-option active fa fa-th-list"></i></li>
+                    <li><i id="large" class="display-option fa fa-th-large"></i></li>
+                </ul>
+            </div>
+            <div class="filter-options">
+                <ul class="tab-page">
+                    <li id="recent-filter" class="filter active"><i class="fa fa-clock-o"></i> <span>Recent</span></li>
+                    <li id="popular-filter" class="filter"><i class="fa fa-star"></i> <span>Popular</span></li>
+                    <li id="search-filter" class="filter"><i class="fa fa-search"></i> <span>Search</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row text-center content-body">
+        <div class="col-xs-12 text-center">
+            {{#if searching}}
+                {{> smartSearch}}
+            {{else}}
+                {{#if allowCreate}}
+                    <div class="new-panel text-center">
+                        <a href="{{pathFor 'teamSubmit'}}"><i class="fa fa-plus-circle"></i></a>
+                        <p><i class="fa fa-group"></i> Create a new Team</p>
+                    </div>
+                {{/if}}
+            {{/if}}
+            <div class="list-flex">
+                {{#if listMode}}
+                    {{#each teams}}
+                        {{>teamItemHorizontal}}
+                    {{/each}}
+                {{else}}
+                    {{#each teams}}
+                        {{>teamItemVertical}}
+                    {{/each}}
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="channelsTabContent">
+    <div class="row content-navbar">
+        <div class="col-xs-12">
+            <div class="display-options">
+                <ul>
+                    <li><i id="list" class="display-option active fa fa-th-list"></i></li>
+                    <li><i id="large" class="display-option fa fa-th-large"></i></li>
+                </ul>
+            </div>
+            <div class="filter-options">
+                <ul class="tab-page">
+                    <li id="recent-filter" class="filter active"><i class="fa fa-clock-o"></i> <span>Recent</span></li>
+                    <li id="popular-filter" class="filter"><i class="fa fa-star"></i> <span>Popular</span></li>
+                    <li id="search-filter" class="filter"><i class="fa fa-search"></i> <span>Search</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row text-center content-body">
+        <div class="col-xs-12 text-center">
+            {{#if searching}}
+                {{> smartSearch}}
+            {{else}}
+                {{#if allowCreate}}
+                    <div class="new-panel text-center">
+                        <a href="{{pathFor 'channelSubmit'}}"><i class="fa fa-plus-circle"></i></a>
+                        <p><i class="fa fa-desktop"></i> Create a new Channel</p>
+                    </div>
+                {{/if}}
+            {{/if}}
+            <div class="list-flex">
+                {{#if listMode}}
+                    {{#each channels}}
+                        {{>channelItemHorizontal}}
+                    {{/each}}
+                {{else}}
+                    {{#each channels}}
+                        {{>channelItemVertical}}
+                    {{/each}}
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="lessonsTabContent">
+    <div class="row content-navbar">
+        <div class="col-xs-12">
+            <div class="display-options">
+                <ul>
+                    <li><i id="list" class="display-option active fa fa-th-list"></i></li>
+                    <li><i id="large" class="display-option fa fa-th-large"></i></li>
+                </ul>
+            </div>
+            <div class="filter-options">
+                <ul class="tab-page">
+                    <li id="recent-filter" class="filter active"><i class="fa fa-clock-o"></i> <span>Recent</span></li>
+                    <li id="popular-filter" class="filter"><i class="fa fa-star"></i> <span>Popular</span></li>
+                    <li id="search-filter" class="filter"><i class="fa fa-search"></i> <span>Search</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row text-center content-body">
+        <div class="col-xs-12 text-center">
+            {{#if searching}}
+                {{> smartSearch}}
+            {{else}}
+                {{#if allowCreate}}
+                    <div class="new-panel text-center">
+                        <a href="{{pathFor 'lessonSubmit'}}"><i class="fa fa-plus-circle"></i></a>
+                        <p><i class="fa fa-graduation-cap"></i> Create a new Lesson</p>
+                    </div>
+                {{/if}}
+            {{/if}}
+            <div class="list-flex">
+                {{#if listMode}}
+                    {{#each lessons}}
+                        {{>lessonItemHorizontal}}
+                    {{/each}}
+                {{else}}
+                    {{#each lessons}}
+                        {{>lessonItemVertical}}
+                    {{/each}}
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="conversationsTabContent">
+    <div class="row content-navbar">
+        <div class="col-xs-12">
+            <div class="filter-options">
+                <ul class="tab-page">
+                    <li><span>Conversations ({{conversationsCount}})</span></li>
+                </ul>
+            </div>
+            <div class="tab-actions pull-right">
+                <a href="{{pathFor 'conversationSubmit'}}" id="create-conversation"><i class="fa fa-plus-circle"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="row text-center content-body">
+        <div class="col-xs-12 text-center">
+            <div class="row item-list text-left">
+                <div class="col-xs-12">
+                    {{#each conversations}}
+                        {{>conversationItem}}
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<template name="conversationItem">
+    <div class="text-left row fade-in">
+        <div class="col-xs-12">
+            <div class="conversation-item {{status}}">
+                <p>
+                    <span class="subject">{{shortField subject 15}}</span>
+                    <span class="replies_counter counter"><i class="fa fa-reply"></i> {{messages_count}}</span>
+                    <span class="users_counter counter"><i class="fa fa-user"></i> {{members_count}}</span>
+                    <span class="status"><i class="fa fa-circle"></i></span>
+                </p>
+                <div class="message-wrapper">
+                    <img src="{{avatar}}"/>
+                    <div class="message">
+                        <div class="message-content">
+                            <div class="arrow"></div>
+                            <p><span class="author">{{username}}</span>
+                                <span>-- <i class="fa fa-clock-o"></i> {{dateFrom last_modified}}</span>
+                            </p>
+                            <p class="message-body">
+                                {{message}}
+                            </p>
+                        </div>
+                        <span class="pull-right reply-button"><i class="fa fa-reply"></i> create reply</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="contactsTabContent">
+    <div class="row content-navbar">
+        <div class="col-xs-12">
+            <div class="filter-options">
+                <ul class="tab-page">
+                    <li id="contacts-filter" class="filter"><span>Contacts</span></li>
+                    {{#if isOwner}}
+                        <li id="requests-filter" class="filter"><span>Requests</span></li>
+                    {{/if}}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row text-center content-body">
+        <div class="col-xs-12 text-center">
+            {{#if showContacts}}
+                {{> contactsList}}
+            {{else}}
+                {{> createRequest}}
+                {{> requestSentList}}
+                {{> requestReceivedList}}
+            {{/if}}
+        </div>
+    </div>
+</template>
+<template name="contactsList">
+    <div class="row item-list text-left">
+        <div class="col-xs-12">
+            {{#each contacts}}
+                {{>contactItem}}
+            {{/each}}
+        </div>
+    </div>
+</template>
+
+<template name="createRequest">
+    <div class="row item-list text-left">
+        <div class="col-xs-12">
+            <p class="title"><i class="fa fa-plus"></i> Create a new Request</p>
+            {{> autoCompleteContacts feedDynamic='true'}}
+        </div>
+    </div>
+</template>
+
+<template name="autoCompleteContacts">
+    <div class="auto-complete-wrapper text-center">
+        <div class="search-box">
+            <i class="fa fa-search"></i>
+            <input id="auto-complete-input" class="target" type="text" placeholder="Search a user">
+            {{#if searching}}
+                <i class="fa fa-spinner fa-pulse"></i>
+            {{/if}}
+            <button id="eraser-search" type="button"><i class="fa fa-eraser"></i></button>
+        </div>
+        {{#if activeSearch}}
+            <div class="results-list">
+                {{#if hasResults}}
+                    {{#each results}}
+                        {{> Template.dynamic template=resultTemplate}}
+                    {{/each}}
+                {{else}}
+                    <p>No results :(</p>
+                {{/if}}
+            </div>
+        {{/if}}
+    </div>
+</template>
+
+<template name="contactResult">
+    <div class="contact-result text-left">
+        <img src="{{avatar}}">
+        <span>{{username}}</span>
+        {{#if inContacts}}
+            <span class="in-contacts pull-right"><i class="fa fa-check-circle"></i></span>
+        {{else}}
+            {{#if sent}}
+                <span class="sent pull-right"><i class="fa fa-paper-plane-o"></i></span>
+            {{else}}
+                {{#if received}}
+                    <span class="received pull-right"><i class="fa fa-inbox"></i></span>
+                {{else}}
+                    <button class="pull-right">
+                        <i class="fa fa-user-plus"></i>
+                    </button>
+                {{/if}}
+            {{/if}}
+        {{/if}}
+
+    </div>
+</template>
+
+<template name="requestSentList">
+    <div class="row item-list text-left">
+        <div class="col-xs-12">
+            <p class="title"><i class="fa fa-paper-plane-o"></i> Sent ({{sent_count}})</p>
+            {{#each requests}}
+              {{> requestItem}}
+            {{/each}}
+        </div>
+    </div>
+</template>
+
+<template name="requestReceivedList">
+    <div class="row item-list text-left">
+        <div class="col-xs-12">
+            <p class="title"><i class="fa fa-inbox"></i> Received ({{received_count}})</p>
+            {{#each requests}}
+                {{> requestItem}}
+            {{/each}}
+        </div>
+    </div>
+</template>
+
+<template name="contactItem">
+    <div class="row fade-in">
+        <div class="col-xs-12">
+            <div class="{{userStatus}} contact-item">
+                <img class="avatar" src="{{avatar}}">
+                <div class="text-left contact-body">
+                    <p>
+                        <span class="author">{{username}}</span>
+                        <span class="status"><i class="fa fa-circle"></i> {{status}}</span>
+                        {{#if isOwner}}
+                            <span class="action-button pull-right"><i class="fa fa-envelope-o"></i></span>
+                        {{/if}}
+                    </p>
+                    <span class="date"><i class="fa fa-clock-o"></i> at contacts since {{dateFrom createAt}}</span>
+                    {{#if description}}
+                        <p class="description">{{shortField description 80}}</p>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="requestItem">
+    <div class="row fade-in">
+        <div class="col-xs-12">
+            <div class="{{status}} request-item">
+                <img class="avatar" src="{{avatar}}">
+                <div class="text-left request-body">
+                    <p>
+                        <span class="username">{{username}}</span>
+                        <span class="date">-- <i class="fa fa-clock-o"></i> {{dateFrom createAt}} --</span>
+                        <span class="status"><i class="fa fa-circle"></i> {{status}}</span>
+                    </p>
+                    {{#if isSent}}
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="applicant-box">
+                                    <img class="applicant-avatar" src="{{avatarApplicant}}">
+                                    <div class="message-content">
+                                        <div class="arrow"></div>
+                                        <p>{{shortField message 150}}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    {{else}}
+                        <div class="message-content">
+                            <div class="arrow"></div>
+                            <p>{{shortField message 150}}</p>
+                        </div>
+                    {{/if}}
+                    {{#if toMe}}
+                        {{#if pending}}
+                            <p>
+                                <span id="accept" class="pull-right action-button"><i class="fa fa-check"></i> accept</span>
+                                <span id="refuse" class="pull-right action-button"><i class="fa fa-times"></i> refuse</span>
+                            </p>
+                        {{else}}
+                            <p><span id="ok" class="pull-right action-button"><i class="fa fa-check"></i> ok</span></p>
+                        {{/if}}
+                    {{else}}
+                        {{#if refused}}
+                            <p>
+                                <span id="ok" class="pull-right action-button"><i class="fa fa-check"></i> ok</span>
+                                <span id="resend" class="pull-right action-button"><i class="fa fa-paper-plane-o"></i> resend</span>
+                            </p>
+                        {{else}}
+                            {{#if accepted}}
+                                <p><span id="ok" class="pull-right action-button"><i class="fa fa-check"></i> ok</span></p>
+                            {{/if}}
+                        {{/if}}
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

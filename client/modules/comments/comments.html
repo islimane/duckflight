@@ -1,0 +1,110 @@
+<template name="commentsTabContent">
+    <div class="row content-navbar">
+        <div class="col-xs-12">
+            <div class="filter-options">
+                <ul class="tab-page">
+                    <li><span>Comments ({{comments_count}})</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row text-center content-body">
+        <div class="col-xs-12 text-left list">
+
+            {{>commentPublishBox}}
+            <div class="row">
+                {{#if hasComments}}
+                    {{> commentsList}}
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="commentPublishBox">
+    <div class="comment-publish-box row">
+        <div class="col-xs-12">
+            <p>Leave a comment</p>
+            <form id="form-comment">
+                <div class="box">
+                    <img src="{{currentAvatar}}">
+                    <textarea placeholder="leave a comment"></textarea>
+                </div>
+                <button type="submit" class="pull-right">publish</button>
+            </form>
+        </div>
+    </div>
+</template>
+
+<template name="replyPublishBox">
+    <div class="comment-publish-box row">
+        <div class="col-xs-12">
+            <form>
+                <div class="box">
+                    <img src="{{currentAvatar}}">
+                    <textarea placeholder="leave a reply"></textarea>
+                </div>
+                <button type="submit" class="pull-right">publish</button>
+                <button class="cancel-publish-reply pull-right">cancel</button>
+            </form>
+        </div>
+    </div>
+</template>
+
+<template name="commentsList">
+        <div class="col-xs-12 comment-list">
+            {{#each comments}}
+                {{> comment}}
+            {{/each}}
+        </div>
+</template>
+
+<template name="commentsRepliesList">
+    <div class="col-xs-12 comment-list">
+        {{#each replies}}
+            {{> commentReply}}
+        {{/each}}
+    </div>
+</template>
+
+<template name="comment">
+    <div class="comment row">
+        {{>commentDefault}}
+        <div class="actions-comment col-xs-12">
+            <button class="create-reply-button"><i class="fa fa-reply"></i> create reply</button>
+            {{>replyPublishBox}}
+
+            <div class="row">
+                {{#if hasReplies}}
+                    {{>commentsRepliesList}}
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="commentDefault">
+    <div class="comment-default col-xs-12">
+        <img src="{{avatar}}">
+        <div class="body">
+            <p>
+                <span class="username">{{username}}</span>
+                <span> - <i class="fa fa-clock-o"></i> {{dateFrom createdAt}}</span>
+                {{#if isNotReply}}
+                    <span class="pull-right"><i class="fa fa-reply"></i> {{replies_count}}</span>
+                {{/if}}
+            </p>
+            <div class="comment-body">
+                <div class="arrow"></div>
+                {{text}}
+            </div>
+        </div>
+    </div>
+
+</template>
+
+<template name="commentReply">
+    <div class="row comment-reply">
+        {{>commentDefault}}
+    </div>
+</template>

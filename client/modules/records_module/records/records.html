@@ -1,0 +1,130 @@
+<template name="records">
+    <div class="content-wrapper">
+        <div class="content-header-wrapper fade-in">
+            <div class="content-header">
+                <div class="content-header-img">
+                    <img src="/Record.png"/>
+                    <a href="{{pathFor 'recordSubmit'}}" class="button-circle inline"><i class="fa fa-plus"></i></a>
+                </div>
+                <h3>Records</h3>
+            </div>
+        </div>
+        <div class="content-tab-wrapper type-2">
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row content-navbar">
+                        <div class="col-xs-12">
+                            <div class="display-options">
+                                <ul>
+                                    <li><i id="list" class="display-option active fa fa-th-list"></i></li>
+                                    <li><i id="large" class="display-option fa fa-th-large"></i></li>
+                                </ul>
+                            </div>
+                            <div class="filter-options">
+                                <ul class="tab-page">
+                                    <li id="recent-filter" class="filter active"><i class="fa fa-clock-o"></i> <span>Recent</span></li>
+                                    <li id="popular-filter" class="filter"><i class="fa fa-star"></i> <span>Popular</span></li>
+                                    <li id="search-filter" class="filter"><i class="fa fa-search"></i> <span>Search</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row text-center content-body">
+                        <div class="col-xs-12 text-center">
+                            {{#if searching}}
+                                {{>smartSearch}}
+                            {{/if}}
+                            <div class="list-flex">
+                                {{#if listMode}}
+                                    {{#each records}}
+                                        {{>recordItemHorizontal}}
+                                    {{/each}}
+                                {{else}}
+                                    {{#each records}}
+                                        {{>recordItemVertical}}
+                                    {{/each}}
+                                {{/if}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</template>
+
+<template name="recordItemHorizontal">
+    <div class="row text-left duckflight-card duckflight-card-horizontal fade-in">
+        <div class="col-xs-12 card-content">
+            <div class="absolute-col">
+                <div class="card-image">
+                    <div class="info-tags-cover">
+                        <p>
+                            {{#if channel_id}}<span class="info-record-tag channel-tag pull-right"><i class="fa fa-desktop"></i></span>{{/if}}
+                            {{#if lesson_id}}<span class="info-record-tag lesson-tag pull-right"><i class="fa fa-graduation-cap"></i></span> {{/if}}
+                            {{#if isReply}}<span class="info-record-tag reply-tag pull-right"><i class="fa fa-reply"></i></span>{{/if}}
+                        </p>
+                    </div>
+                    <div class="duration-tag-cover">
+                        <p><span class="pull-left duration-tag"><i class="fa fa-clock-o"></i> {{timeParser duration}}</span></p>
+                    </div>
+                    <div class="image-hover"><i class="fa fa-play-circle"></i></div>
+                    <img src="{{img}}"/>
+                </div>
+            </div>
+            <div class="card-caption">
+                <ul>
+                    <li class="card-title">{{title}}</li>
+                    <li>by <span class="card-author">{{authorName}}</span></li>
+                    {{#if channel_id}}<li><button type='button' class="button-from link-channel"><i class="fa fa-desktop"></i> view channel</button></li>{{/if}}
+                    {{#if lesson_id}}<li><button type='button' class="button-from link-lesson"><i class="fa fa-graduation-cap"></i> view lesson</button></li>{{/if}}
+                    {{#if isReply}}<li><button type='button' class="button-from link-lesson"><i class="fa fa-eye"></i> view parent</button> </li>{{/if}}
+                    <li class="card-counters">
+                        <span>{{dateFrom createdAt}} · </span>
+                        <span class="file-count fa fa-file"></span><span class="counter">{{docs_count}}</span>
+                        <span class="comments-count fa fa-comments"></span><span class="counter">{{comments_count}}</span>
+                        <span class="votes-count fa fa-heart"></span><span class="counter">{{votes_count}}</span>
+                        <span class="replies-count fa fa-mail-reply"></span><span class="counter">{{replies_count}}</span>
+                    </li>
+                    <li class="card-description">{{shortDescription description 50}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="recordItemVertical">
+    <div class="text-left duckflight-card duckflight-card-vertical fade-in">
+        <div class="card-image">
+            <div class="info-tags-cover">
+                <p>
+                    {{#if channel_id}}<span class="info-record-tag channel-tag pull-right"><i class="fa fa-desktop"></i></span>{{/if}}
+                    {{#if lesson_id}}<span class="info-record-tag lesson-tag pull-right"><i class="fa fa-graduation-cap"></i></span> {{/if}}
+                    {{#if isReply}}<span class="info-record-tag reply-tag pull-right"><i class="fa fa-reply"></i></span>{{/if}}
+                </p>
+            </div>
+            <div class="duration-tag-cover">
+                <p><span class="pull-left duration-tag"><i class="fa fa-clock-o"></i> {{timeParser duration}}</span></p>
+            </div>
+            <div class="image-hover"><i class="fa fa-play-circle"></i></div>
+            <img src="{{img}}"/>
+        </div>
+        <div class="card-caption">
+            <ul>
+                <li class="card-title">{{ellipsis title 15}}</li>
+                <li>by <span class="card-author">{{authorName}}</span></li>
+                {{#if channel_id}}<li class="text-center"><button type='button' class="button-from link-channel"><i class="fa fa-desktop"></i> view channel</button></li>{{/if}}
+                {{#if lesson_id}}<li class="text-center"><button type='button' class="button-from link-lesson"><i class="fa fa-graduation-cap"></i> view lesson</button></li>{{/if}}
+                {{#if isReply}}<li class="text-center"><button type='button' class="button-from link-lesson"><i class="fa fa-eye"></i> view parent</button></li>{{/if}}
+                <li class="card-counters text-center">
+                    <span class="card-date">{{dateFrom createdAt}} · </span>
+                    <span class="file-count fa fa-file"></span><span class="counter">{{docs_count}}</span>
+                    <span class="comments-count fa fa-comments"></span><span class="counter">{{comments_count}}</span>
+                    <span class="votes-count fa fa-heart"></span><span class="counter">{{votes_count}}</span>
+                    <span class="replies-count fa fa-mail-reply"></span><span class="counter">{{replies_count}}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>

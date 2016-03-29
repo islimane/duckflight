@@ -1,0 +1,198 @@
+<template name="recordSubmit">
+    <div class="content-wrapper">
+        {{#if uploading}}
+            {{>uploadPanel}}
+        {{else}}
+            <div class="editor-recorder">
+                <div class="container-fluid">
+                    <div class="row header-editor text-center">
+                        <div class="col-xs-12">
+                            <p><i class="fa fa-film"></i> Create a new Record</p>
+                        </div>
+                    </div>
+                    <div class="row work-space">
+
+                        <div class="col-xs-3 sidebar-editor">
+                            <div class="add-doc-button">
+                                <p>Documents <i id="add-document" class="pull-right fa fa-plus-circle"></i></p>
+                            </div>
+                            <div class="docs-list">
+                                {{#if hasDocs}}
+                                    {{#each documents}}
+                                        {{> docEntry}}
+                                    {{/each}}
+                                {{else}}
+                                    <p class="text-center" style="padding: 30px 10px">No documents</p>
+                                {{/if}}
+
+                            </div>
+                        </div>
+
+                        <div class="col-xs-9 editor-wrapper">
+                            <div class="form-doc-editor">
+                                {{> formAwesome}}
+                            </div>
+                            {{#if hasDocs}}
+                                <div id="editor-recorder"></div>
+                            {{else}}
+                                <div class="text-center information-start">
+                                    {{#if stop}}
+                                        <p>Recording process is finished. Please save or discard the record!</p>
+                                    {{else}}
+                                        <p>Select or create a new document to start recording!</p>
+                                    {{/if}}
+                                </div>
+                            {{/if}}
+                        </div>
+
+                    </div>
+                    <div class="row actions-wrapper">
+                        {{#if recording}}
+                            {{> recordProgressBar}}
+                        {{else}}
+                            {{#if stop}}
+                                {{> stopBar}}
+                            {{else}}
+                                {{> startRecord}}
+                            {{/if}}
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+
+        {{/if}}
+    </div>
+    <!--<div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-6">
+                <div id="editor2" class="second-editor"></div>
+            </div>
+            <div class="col-xs-6">
+                <div id="editor3" class="second-editor"></div>
+            </div>
+        </div>
+    </div>-->
+	{{>modalSaveRecord}}
+</template>
+
+
+<template name="docEntry">
+    <div class="doc-item">
+        <i class="fa fa-file-o"></i>
+        <span>{{shortTitle title 16}}</span>
+        <i class="pull-right fa fa-cog config-doc"></i>
+        <div class="options">
+            <span>{{optionTag mode}}</span>
+            <span>{{optionTag theme}}</span>
+        </div>
+    </div>
+</template>
+
+<template name="startRecord">
+    <div class="text-center col-xs-12">
+        <button type="button" id="record-button" disabled="{{notSelected}}"><span><i class="fa fa-circle"></i> Rec</span></button>
+    </div>
+</template>
+
+<template name="recordProgressBar">
+    <div class="text-center col-xs-12">
+        <span class="recording-message"><i class="fa fa-circle"></i> Recording...</span>
+        <button type="button" id="stop-button"><i class="fa fa-stop"></i> Stop</button>
+        <span id="timer">0</span>
+        <span>/ 60:00</span>
+    </div>
+</template>
+
+<template name="stopBar">
+    <div class="text-center col-xs-12">
+        <button type="button" id="save-record" data-toggle="modal" data-target="#savePanel"><span><i class="fa fa-floppy-o"></i> Save</span></button>
+        <button type="button" id="discard-record"><span><i class="fa fa-times"></i> Discard</span></button>
+    </div>
+</template>
+
+
+
+<template name="modalSaveRecord">
+	<div class="modal fade modal-duckflight" id="savePanel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+          <img src="/duck_icon.ico"><h4 class="modal-title" id="exampleModalLabel">Save your record</h4>
+      </div>
+      <div class="modal-body">
+        {{> formAwesome}}
+      </div>
+    </div>
+  </div>
+</div>
+</template>
+
+<template name="saveRecordForm">
+    <form id="saveForm" class="awesome-form">
+
+        <div class="form-group">
+            <div class="row">
+                <div id="inputTitle" class="col-xs-12 form-field">
+                    <label for="title" class="control-label">Title</label>
+                    <input id="title" name="title" type="text" class="form-control" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div id="inputTitle" class="col-xs-12 form-field">
+                    <label for="description" class="control-label">Description</label>
+                    <textarea name="description" class="form-control" id="description" required></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-12">
+                    <p>tags</p>
+                    {{>tagsInput}}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row text-center">
+                <div class="col-xs-12">
+                    <button class="submit-button" type="submit"><i class="fa fa-floppy-o"></i> Save</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</template>
+
+<template name="uploadPanel">
+    <div class="duckflight-panel-info-wrapper">
+        <div class="container-fluid">
+            <div class="row text-center">
+                <div class="col-xs-12">
+                    <img src="/duck_icon.ico">
+                    <div class="">
+                        {{#if uploaded}}
+                            <p class="panel-info-message"><strong>Congratulations!</strong> <br>Your record has been uploaded</p>
+                            <p><button type="button"><i class="fa fa-film"></i> Play Record</button></p>
+                        {{else}}
+                            <p class="panel-info-message"><strong>Wait please!</strong>
+                                <br>Your record is uploading
+                            </p>
+                            <div class="progress">
+                                <div class="loader"></div>
+                            </div>
+                            <p class="panel-info-message">
+                                <small>It may take a few minutes</small>
+                                <br><small>Please, do not close the window!!</small>
+                            </p>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
