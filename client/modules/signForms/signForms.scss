@@ -52,3 +52,35 @@
     }
   }
 }
+
+.modal-login{
+  .modal-content{border-radius: 30px;}
+  .modal-header{
+    border-radius: 28px 28px 0px 0px;
+  }
+  .modal-body{
+    border-radius: 0px 0px 30px 30px;
+    .awesome-form{
+      border-radius: 0px 0px 28px 28px;
+      .form-field{
+        label{
+          top: 10px;
+          font-size: 20px;
+          margin-left: 13px;
+          &.active{
+            transform: none;
+            transition: none;
+            font-size: 20px;
+          }
+        }
+        input{
+          padding: 2px 13px 10px 35px;
+          font-size: 16px;
+        }
+        input:-webkit-autofill{
+          -webkit-box-shadow: 0 0 0 1000px white inset !important;
+        }
+      }
+    }
+  }
+}

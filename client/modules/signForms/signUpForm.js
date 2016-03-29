@@ -1,8 +1,15 @@
+Template.signUpForm.helpers({
+	isSignUp: function(){
+		return Session.get('isSignUp');
+	}
+});
+
 Template.signUpForm.events({
 	'click a': function(){
 		Session.set('formType','signInForm');
 	},
 	"submit form": function(e){
+		Session.set('isSignUp',true);
 		e.preventDefault();
 		$('div').removeClass("has-error"); //eliminamos el estado de error de los campos.
 		$('.errormsg').remove();
@@ -22,7 +29,6 @@ Template.signUpForm.events({
 			password: password,
 			repassword: repassword},
 			function(err,result){
-
 				if (err){
 					console.log("ha habido un error al crear el usuario");
 				}else{
@@ -31,7 +37,11 @@ Template.signUpForm.events({
 						var errors = result[1];
 						if (errors.username){
 							$('#inputUsername').addClass('has-error');
-							$('#inputUsername').append("<p class='errormsg'><i class='fa fa-exclamation-triangle'></i> username already exists!</p>")
+							$('#inputUsername').append("<p class='errormsg'><i class='fa fa-exclamation-triangle'></i> username already exists!</p>");
+						}
+						if(errors.email){
+							$('#inputEmail').addClass('has-error');
+							$('#inputEmail').append("<p class='errormsg'><i class='fa fa-exclamation-triangle'></i> email already exists!</p>");
 						}
 						if(errors.password){
 							$("#inputPassword").addClass("has-error");
@@ -47,6 +57,11 @@ Template.signUpForm.events({
 						});
 					}
 				}
+				Session.set('isSignUp',false);
 			});
 	}
-})
+});
+
+Template.signUpForm.rendered = function(){
+	Session.set('isSignUp',false);
+}

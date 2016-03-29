@@ -3,32 +3,32 @@
          <div class="form-group">
              <div class="row">
                  <div id= "inputUsername" class="col-xs-12 form-field">
-                     <label class="control-label" for="username">User Name</label>
-                     <input name="username" type="text" class="form-control" id="username" required>
+                     <label class="control-label" for="username"><i class="fa fa-user"></i></label>
+                     <input name="username" type="text" class="form-control" id="username" placeholder=" username" required>
                  </div>
              </div>
          </div>
          <div class="form-group">
              <div class="row">
                  <div id="inputEmail" class="col-xs-12 form-field">
-                     <label class="control-label" for="email">Email Address (optional)</label>
-                     <input name= "email" type="email" class="form-control" id="email">
+                     <label class="control-label" for="email"><i class="fa fa-envelope"></i></label>
+                     <input name= "email" type="email" class="form-control" id="email" placeholder=" email" required>
                  </div>
              </div>
          </div>
          <div class="form-group">
              <div class="row">
                  <div id="inputPassword" class="col-xs-12 form-field">
-                     <label class="control-label" for="password">Password</label>
-                     <input name="password" type="password" class="form-control" id="password" required>
+                     <label class="control-label" for="password"><i class="fa fa-key"></i></label>
+                     <input name="password" type="password" class="form-control" id="password" placeholder=" password" required>
                  </div>
              </div>
          </div>
          <div class="form-group">
              <div class="row">
                  <div id="inputRepassword" class="col-xs-12 form-field">
-                     <label class="control-label" for="repassword">Repeat Password</label>
-                     <input name="repassword" type="password" class="form-control" id="repassword" required>
+                     <label class="control-label" for="repassword"><i class="fa fa-key"></i></label>
+                     <input name="repassword" type="password" class="form-control" id="repassword" placeholder=" repeat password" required>
                  </div>
              </div>
          </div>
@@ -38,7 +38,12 @@
         <div class="form-group">
             <div class="row text-center">
                 <div class="col-xs-12">
-                    <button class="submit-button" type="submit"><i class="fa fa-plus"></i> Sign Up</button>
+                    {{#if isSignUp}}
+                        <p><i class="fa fa-spinner fa-spin"></i></p>
+                    {{else}}
+                        <button class="submit-button" type="submit"><i class="fa fa-plus"></i> Sign Up</button>
+                    {{/if}}
+
                 </div>
             </div>
         </div>

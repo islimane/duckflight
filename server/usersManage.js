@@ -7,9 +7,14 @@ var validateUserName = function(username){
 	return !Meteor.users.findOne({username: username});
 };
 
+var validateEmail = function(email){
+	return !Meteor.users.findOne({emails: {$elemMatch: { address: email}}});
+};
+
 var validateCreateUser = function(user,errors){
 	//debe de cumplir todas las condiciones de validación.
 	if(!validateUserName(user.username)) errors.username = true;
+	if(!validateEmail(user.email)) errors.email = true;
 	if (!validatePassword(user.password)) errors.password = true;
 	if (user.password != user.repassword) errors.repassword = true;
 	console.log(errors);
@@ -21,11 +26,13 @@ Meteor.methods({
 		var errors = {};
 		var result;
 		if (validateCreateUser(user,errors)){
+			console.log('validate');
 			var id = Accounts.createUser({
 					username: user.username,
 					password: user.password,
 					email: user.email,
 				});
+			console.log('created user with id: ' + id);
 			var params = {
 				          avatar: '/usericon.png',
 						  banner: '/banner.jpeg'
@@ -33,6 +40,7 @@ Meteor.methods({
 			Meteor.users.update(id,{$set: params});
 			result = [true];
 		}else{
+			console.log('not validate user');
 			result = [false, errors];
 		}
 		return result;
