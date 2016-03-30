@@ -6,7 +6,20 @@
                     <img src="duck_icon.ico"><h4 class="modal-title" id="exampleModalLabel">Sign In or Sign Up</h4>
                 </div>
                 <div class="modal-body text-left">
-                    {{> formAwesome}}
+                    {{#if signing}}
+                        <div class="row text-center">
+                            <div class="col-xs-12">
+                                <div class="signing-container">
+                                    <div class="signing-msg">
+                                        <h3>Signing In. Wait please! ...</h3>
+                                        <p><i class="fa fa-circle-o-notch fa-spin"></i></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {{else}}
+                        {{> formAwesome}}
+                    {{/if}}
                 </div>
             </div>
         </div>

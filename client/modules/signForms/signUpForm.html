@@ -12,7 +12,7 @@
              <div class="row">
                  <div id="inputEmail" class="col-xs-12 form-field">
                      <label class="control-label" for="email"><i class="fa fa-envelope"></i></label>
-                     <input name= "email" type="email" class="form-control" id="email" placeholder=" email" required>
+                     <input name= "email" type="email" class="form-control" id="email" placeholder=" email (optional)">
                  </div>
              </div>
          </div>
@@ -33,21 +33,17 @@
              </div>
          </div>
 
-         <a href=""><i class="fa fa-angle-double-left"></i> back</a>
+
 
         <div class="form-group">
             <div class="row text-center">
                 <div class="col-xs-12">
-                    {{#if isSignUp}}
-                        <p><i class="fa fa-spinner fa-spin"></i></p>
-                    {{else}}
-                        <button class="submit-button" type="submit"><i class="fa fa-plus"></i> Sign Up</button>
-                    {{/if}}
-
+                    <button class="submit-button" type="submit"><i class="fa fa-plus"></i> Sign Up</button>
                 </div>
             </div>
         </div>
 
+         <a href=""><i class="fa fa-angle-double-left"></i> back</a>
 
      </form>
 </template>

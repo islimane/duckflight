@@ -77,9 +77,9 @@
                 <ul>
                     <li class="card-title">{{title}}</li>
                     <li>by <span class="card-author">{{authorName}}</span></li>
-                    {{#if channel_id}}<li><button type='button' class="button-from link-channel"><i class="fa fa-desktop"></i> view channel</button></li>{{/if}}
-                    {{#if lesson_id}}<li><button type='button' class="button-from link-lesson"><i class="fa fa-graduation-cap"></i> view lesson</button></li>{{/if}}
-                    {{#if isReply}}<li><button type='button' class="button-from link-lesson"><i class="fa fa-eye"></i> view parent</button> </li>{{/if}}
+                    {{#if channel_id}}<li class="button-browse"><button type='button' class="button-from link-channel"><i class="fa fa-desktop"></i> view channel</button></li>{{/if}}
+                    {{#if lesson_id}}<li class="button-browse"><button type='button' class="button-from link-lesson"><i class="fa fa-graduation-cap"></i> view lesson</button></li>{{/if}}
+                    {{#if isReply}}<li class="button-browse"><button type='button' class="button-from link-lesson"><i class="fa fa-eye"></i> view parent</button> </li>{{/if}}
                     <li class="card-counters">
                         <span>{{dateFrom createdAt}} · </span>
                         <span class="file-count fa fa-file"></span><span class="counter">{{docs_count}}</span>
@@ -110,13 +110,13 @@
             <div class="image-hover"><i class="fa fa-play-circle"></i></div>
             <img src="{{img}}"/>
         </div>
-        <div class="card-caption">
+        <div class="card-caption text-center">
             <ul>
-                <li class="card-title">{{ellipsis title 15}}</li>
+                <li class="card-title">{{ellipsis title 25}}</li>
                 <li>by <span class="card-author">{{authorName}}</span></li>
-                {{#if channel_id}}<li class="text-center"><button type='button' class="button-from link-channel"><i class="fa fa-desktop"></i> view channel</button></li>{{/if}}
-                {{#if lesson_id}}<li class="text-center"><button type='button' class="button-from link-lesson"><i class="fa fa-graduation-cap"></i> view lesson</button></li>{{/if}}
-                {{#if isReply}}<li class="text-center"><button type='button' class="button-from link-lesson"><i class="fa fa-eye"></i> view parent</button></li>{{/if}}
+                {{#if channel_id}}<li class="text-center button-browse"><button type='button' class="button-from link-channel"><i class="fa fa-desktop"></i> channel</button></li>{{/if}}
+                {{#if lesson_id}}<li class="text-center button-browse"><button type='button' class="button-from link-lesson"><i class="fa fa-graduation-cap"></i> lesson</button></li>{{/if}}
+                {{#if isReply}}<li class="text-center button-browse"><button type='button' class="button-from link-lesson"><i class="fa fa-eye"></i> parent</button></li>{{/if}}
                 <li class="card-counters text-center">
                     <span class="card-date">{{dateFrom createdAt}} · </span>
                     <span class="file-count fa fa-file"></span><span class="counter">{{docs_count}}</span>

@@ -1,15 +1,8 @@
-Template.signUpForm.helpers({
-	isSignUp: function(){
-		return Session.get('isSignUp');
-	}
-});
-
 Template.signUpForm.events({
 	'click a': function(){
 		Session.set('formType','signInForm');
 	},
 	"submit form": function(e){
-		Session.set('isSignUp',true);
 		e.preventDefault();
 		$('div').removeClass("has-error"); //eliminamos el estado de error de los campos.
 		$('.errormsg').remove();
@@ -52,16 +45,14 @@ Template.signUpForm.events({
 							$("#inputRepassword").append("<p class='errormsg'><i class='fa fa-exclamation-triangle'></i>passwords do not match!</p>");
 						}
 					}else{//se ha creado satisfactoriamente el usuario.
+						Session.set('signing',true);
 						Meteor.loginWithPassword({username: username},password,function(err){
-							console.log('error al logear al nuevo usuario');
+							if(err)console.log('error al logear al nuevo usuario');
+							Session.set('signing',false);
 						});
 					}
 				}
-				Session.set('isSignUp',false);
+
 			});
 	}
 });
-
-Template.signUpForm.rendered = function(){
-	Session.set('isSignUp',false);
-}

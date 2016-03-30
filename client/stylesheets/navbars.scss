@@ -111,6 +111,7 @@
     margin-right: 5px;
     padding: 10px 5px 8px;
     &.filter{
+      font-size: 15px;
       cursor: pointer;
       &:hover, &.active{
         border-bottom: 2px solid #F25252;

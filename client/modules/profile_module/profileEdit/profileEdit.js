@@ -18,7 +18,7 @@ Template.profileEdit.created = function(){
     var userObject = {
         img: user.avatar || '/usericon.png',
         banner: user.banner || '/banner.jpeg',
-        description: user.description,
+        description: user.description || ' ',
         imgDefault: '/usericon.png',
         bannerDefault: '/banner.jpeg',
         tagsAllow: user.tagsAllow || false

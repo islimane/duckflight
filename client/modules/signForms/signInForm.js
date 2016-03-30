@@ -18,11 +18,11 @@ Template.signInForm.events({
 		e.preventDefault();
 		$("div").removeClass("has-error");
 		$(".errormsg").remove();
-		console.log("he hecho click en sign in");
 		var identifier = $(e.target).find("[name=username]").val();
 		var password = $(e.target).find("[name=password]").val();
 		var userContext = (new RegExp('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$').exec(identifier))? {email: identifier} : {username: identifier};
 		Meteor.loginWithPassword(userContext,password,function(err){
+			Session.set('isLogin',false);
 			if (err){
 				switch(err.reason){
 					case 'Incorrect password':
@@ -36,13 +36,7 @@ Template.signInForm.events({
 				}
 			}else{
 				$('#loginForm').modal('hide');
-				console.log("usuario logueado");
 			}
-			Session.set('isLogin',false);
 		});
 	}
 });
-
-Template.signInForm.rendered = function(){
-	Session.set('isLogin',false);
-};
