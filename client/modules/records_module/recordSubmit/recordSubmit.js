@@ -214,6 +214,7 @@ Template.docEntry.rendered = function(){
 
     editor.setValue(this.data.value);
     editor.setTheme(this.data.theme);
+    console.log(this.data.mode);
     editor.getSession().setMode(this.data.mode);
     editor.setShowPrintMargin(false);
 

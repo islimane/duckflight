@@ -24,7 +24,7 @@
         </div>
 
         <div class="content-tab-wrapper type-2">
-            {{> Template.dynamic template=sectionActive}}
+            {{> Template.dynamic template=sectionActive data=contextData}}
         </div>
     </div>
 </template>
@@ -158,7 +158,7 @@
         <div class="container-fluid">
             <div class="row text-left content-body">
                 <div class="col-xs-12">
-                    {{>smartSearch}}
+                    {{>smartSearch data=contextSearch}}
                 </div>
             </div>
         </div>

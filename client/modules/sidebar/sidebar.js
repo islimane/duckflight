@@ -6,7 +6,7 @@ Template.sidebar.helpers({
 		return Session.get('menu-active');
 	},
 	avatar: function(){
-		return Meteor.users.findOne(Meteor.userId()).avatar;
+		return Meteor.user().avatar;
 	},
 	currentSidebarTab: function(){
 		return Session.get('currentSidebarTab');

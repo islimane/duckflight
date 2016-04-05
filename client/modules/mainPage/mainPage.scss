@@ -4,11 +4,12 @@
   background-image: url('/MainPageBG.jpg');
   background-repeat: no-repeat;
   background-size: cover;
-  padding-bottom: 120px;
+  overflow: auto;
 }
 
 #main-page-content{
   height: 100%;
+  position: relative;
   .container-fluid, .row, [class^=col-]{
     height: 100%;
   }
@@ -51,7 +52,7 @@
     text-shadow: 0px 5px 10px rgba(0,0,0,.5);
   }
 
-  button{
+  button.start-button{
     border: none;
     background: rgba(0,0,0,.8);
     color: #54D788;
@@ -75,10 +76,36 @@
       outline: 0px;
     }
   }
+  .navigation-message{
+    p{
+      font-size: 20px;
+      color: rgba(255,255,255,0.5);
+      text-shadow: 0px 5px 10px rgba(0,0,0,.5);
+    }
+    button.navigation-down{
+      margin-bottom: 59px;
+      background: rgba(255,255,255,0.6);
+      border: none;
+      height: 50px;
+      width: 50px;
+      border-radius: 50%;
+      font-size: 20px;
+      line-height: 40px;
+      i{vertical-align: middle;}
+      &:focus{outline: 0px;}
+      box-shadow: 0px 5px 10px rgba(0,0,0,.5);
+    }
+  }
+
 }
 
+#features-wrapper{
+  height: 100%;
+  padding: 20px 40px;
+  background: #5D4D64;
+}
 #footer-page{
-  min-height: 120px;
+  height:100%;
   padding: 20px 40px;
   background: #B13D3D;
 }

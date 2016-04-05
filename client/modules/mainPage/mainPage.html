@@ -1,6 +1,11 @@
 <template name="mainPage">
+    {{>facebookShareSDK}}
   {{#if currentUser}}
-	   {{>startPage}}
+      {{>startPage}}
+      <!--<div class="fb-share-button"
+           data-href="http://duckflight.herokuapp.com"
+           data-layout="button_count">
+      </div>-->
   {{else}}
       <div id="main-page-wrapper">
           <div id="main-page-content">
@@ -12,12 +17,19 @@
                                   <img id="main-logo" src="/duck_icon.ico"/>
                                   <h3>DuckFlight</h3>
                                   <h4>>_ The definitive live site for developers</h4>
-                                  <button data-toggle="modal" data-target="#loginForm" class="upAndDown"><span><i class="fa fa-power-off"></i></span><span class="action">Start</span></button>
+                                  <button data-toggle="modal" data-target="#loginForm" class="upAndDown start-button"><span><i class="fa fa-power-off"></i></span><span class="action">Start</span></button>
                               </div>
                           </div>
                       </div>
                   </div>
               </div>
+              <div class="absolute-bottom text-center navigation-message">
+                  <p>Check out the features!</p>
+                  <button class="navigation-down"><i class="fa fa-arrow-down"></i></button>
+              </div>
+          </div>
+          <div id="features-wrapper">
+              <h3>Features</h3>
           </div>
           <div id="footer-page">
               <div class="container-fluid">

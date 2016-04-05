@@ -1,0 +1,116 @@
+<template name="smartSearch">
+    <div class="smart-search-box-wrapper text-left fade-in">
+        <div class="search-box">
+            <i class="fa fa-search search-icon"></i>
+            <div id="input-search-wrapper">
+                {{>modifiersChoosed}}
+                <input type="text"/>
+            </div>
+            <button id="eraser-button" type="button"><i class="fa fa-eraser"></i></button>
+        </div>
+        {{#if showAutocomplete}}
+            <div class="helper-search">
+                {{> Template.dynamic template=dynamicTabNameAutocomplete data=autocompleteData}}
+            </div>
+        {{/if}}
+        <div class="assisted-search fade-in">
+            <h4>Assisted Search</h4>
+            <p><strong>Searching in DuckFlight is a great experience!!</strong> Narrow your search! Press the plus key
+                <span><i class="fa fa-plus"></i></span>
+                and choose the option you prefers.</p>
+        </div>
+        <div class="results-panel">
+            <h3>Results <span>({{counter}})</span></h3>
+            {{>navResults}}
+            {{>resultsTabContent type=currentResultTab}}
+        </div>
+    </div>
+</template>
+
+<template name="navResults">
+    <div class="nav-results text-center">
+        {{#each navResultsFilters}}
+            {{> navResultFilter}}
+        {{/each}}
+    </div>
+</template>
+
+<template name="navResultFilter">
+    <div class="results-filter {{active}}"><i class="fa {{icon}}"></i> <span>({{counter}})</span></div>
+</template>
+
+
+<template name="resultsTabContent">
+    <div class="results-wrapper">
+        <div class="row text-center">
+            <div class="col-xs-12">
+                {{#each results}}
+                    {{> Template.dynamic template=resultTemplate}}
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="modifiersAutocompleteTab">
+    <ul>
+        {{#each modifiersList}}
+            {{#if isValid}}
+                <li class="search-filter">
+                    <i class="fa fa-plus-square-o"></i> <span>{{key}}:</span> {{description}}
+                </li>
+            {{/if}}
+        {{/each}}
+    </ul>
+</template>
+
+<template name="modifiersChoosed">
+    <div class="modifiers-wrapper">
+        {{#each listModifiers}}
+            {{>modifierChoosedItem}}
+        {{/each}}
+    </div>
+</template>
+
+<template name="modifierChoosedItem">
+    <span class="modifier {{incomplete}}">{{key}}:{{value}}</span>
+</template>
+
+<template name="categoryAutocompleteTab">
+    <ul>
+        {{#each categories}}
+            <li class="element">{{name}}</li>
+        {{/each}}
+    </ul>
+</template>
+<template name="authorAutocompleteTab">
+    <p>authorAutocompleteTab</p>
+</template>
+<template name="tagAutocompleteTab">
+    <ul>
+        {{#each tags}}
+            <li class="element">{{name}}</li>
+        {{/each}}
+    </ul>
+</template>
+<template name="sortAutocompleteTab">
+    <ul>
+        {{#each options}}
+            <li class="element">{{name}}</li>
+        {{/each}}
+    </ul>
+</template>
+<template name="fromAutocompleteTab">
+    <ul>
+        {{#each options}}
+            <li class="element">{{name}}</li>
+        {{/each}}
+    </ul>
+</template>
+<template name="stateAutocompleteTab">
+    <ul>
+        {{#each options}}
+            <li class="element">{{name}}</li>
+        {{/each}}
+    </ul>
+</template>

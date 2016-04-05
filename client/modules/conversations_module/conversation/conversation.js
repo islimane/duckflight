@@ -158,7 +158,7 @@ Template.conversationExiting.events({
         var message = {
             type: 'info',
             createdAt: new Date(),
-            message: Meteor.users.findOne(Meteor.userId()).username + ' has left the conversation',
+            message: Meteor.user().username + ' has left the conversation',
             conversation_id: this._id
         };
         Meteor.call('insertMessage',message,function(err,res){

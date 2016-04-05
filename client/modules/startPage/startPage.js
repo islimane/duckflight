@@ -8,6 +8,9 @@ Template.startPage.helpers({
     },
     username: function(){
         return Meteor.users.findOne(Meteor.userId()).username;
+    },
+    contextData: function(){
+        return {contextSearch: {context: 'general'} };
     }
 });
 
@@ -46,7 +49,7 @@ Template.exploreSection.events({
     'click section p button': function(){
         Router.go(this.title.toLowerCase());
     }
-})
+});
 Template.listItemsDynamicFeed.helpers({
     feed: function(){
         return this.listObject.feed;
@@ -77,3 +80,4 @@ Template.listItemsDynamicFeed.events({
         Router.go('profile',{_id: this.author});
     }
 });
+

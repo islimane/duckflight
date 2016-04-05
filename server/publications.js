@@ -537,6 +537,10 @@ Meteor.publish('tagsBySearch',function(searchValue){
 	return Tags.find({name: new RegExp(searchValue)});
 });
 
+Meteor.publish('tags',function(){
+	return Tags.find();
+});
+
 //VOTES
 
 //record

@@ -19,7 +19,7 @@ var validateCreateUser = function(user,errors){
 	if (user.password != user.repassword) errors.repassword = true;
 	console.log(errors);
 	return _(errors).keys().length == 0;
-}
+};
 
 Meteor.methods({
 	signUp: function(user){
@@ -33,11 +33,6 @@ Meteor.methods({
 					email: user.email,
 				});
 			console.log('created user with id: ' + id);
-			var params = {
-				          avatar: '/usericon.png',
-						  banner: '/banner.jpeg'
-						};
-			Meteor.users.update(id,{$set: params});
 			result = [true];
 		}else{
 			console.log('not validate user');
@@ -47,7 +42,7 @@ Meteor.methods({
 	},
 	userUpdate: function(user_id,params){
 		params.avatar = params.img;
-		params.img = null;
+		params = _(params).omit('img');
 		return Meteor.users.update(user_id,{$set: params});
 	}
 });
@@ -72,4 +67,18 @@ Meteor.startup(function(){
 		return "To activate your account, simply click the link below:\n\n"
 			+ url;
 	};
+});
+
+Accounts.onCreateUser(function(options,user){
+	user.banner = '/banner.jpeg';
+	if(options.profile){
+		user.username = options.profile.name;
+		var userService = {service: _(user.services).keys()[0]}
+		userService.id = user.services[userService.service].id;
+
+		user.avatar = get_avatar_from_service(userService,100);
+	}else{
+		user.avatar = '/usericon.png';
+	}
+	return user;
 });
