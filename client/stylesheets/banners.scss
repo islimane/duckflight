@@ -139,6 +139,13 @@
     padding: 5px 10px 5px 15px;
     text-align: center;
     background: rgba(26, 26, 22, 0.6);
+    .visitator-action{
+      font-size: 14px;
+      cursor: pointer;
+      i{
+        font-size: 18px;
+      }
+    }
     i{
       cursor: pointer;
     }

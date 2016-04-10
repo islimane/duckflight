@@ -1,20 +1,3 @@
-var searchParser = function(search){
-	var reg = new RegExp ('^author|title|channel:.*$');
-	if (reg.test(search)){ //nos aseguramos de que el comando es valido.
-		var ps = search.split(':');
-		cmd = ps[0]; 
-		if (ps.length > 2){ //hay ':' en el argumento. vuelvo a construir todo el argumento.
-			var args = ps.slice(1);
-			arg = _(args).join(":");
-		}else{
-			arg = ps[1];
-		}
-		return [cmd,arg];
-	}
-	return null;
-};
-
-
 Template.records.helpers({
 	records: function(){
 		switch(Session.get('filter-active')){
@@ -31,6 +14,9 @@ Template.records.helpers({
 	},
 	searching: function(){
 		return Session.get('filter-active') == 'search-filter';
+	},
+	contextSearch: function(){
+		return {context: 'channels'};
 	}
 });
 

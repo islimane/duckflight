@@ -14,6 +14,9 @@ Template.lessons.helpers({
     },
     searching: function(){
         return Session.get('filter-active') == 'search-filter';
+    },
+    contextSearch: function(){
+        return {context: 'lessons'};
     }
 });
 

@@ -13,10 +13,13 @@
                                         <div class="banner-edits">
                                             <span id="edit-profile"><i class="fa fa-pencil pull-right"></i></span>
                                         </div>
+                                        <div class="banner-options">
+                                            <span class="visitator-action" id="open-manager"><i class="fa fa-archive"></i> manage your content</span>
+                                        </div>
                                     {{else}}
                                         <div class="banner-options">
                                             {{#if isMyContact}}
-                                                <span class="visitator-action" id="send-message"><i class="fa fa-envelope-o"></i></span>
+                                                <span class="visitator-action" id="send-message"><i class="fa fa-comments"></i>+</span>
                                             {{else}}
                                                 <span class="visitator-action" id="add-contact"><i class="fa fa-user-plus"></i></span>
                                             {{/if}}
@@ -108,7 +111,12 @@
                 <ul class="tab-page">
                     <li id="recent-filter" class="filter active"><i class="fa fa-clock-o"></i> <span>Recent</span></li>
                     <li id="popular-filter" class="filter"><i class="fa fa-star"></i> <span>Popular</span></li>
-                    <li id="search-filter" class="filter"><i class="fa fa-search"></i> <span>Search</span></li>
+                    {{#if allowCreate}}
+                        <li id="latest-filter" class="filter"><i class="fa fa-history"></i> <span> History</span></li>
+                    {{else}}
+                        <li id="search-filter" class="filter"><i class="fa fa-search"></i> <span>Search</span></li>
+                    {{/if}}
+
                 </ul>
             </div>
 
@@ -202,7 +210,11 @@
                 <ul class="tab-page">
                     <li id="recent-filter" class="filter active"><i class="fa fa-clock-o"></i> <span>Recent</span></li>
                     <li id="popular-filter" class="filter"><i class="fa fa-star"></i> <span>Popular</span></li>
-                    <li id="search-filter" class="filter"><i class="fa fa-search"></i> <span>Search</span></li>
+                    {{#if allowCreate}}
+                        <li id="subscribed-filter" class="filter"><i class="fa fa-check-circle"></i> <span>Subscribed</span></li>
+                    {{else}}
+                        <li id="search-filter" class="filter"><i class="fa fa-search"></i> <span>Search</span></li>
+                    {{/if}}
                 </ul>
             </div>
         </div>
@@ -247,7 +259,11 @@
                 <ul class="tab-page">
                     <li id="recent-filter" class="filter active"><i class="fa fa-clock-o"></i> <span>Recent</span></li>
                     <li id="popular-filter" class="filter"><i class="fa fa-star"></i> <span>Popular</span></li>
-                    <li id="search-filter" class="filter"><i class="fa fa-search"></i> <span>Search</span></li>
+                    {{#if allowCreate}}
+                        <li id="subscribed-filter" class="filter"><i class="fa fa-check-circle"></i> <span>Subscribed</span></li>
+                    {{else}}
+                        <li id="search-filter" class="filter"><i class="fa fa-search"></i> <span>Search</span></li>
+                    {{/if}}
                 </ul>
             </div>
         </div>

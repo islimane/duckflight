@@ -38,7 +38,7 @@ Template.profile.helpers({
                 {template: 'teamsTabContent',    name: 'teams', icon: 'fa-users'},
                 {template: 'lessonsTabContent',  name: 'lessons', icon: 'fa-graduation-cap'},
                 {template: 'recordsTabContent',  name: 'records', icon: 'fa-film'},
-                {template: 'conversationsTabContent', name: 'conversations', icon: 'fa-envelope-o', ownerOnly: true, isOwner: Session.get('currentProfileId') === Meteor.userId()},
+                {template: 'conversationsTabContent', name: 'conversations', icon: 'fa-comments', ownerOnly: true, isOwner: Session.get('currentProfileId') === Meteor.userId()},
                 {template: 'contactsTabContent', name: 'contacts', icon: 'fa-user'}];
         return tabs;
     }
@@ -237,7 +237,7 @@ Template.recordsTabContent.helpers({
         return Session.get('currentFilter') == 'search-filter';
     },
     allowCreate: function() {
-        return (Router.current().options.route.getName() == 'profile') ? Session.get('currentProfileId') == Meteor.userId() : true;
+        return Session.get('currentProfileId') == Meteor.userId();
     }
 });
 

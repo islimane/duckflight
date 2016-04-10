@@ -20,9 +20,18 @@
                 and choose the option you prefers.</p>
         </div>
         <div class="results-panel">
-            <h3>Results <span>({{counter}})</span></h3>
-            {{>navResults}}
-            {{>resultsTabContent type=currentResultTab}}
+            <h3>Results ({{counter}})</h3>
+            {{#if searching}}
+                {{>loading}}
+            {{else}}
+                {{#if results}}
+                    {{>navResults data=contextSearch}}
+                    {{>resultsTabContent type=currentResultTab}}
+                {{else}}
+                    <p>No results!!</p>
+                {{/if}}
+            {{/if}}
+
         </div>
     </div>
 </template>
@@ -36,7 +45,7 @@
 </template>
 
 <template name="navResultFilter">
-    <div class="results-filter {{active}}"><i class="fa {{icon}}"></i> <span>({{counter}})</span></div>
+    <div class="results-filter {{active}}"><i class="fa {{icon}}"></i> <span>{{template}} ({{counter}})</span></div>
 </template>
 
 
@@ -44,9 +53,14 @@
     <div class="results-wrapper">
         <div class="row text-center">
             <div class="col-xs-12">
-                {{#each results}}
-                    {{> Template.dynamic template=resultTemplate}}
-                {{/each}}
+                {{#if results}}
+                    {{#each results}}
+                        {{> Template.dynamic template=resultTemplate}}
+                    {{/each}}
+                {{else}}
+                    <p>No results</p>
+                {{/if}}
+
             </div>
         </div>
     </div>
@@ -84,7 +98,13 @@
     </ul>
 </template>
 <template name="authorAutocompleteTab">
-    <p>authorAutocompleteTab</p>
+    <ul>
+        {{#each users}}
+            <li class="element user-item">
+                <img src="{{avatar}}"/> {{username}}
+            </li>
+        {{/each}}
+    </ul>
 </template>
 <template name="tagAutocompleteTab">
     <ul>

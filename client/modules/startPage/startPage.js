@@ -10,7 +10,7 @@ Template.startPage.helpers({
         return Meteor.users.findOne(Meteor.userId()).username;
     },
     contextData: function(){
-        return {contextSearch: {context: 'general'} };
+        return {contextSearch: {context: 'all'} };
     }
 });
 

@@ -554,3 +554,31 @@ Meteor.publish('voteRecordByUser',function(record_id,user_id){
 Meteor.publish('documentsRecord',function(record_id,start){
 	return Documents.find({record: record_id,start: start});
 });
+
+
+//SEARCHING
+
+Meteor.publish('searchResults',function(params){
+	var sub;
+
+	var paramsOmited = params;
+	paramsOmited.query = _(params.query).omit('$exists');
+
+	switch(params.category){
+		case 'records':
+			sub = Records.find(params.query, params.options);
+			break;
+		case 'channels':
+			sub = Channels.find(paramsOmited.query, paramsOmited.options);
+			break;
+		case 'lessons':
+			sub = Lessons.find(paramsOmited.query, paramsOmited.options);
+			break;
+		case 'all':
+			sub = [Records.find(params.query, params.options),
+					Channels.find(paramsOmited.query, paramsOmited.options),
+					Lessons.find(paramsOmited.query, paramsOmited.options)];
+			break;
+	}
+	return sub;
+});

@@ -63,6 +63,13 @@
         padding: 5px 10px;
         border-radius: 10px;
         cursor: pointer;
+        &.user-item{
+          img{
+            height: 50px;
+            width: 50px;
+            border-radius: 20px;
+          }
+        }
         &:hover{
           background: #EEF0EF;
           i{
@@ -138,6 +145,15 @@
         outline: 0px;
       }
       &:hover{background: #C4C2C2;}
+    }
+  }
+}
+
+@media (max-width: 500px){
+  .results-filter{
+    font-size: 15px;
+    span{
+      display: block;
     }
   }
 }

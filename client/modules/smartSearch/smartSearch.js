@@ -29,7 +29,7 @@ Template.smartSearch.helpers({
     autocompleteData: function(){
         if (!Session.get('currentModifier')){
             var modifiers = [];
-            if (this.data.context == 'general') modifiers.push({key: 'category',tabName: 'categoryAutocompleteTab',description: "set a category"});
+            if (this.data.context == 'all') modifiers.push({key: 'category',tabName: 'categoryAutocompleteTab',description: "set a category"});
             modifiers.push({key: 'author' ,tabName: 'authorAutocompleteTab', description: 'author name'});
             modifiers.push({key: 'state', tabName: 'stateAutocompleteTab', description: 'filter by subscriptions'});
             modifiers.push({key: 'tag', tabName: 'tagAutocompleteTab', description: 'filter by tag'});
@@ -39,6 +39,16 @@ Template.smartSearch.helpers({
         }else{
             return {};
         }
+    },
+    contextSearch: function(){
+        return this.data;
+    },
+    results: function(){
+        var results = Session.get('results');
+        var keys = _(results).keys();
+        return _(keys).any(function(key){
+            return results[key].length;
+        });
     }
 });
 Template.smartSearch.events({
@@ -46,12 +56,6 @@ Template.smartSearch.events({
         var wrapper = document.getElementById('input-search-wrapper');
         wrapper.scrollLeft = wrapper.scrollWidth;
         $('input').focus();
-    },
-    'focus input': function(){
-        Session.set('searching',true);
-    },
-    'blur input': function(){
-        Session.set('searching',false);
     },
     'keyup input': function(e){
         switch(e.keyCode){
@@ -64,6 +68,7 @@ Template.smartSearch.events({
                     if (Session.get('currentModifier')){
                         if(!Session.get('showAutocomplete')){
                             var currentModifier = modifiers.pop();
+                            Session.set('searchParams',modifiers);
                             $('input').val(currentModifier.key);
                             Session.set('currentModifier',null);
                             if (modifiers.length){
@@ -101,20 +106,23 @@ Template.smartSearch.events({
         Session.set('modifiersChanged',true);
     }
 });
-
+Template.smartSearch.created = function(){
+    Session.set('searchParams',[]); //parametros de busqueda para el manejador
+    Session.set('modifiersChanged', false); //modifiers have changed
+    var searchManager = new SearchParamsManager();
+    searchManager.initialize('searchParams','results',null,null,this.data.data.context);
+};
 Template.smartSearch.rendered = function(){
     Session.set('showAutocomplete',false);
-    Session.set('results',{records: [], channels: [], lessons: []});
     Session.set('searchValue',''); //sirve para las plantillas de autocompletado.
     Session.set('modifiers',[]); //modifiers added
     Session.set('currentModifier', null); //current and incomplete modifier
-    Session.set('modifiersChanged', false); //modifiers have changed
+    Session.set('limitResults',5); //limite de resultados a mostrar.
+
     var self = this;
     self.autorun(function(){
         if(Session.get('modifiersChanged')){
-            var modifiers = Session.get('modifiers');
             Session.set('modifiersChanged', false);
-            console.log($('#input-search-wrapper').width());
             var wrapper = document.getElementById('input-search-wrapper');
             wrapper.scrollLeft = wrapper.scrollWidth;
         }
@@ -122,14 +130,31 @@ Template.smartSearch.rendered = function(){
         Session.set('showAutocomplete',(searchVal != '')? true : false);
     });
 };
+
 //---------------------------------------------------------------
 
 //NAV RESULTS
 Template.navResults.helpers({
     navResultsFilters: function(){
-        return [{icon: 'fa-film',initialActive: 'true', template: 'records', resultTemplate: 'recordItemHorizontal'},
-                {icon: 'fa-desktop', template: 'channels', resultTemplate: 'channelItemHorizontal'},
-                {icon: 'fa-graduation-cap', template: 'lessons', resultTemplate: 'lessonItemHorizontal'}];
+        console.log(this.data);
+        var filters = [];
+        switch(this.data.context){
+            case 'records':
+                filters.push({icon: 'fa-film',initialActive: 'true', template: 'records', resultTemplate: 'recordItemHorizontal'});
+                break;
+            case 'channels':
+                filters.push({icon: 'fa-desktop',initialActive: 'true', template: 'channels', resultTemplate: 'channelItemHorizontal'})
+                break;
+            case 'lessons':
+                filters.push({icon: 'fa-graduation-cap',initialActive: 'true', template: 'lessons', resultTemplate: 'lessonItemHorizontal'})
+                break;
+            default:
+                filters = [{icon: 'fa-film',initialActive: 'true', template: 'records', resultTemplate: 'recordItemHorizontal'},
+                    {icon: 'fa-desktop', template: 'channels', resultTemplate: 'channelItemHorizontal'},
+                    {icon: 'fa-graduation-cap', template: 'lessons', resultTemplate: 'lessonItemHorizontal'}];
+                break;
+        }
+        return filters;
     }
 });
 
@@ -142,15 +167,14 @@ Template.navResults.destroyed = function(){
 
 //NAV RESULT FILTER
 Template.navResultFilter.helpers({
-    counter: function(){
-        var counter = 0;
-        if (Session.get('results')){
-            return Session.get('results')[this.template].length;
-        };
-        return counter;
+    template: function(){
+        return this.template.charAt(0).toUpperCase() + this.template.substring(1).toLowerCase();
     },
     active: function(){
         return (this.initialActive)? 'active' : '';
+    },
+    counter: function(){
+        return Session.get('results')[this.template].length;
     }
 });
 
@@ -175,18 +199,16 @@ Template.navResultFilter.rendered = function(){
 Template.resultsTabContent.helpers({
     results: function(){
         var results = [];
-        if(Session.get('results')){
-            switch (Session.get('currentResultTab')){
-                case 'records':
-                    results = Session.get('results').records;
-                    break;
-                case 'channels':
-                    results = Session.get('results').channels;
-                    break;
-                case 'lessons':
-                    results = Session.get('results').lessons;
-                    break;
-            }
+        switch(Session.get('currentResultTab')){
+            case 'records':
+                results = Session.get('results').records;
+                break;
+            case 'channels':
+                results = Session.get('results').channels;
+                break;
+            case 'lessons':
+                results = Session.get('results').lessons;
+                break;
         }
         return results;
     },
@@ -243,8 +265,6 @@ Template.modifiersAutocompleteTab.events({
         modifiers.push(modifier);
         Session.set('modifiers',modifiers);
         Session.set('currentModifier',modifier);
-        Session.set('showAutocomplete',false);
-        Session.set('modifiersChanged', true);
         $('input').val('');
         $('input').focus();
     }
@@ -301,6 +321,7 @@ Template.categoryAutocompleteTab.events({
         modifiers.pop();
         modifiers.push(modifier);
         Session.set('modifiers',modifiers);
+        Session.set('searchParams',modifiers);
         Session.set('currentModifier',null);
         Session.set('showAutocomplete',false);
         Session.set('modifiersChanged', true);
@@ -312,7 +333,8 @@ Template.categoryAutocompleteTab.created = function(){
     this.data.categories = [
         {name: 'records'},
         {name: 'channels'},
-        {name: 'lessons'}
+        {name: 'lessons'},
+        {name: 'all'}
     ];
 };
 
@@ -342,14 +364,47 @@ Template.categoryAutocompleteTab.destroyed = function(){Session.set('categories'
 
 
 //AUTHOR AUTOCOMPLETE
-Template.authorAutocompleteTab.helpers({});
-Template.authorAutocompleteTab.events({
-    'click .element': function(){
-
+Template.authorAutocompleteTab.helpers({
+    users: function(){
+        return Session.get('usersMatch');
     }
 });
-Template.authorAutocompleteTab.rendered = function(){};
-Template.authorAutocompleteTab.destroyed = function(){};
+Template.authorAutocompleteTab.events({
+    'click .element': function(){
+        var modifier = Session.get('currentModifier');
+        modifier.completed = true;
+        modifier.value = this.username;
+        modifier.user_id = this._id;
+        var modifiers = Session.get('modifiers');
+        modifiers.pop();
+        modifiers.push(modifier);
+        Session.set('modifiers',modifiers);
+        Session.set('searchParams',modifiers);
+        Session.set('currentModifier',null);
+        Session.set('showAutocomplete',false);
+        Session.set('modifiersChanged', true);
+        $('input').val('');
+        $('input').focus();
+    }
+});
+Template.authorAutocompleteTab.rendered = function(){
+    var self = this;
+    Session.set('usersMatch',Meteor.users.find().fetch());
+    self.autorun(function(){
+        var searchVal = Session.get('searchValue');
+        switch(searchVal){
+            case '+':
+                Meteor.subscribe('allUsers');
+                Session.set('usersMatch',Meteor.users.find().fetch());
+                break;
+            default:
+                if (searchVal[0] == '+') searchVal = searchVal.slice(1);
+                Meteor.subscribe('usersBySearch',searchVal);
+                Session.set('usersMatch',Meteor.users.find({username: new RegExp(searchVal)}).fetch());
+                break;
+        }
+    });
+};
 
 
 
@@ -370,6 +425,7 @@ Template.tagAutocompleteTab.events({
         modifiers.pop();
         modifiers.push(modifier);
         Session.set('modifiers',modifiers);
+        Session.set('searchParams',modifiers);
         Session.set('currentModifier',null);
         Session.set('showAutocomplete',false);
         Session.set('modifiersChanged', true);
@@ -412,6 +468,7 @@ Template.sortAutocompleteTab.events({
         modifiers.pop();
         modifiers.push(modifier);
         Session.set('modifiers',modifiers);
+        Session.set('searchParams',modifiers);
         Session.set('currentModifier',null);
         Session.set('showAutocomplete',false);
         Session.set('modifiersChanged', true);
@@ -462,6 +519,7 @@ Template.fromAutocompleteTab.events({
         modifiers.pop();
         modifiers.push(modifier);
         Session.set('modifiers',modifiers);
+        Session.set('searchParams',modifiers);
         Session.set('currentModifier',null);
         Session.set('showAutocomplete',false);
         Session.set('modifiersChanged', true);
@@ -474,7 +532,7 @@ Template.fromAutocompleteTab.created = function(){
         {name: 'channel'},
         {name: 'lesson'}
     ];
-}
+};
 Template.fromAutocompleteTab.rendered = function(){
     var self = this;
     self.autorun(function(){
@@ -513,6 +571,7 @@ Template.stateAutocompleteTab.events({
         modifiers.pop();
         modifiers.push(modifier);
         Session.set('modifiers',modifiers);
+        Session.set('searchParams',modifiers);
         Session.set('currentModifier',null);
         Session.set('showAutocomplete',false);
         Session.set('modifiersChanged', true);
