@@ -582,3 +582,36 @@ Meteor.publish('searchResults',function(params){
 	}
 	return sub;
 });
+
+
+Meteor.publishComposite('tagsVoted', function(userId){
+	var sub = {
+		collection: 'votes',
+		find: function(){
+			return Votes.find({user_id: userId});
+		},
+		children: [
+			{
+				collection: 'tags',
+				find: function(vote){
+					var tags = [];
+
+					if (vote.channel_id) tags = Channels.findOne(vote.channel_id).tags;
+					if (vote.lesson_id)  tags = Lessons.findOne(vote.lesson_id).tags;
+					if (vote.record_id)  tags = Records.findOne(vote.record_id).tags;
+
+					var tagNames = _(tags).pluck('name');
+					return Tags.find({name: {$in: tagNames}});
+				}
+			}
+		]
+	};
+	return sub;
+});
+
+Meteor.publish('recommendations',function(contextsIds,tagsNames,limit){
+	var cursorChannels = Channels.find({_id: {$nin: contextsIds}, tags: {$elemMatch: {name: {$in: tagsNames}}}},{limit: limit, sort: {votes: -1}});
+	var cursorLessons =  Lessons.find({_id: {$nin: contextsIds}, tags: {$elemMatch: {name: {$in: tagsNames}}}},{limit: limit, sort: {votes: -1}});
+	var cursorRecords =  Records.find({_id: {$nin: contextsIds}, tags: {$elemMatch: {name: {$in: tagsNames}}},fields: {RC:0}},{limit: limit, sort: {votes: -1}});
+	return [cursorChannels,cursorLessons,cursorRecords];
+});
