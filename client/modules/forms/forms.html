@@ -248,7 +248,6 @@
                     {{else}}
                         <p>No description</p>
                     {{/if}}
-
                 </div>
                 <div class="edit-block">
                     <div class="form-group">
@@ -258,6 +257,37 @@
                             </div>
                         </div>
                     </div>
+                    <div class="actions text-center">
+                        <span class="action-button save">save</span>
+                        <span class="action-button discard">discard</span>
+                    </div>
+                </div>
+            </section>
+        {{/if}}
+        {{#if isProfile}}
+            <section id="emails-section">
+                <p class="title-section">Emails <span class="edit-button"><i class="fa fa-pencil"></i> edit</span></p>
+                <div class="edited-block">
+                    <p class="info-icons"><i class="fa fa-exclamation-circle"></i> indicates that email has not been verified.<br>
+                        <i class="fa fa-check-circle"></i> indicates that email has been verified</p>
+                    {{#each emails}}
+                        <div class="email-item">
+                            <p class="{{verified}}">
+                                {{#if verified}}
+                                    <i class="fa fa-check-circle"></i>
+                                {{else}}
+                                    <i class="fa fa-exclamation-circle"></i>
+                                {{/if}}
+                                {{address}}
+                            </p>
+
+                        </div>
+
+                    {{/each}}
+
+                </div>
+                <div class="edit-block">
+                    {{>inputEmailsBox}}
                     <div class="actions text-center">
                         <span class="action-button save">save</span>
                         <span class="action-button discard">discard</span>
@@ -638,5 +668,22 @@
     </form>
 </template>
 
+
+<template name="inputEmailsBox">
+    <div class="input-email-box">
+        <div class="list-emails">
+            {{#each emails}}
+                <div class="email"><p>{{address}} <span class="remove-email"><i class="fa fa-trash"></i></span></p></div>
+            {{/each}}
+        </div>
+        <form id="email-form">
+            <div class="input-email-wrapper">
+                <input id='email-input' type="email" class="form-control" placeholder="enter new email"/>
+                <button type="submit"><i class="fa fa-plus"></i></button>
+            </div>
+        </form>
+    </div>
+
+</template>
 
 

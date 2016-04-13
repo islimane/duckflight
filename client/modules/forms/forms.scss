@@ -278,6 +278,21 @@ $verdana-thin: 100;
     &.hide{
       display: none;
     }
+    .info-icons{
+      padding-left: 5px;
+      font-size: 12px;
+    }
+    .email-item{
+      padding: 5px 10px;
+      p{ margin: 0px};
+      i{
+        color: #FA6969;
+        font-size: 12px;
+      }
+      &.verified{
+        color: #69FAC4;
+      }
+    }
   }
   .avatar{
     margin: 0px 5px;
@@ -764,6 +779,33 @@ $verdana-thin: 100;
           margin: 0px 5px;
         }
       }
+    }
+  }
+}
+
+.input-email-box{
+  .remove-email{
+    cursor: pointer;
+  }
+  .input-email-wrapper{
+    padding: 10px 0px;
+    display: flex;
+    input{
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      border-radius: 0px;
+      padding-left: 5px;
+      border-bottom: 1px solid grey;
+      &:focus{ outline: 0px;}
+    }
+    button{
+      margin-left: 5px;
+      border: none;
+      border-radius: 5px;
+      height: 35px;
+      padding: 0px 15px;
+      &:focus{outline: 0px;}
     }
   }
 }

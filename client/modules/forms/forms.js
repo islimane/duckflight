@@ -91,6 +91,15 @@ Template.formProfileEdit.helpers({
     },
     isLeader: function(){
         return (this.author)? Meteor.userId() == this.author : false || (this.user_id)? Meteor.userId() == this.user_id : null;
+    },
+    isProfile: function(){
+        return Router.current().route.getName() == 'profileEdit';
+    },
+    emails: function(){
+        return Session.get('userObject').emails;
+    },
+    verified: function(){
+        return (this.verified)? 'verified': '';
     }
 });
 
@@ -252,6 +261,12 @@ Template.formProfileEdit.events({
         obj.members = Session.get('memberList');
         Session.set('userObject',obj);
         $('#members-section .discard').click();
+    },
+    'click #emails-section .save': function(){
+        var obj = Session.get('userObject');
+        obj.emails = Session.get('emailsList');
+        Session.set('userObject',obj);
+        $('#emails-section .discard').click();
     }
 });
 
@@ -261,9 +276,12 @@ Template.formProfileEdit.rendered = function(){
     var sections = Session.get('userObject').sections;
     var tags = Session.get('userObject').tags;
     var members = Session.get('userObject').members;
+    var emails = Session.get('userObject').emails;
+
     (tags)? Session.set('tagsChoosen', tags) : null;
     (sections) ? Session.set('sectionsArray', sections) : null;
     (members) ? Session.set('memberList', members) : null;
+    (emails) ? Session.set('emailsList',emails) : null;
 };
 
 /**
@@ -622,3 +640,38 @@ Template.tagChoosen.events({
 
     }
 });
+
+Template.inputEmailsBox.helpers({
+    emails: function(){
+        return Session.get('emailsList');
+    }
+});
+
+Template.inputEmailsBox.events({
+    'click .remove-email': function(){
+        console.log('removeeee');
+        var emails = Session.get('emailsList');
+        var address = this.address;
+        emails = _(emails).filter(function(e){
+            return e.address != address;
+        });
+        Session.set('emailsList',emails);
+    },
+    'submit #email-form': function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var address = $('#email-input').val();
+        if (address){
+            var emails = Session.get('emailsList');
+            if (_(emails).all(function(email){return email.address != address})){
+                emails.push({
+                    address: address,
+                    verified: false
+                });
+                Session.set('emailsList',emails);
+            }
+            $('.email-input').val();
+        }
+    }
+});
+

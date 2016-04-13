@@ -13,6 +13,28 @@
 
     }
   }
+  &.transparent{
+    .page-banner-content{
+      background: transparent;
+      box-shadow: none;
+      .banner-navbar, .banner-navbar-vertical{
+        color: #4D4C4C;
+        font-size: 17px;
+        background: transparent;
+        button{
+          background: #D0CECE;
+          border-radius: 74px;
+          color: inherit;
+          height: 35px;
+          width: 70px;
+        }
+        #menuTabCollapse{
+          background: transparent;
+          border-bottom: 1px solid #D8D8D8;
+        }
+      }
+    }
+  }
   &.type-2{
     min-width: 0;
   }
@@ -211,6 +233,28 @@
     .description-wrapper{
       padding-top: 5px;
       font-size: 14px;
+    }
+  }
+  .banner-services{
+    padding: 0px 15px 15px 15px;
+    button{
+      background: #DBD9D9;
+      padding: 5px 10px;
+      &:focus{outline: 0px;}
+      border: none;
+      border-radius: 5px;
+      margin: 0px 5px 5px;
+      &:hover{background: #ECEBEB;}
+      &.facebook{
+        background: #5A55EB;
+        color: white;
+        &:hover{background: #5B5BCF;}
+      }
+      &.google{
+        background: #EF4438;
+        color: white;
+        &:hover{background: #F06055;}
+      }
     }
   }
   .banner-tags{

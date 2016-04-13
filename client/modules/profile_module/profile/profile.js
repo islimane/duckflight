@@ -33,6 +33,20 @@ Template.profile.helpers({
     description: function(){
         return Meteor.users.findOne(Session.get('currentProfileId')).description;
     },
+    hasNotVerifiedEmails: function(){
+        var emails = Meteor.users.findOne(Session.get('currentProfileId')).emails;
+        return _(emails).any(function(e){return !e.verified;});
+    },
+    services: function(){
+        var services = Meteor.users.findOne(Session.get('currentProfileId')).services;
+        if (_(services).isObject()) services = [services];
+
+        return services;
+    },
+    isService: function(service){
+        var services = Meteor.users.findOne(Session.get('currentProfileId')).services;
+        return services[service];
+    },
     tabNamesArray: function(){
         var tabs = [{template: 'channelsTabContent', name: 'channels', icon: 'fa-desktop', initialActive: true},
                 {template: 'teamsTabContent',    name: 'teams', icon: 'fa-users'},
@@ -50,6 +64,9 @@ Template.profile.events({
     },
     'click .profile-img': function(){
         Router.go('profile',{_id: Session.get('currentProfileId')});
+    },
+    'click #view-facebook': function(){
+        window.open(Meteor.users.findOne(Session.get('currentProfileId')).services.facebook.link);
     },
     'click #add-contact': function(){
         var processInitiated = function(){

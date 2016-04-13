@@ -19,6 +19,7 @@ Template.profileEdit.created = function(){
         img: user.avatar || '/usericon.png',
         banner: user.banner || '/banner.jpeg',
         description: user.description || ' ',
+        emails: user.emails || [],
         imgDefault: '/usericon.png',
         bannerDefault: '/banner.jpeg',
         tagsAllow: user.tagsAllow || false
