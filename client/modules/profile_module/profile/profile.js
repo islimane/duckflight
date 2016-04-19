@@ -65,6 +65,12 @@ Template.profile.events({
     'click .profile-img': function(){
         Router.go('profile',{_id: Session.get('currentProfileId')});
     },
+    'click #verify-emails-button': function(){
+        Router.go('verificationEmail');
+    },
+    'click #change-password-button': function(){
+        Router.go('changePassword');
+    },
     'click #view-facebook': function(){
         window.open(Meteor.users.findOne(Session.get('currentProfileId')).services.facebook.link);
     },

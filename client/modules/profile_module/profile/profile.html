@@ -46,10 +46,10 @@
                                     <div class="banner-services">
                                         <h4>Services</h4>
                                         {{#if hasNotVerifiedEmails}}
-                                            <button type="button"><i class="fa fa-envelope-o"></i> verify your emails</button>
+                                            <button id='verify-emails-button' type="button"><i class="fa fa-envelope-o"></i> verify your emails</button>
                                         {{/if}}
                                         {{#each services}}
-                                            {{#if isService 'password'}}<button type="button"><i class="fa fa-key"></i> change your password</button>{{/if}}
+                                            {{#if isService 'password'}}<button type="button" id="change-password-button"><i class="fa fa-key"></i> change your password</button>{{/if}}
                                             {{#if isService 'facebook'}}<button id='view-facebook' type="button" class="facebook"><i class="fa fa-facebook"></i> view profile</button>{{/if}}
                                             {{#if isService 'google'}}<button id="view-google-plus" type="button" class="google"><i class="fa fa-facebook"></i> view profile</button>{{/if}}
                                         {{/each}}
@@ -497,6 +497,7 @@
                         <span class="status"><i class="fa fa-circle"></i> {{status}}</span>
                         {{#if isOwner}}
                             <span class="action-button pull-right"><i class="fa fa-envelope-o"></i></span>
+                            <span class="action-button pull-right"><i class="fa fa-comments"></i></span>
                         {{/if}}
                     </p>
                     <span class="date"><i class="fa fa-clock-o"></i> at contacts since {{dateFrom createAt}}</span>

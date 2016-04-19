@@ -284,14 +284,21 @@ $verdana-thin: 100;
     }
     .email-item{
       padding: 5px 10px;
-      p{ margin: 0px};
-      i{
-        color: #FA6969;
-        font-size: 12px;
-      }
-      &.verified{
-        color: #69FAC4;
-      }
+      p{
+        margin: 0px;
+        i{
+          color: #FA6969;
+          font-size: 12px;
+        }
+        &.verified{
+          i{
+            color: #69FAC4;
+          }
+
+        }
+      };
+
+
     }
   }
   .avatar{
@@ -656,6 +663,7 @@ $verdana-thin: 100;
   }
   .input-box-wrapper{
     flex: 1;
+    word-break: break-all;
     position: relative;
     border: 1px solid #EBEAEA;
     background: #EAEAEA;
@@ -692,9 +700,6 @@ $verdana-thin: 100;
       border-radius: 10px;
       border: 1px dashed #BAB9B9;
       background: #FFFFFF;
-      min-height: 100px;
-      overflow-y: scroll;
-      height: 100%;
       color: #6F6E6E;
       &:focus{
         outline: 0px;

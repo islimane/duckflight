@@ -1,0 +1,201 @@
+.verifications-page{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .verifications-wrapper{
+    padding-top: 85px;
+    padding-bottom: 60px;
+    .verifications-header{
+      width: 100%;
+      font-size: 18px;
+      color: #898989;
+      i{
+        background: rgba(0,0,0,0.5);
+        color: #EFEEEE;
+        margin-bottom: 5px;
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+        font-size: 25px;
+        padding: 12px;
+      }
+      .spinner i{
+        color: #FA5656;
+        font-size: 40px;
+        background: transparent;
+        padding: 0px;
+        height: auto;
+        width: auto;
+      }
+      img{
+        padding: 5px;
+        background: white;
+        border-radius: 50%;
+        height: 60px;
+        width: 60px;
+      }
+      h3{
+        color: #5D5D5D;
+        font-size: 28px;
+        margin-bottom: 20px;
+      }
+    }
+    .back-wrapper{
+      margin-top: 20px;
+      button{
+        &:focus{outline: 0px;}
+        background: #6E6C6C;
+        color: #464545;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 30px;
+        font-size: 18px;
+      }
+    }
+    .verifications-form{
+      box-shadow: 0px 2px 10px rgba(0,0,0,0.5);
+      margin-top: 25px;
+      width: 100%;
+
+      button{
+        &:focus{outline: 0px;}
+        background: #DCE1DD;
+        padding: 5px 20px;
+        border: none;
+        border-radius: 5px;
+        color: #5CCE68;
+        font-size: 16px;
+        &:hover{background: #ECF0EC;}
+      }
+
+      .user-header{
+        padding: 20px;
+        background: #F44444;
+        color: #EBE5E5;
+        .username{
+          font-size: 20px;
+          margin: 0px;
+        }
+        .avatar{
+          border-radius: 50%;
+          border: 3px solid white;
+          height: 100px;
+          width: 100px;
+          padding: 5px;
+          margin-bottom: 10px;
+          background: #431F1F;
+        }
+      }
+      .notions{
+        padding: 10px;
+        background: #ECF0EC;
+        font-size: 14px;
+        p{margin: 0px;}
+      }
+      .emails-wrapper{
+        background: white;
+        padding: 20px;
+        color: #6F6E6E;
+        font-size: 16px;
+        position: relative;
+        padding-bottom: 40px;
+
+        .email-list{
+          padding-left: 0px;
+          padding-bottom: 10px;
+          list-style: none;
+          font-size: 20px;
+          li{
+            font-family: helvetica, comic-sans;
+            border-top: 1px solid #ECF0EC;
+            border-bottom: 1px solid #ECF0EC;
+            padding: 10px;
+            .status{
+              color: white;
+              height: 30px;
+              width: 30px;
+              border-radius: 50%;
+              padding: 5px;
+              background: #3FF780;
+            }
+            p{font-size: 17px;}
+            &.pending{
+              .status{
+                background: #F73F3F;
+              }
+            }
+
+          }
+        }
+      }
+      .search-username-box{
+        background: white;
+        font-size: 18px;
+        color: #6F6E6E;
+        .searching-box{
+          padding: 20px;
+          i{
+            color: #EB7171;
+          }
+        }
+        .message-error{
+          color: #F95656;
+        }
+        form{
+          padding: 20px;
+        }
+        .form-group-flex{
+          display: flex;
+          border: 1px solid #D5D4D4;
+          border-radius: 30px;
+          padding: 5px 10px;
+          margin-bottom: 15px;
+          label{
+            font-size: 20px;
+            margin: 0px;
+            line-height: 35px;
+          }
+          input{
+            margin: 0px 5px;
+            flex: 1;
+            background: transparent;
+            border: none;
+            &:focus{
+              outline: 0px;
+            }
+          }
+          button{
+            border-radius: 30px;
+            background: #989898;
+            &:hover{background: #B7B7B7;}
+            color: #E6E6E6;
+          }
+        }
+      }
+
+    }
+  }
+}
+
+.verifications-status-wrapper{
+  .verified-status{
+    .verified{
+      background: #3FF780 !important;
+    }
+    .not-verified{
+      background: #FA5656 !important;
+    }
+    button{
+      &:focus{outline: 0px;};
+      background: #EFEFEF;
+      color: #868686;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 20px;
+      margin-top: 30px;
+      &:hover{background: #F5F5F5;}
+    }
+  }
+}
+
+

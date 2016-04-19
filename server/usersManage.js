@@ -48,24 +48,27 @@ Meteor.methods({
 });
 
 Meteor.startup(function(){
+	process.env.MAIL_URL = 'smtp://postmaster%40sandbox0e3723bcf7de4d528545792928d56381.mailgun.org:e0c89ff84b3f5ccdd42562bd0d8aa51f@smtp.mailgun.org:587';
+
 	UserStatus.events.on('connectionLogout',function(fields){
 		//aquí cada vez que se desconecte un usuario se borraran los datos pertinentes.
 	});
 	Accounts.emailTemplates.siteName = "DuckFlight";
-	Accounts.emailTemplates.from = "DuckFlight <accounts@example.com>";
-	Accounts.emailTemplates.verifyEmail.subject = function (user) {
-		return "Welcome to DuckFlight, " + user.profile.name;
-	};
-	Accounts.emailTemplates.resetPassword.subject = function(user){
-		return "Hello " + user;
-	};
-	Accounts.emailTemplates.resetPassword.text = function(user,url){
-		return "To reset your password, simply click the link below:\n\n"
-			+ url;
-	};
-	Accounts.emailTemplates.verifyEmail.text = function (user, url) {
-		return "To activate your account, simply click the link below:\n\n"
-			+ url;
+	Accounts.emailTemplates.from = "DuckFlight <duckflight.team@gmail.com>";
+
+	Accounts.emailTemplates.verifyEmail = {
+		subject: function() {
+			return '[DuckFlight] Verification Email Process.';
+		},
+		text: function(user,url) {
+			var urlWithoutHash = url.replace( '#/', '' );
+			var supportEmail   = "duckflight.team@gmail.com";
+			var emailBody      = 'To verify your email address visit the following link:\n\n' + urlWithoutHash
+							     + '\n\n Please, do not answer this message!. If you feel something is wrong,'
+								 + ' please contact our support team: ' + supportEmail;
+
+			return emailBody;
+		}
 	};
 });
 
@@ -79,6 +82,9 @@ Accounts.onCreateUser(function(options,user){
 		user.avatar = get_avatar_from_service(userService,100);
 	}else{
 		user.avatar = '/usericon.png';
+	}
+	if (user.emails){
+		Accounts.sendVerificationEmail(user._id,user.emails[0].address);
 	}
 	return user;
 });

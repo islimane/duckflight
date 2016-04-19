@@ -1,0 +1,152 @@
+<template name="verificationEmail">
+    <div class="container-fluid">
+        <div class="row text-center">
+            <div class="col-xs-12">
+                <div class="verifications-page">
+                    <div class="verifications-wrapper">
+                        <div class="verifications-header">
+                            <img src="/duck_icon.ico">
+                            <h3>Duckflight Email Verification</h3>
+                            <i class="fa fa-envelope-o"></i> <i class="fa fa-check"></i>
+                            <p>Check your emails is paramount.</p>
+                            <p>This lets you recover your password and send emails within the platform</p>
+                        </div>
+                        <div class="verifications-form">
+                            {{#if userToVerify}}
+                                <div class="user-header">
+                                    <img class='avatar' src="{{userToVerify.avatar}}"/>
+                                    <p class="username">{{userToVerify.username}}</p>
+                                </div>
+                                <div class="emails-wrapper">
+                                    {{#if sentMail}}
+                                        <p>Verification link sent to <strong>{{currentEmail}}</strong>. Check It!</p>
+                                        <p>If not received it, try again!</p>
+                                        <button id='resend-button' type="button"><i class="fa fa-paper-plane-o"></i> Resend</button>
+                                    {{else}}
+                                        {{#if userToVerify.emails}}
+                                            {{>emailsList emails = userToVerify.emails}}
+                                        {{else}}
+                                            <div class="error-mails">
+                                                <p>Sorry, you has not mails already.</p>
+                                                {{#if currentUser}}
+                                                    <p>Add mails at your profile edit page!</p>
+                                                    <button type="button">Add mails</button>
+                                                {{/if}}
+                                                <p>If you forget your password, you may not access more!</p>
+                                            </div>
+                                        {{/if}}
+                                        {{#if errorSent}}
+                                            <p class="message-error"><i class="fa fa-exclamation-triangle"></i> Error sending the verification link, maybe incorrect address!</p>
+                                        {{/if}}
+                                    {{/if}}
+                                </div>
+                                <div class="notions">
+                                    <p>If you click verify you will receive a email with a link to verify it!</p>
+                                </div>
+                            {{else}}
+                                {{>searchEmails}}
+                            {{/if}}
+
+                        </div>
+                        <div class="back-wrapper">
+                            <button id='back' type="button"><i class="fa fa-arrow-circle-o-left"></i> back</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</template>
+
+
+<template name="emailsList">
+
+    <p class="text-left"><i class="fa fa-envelope"></i> Your Emails: </p>
+    <ul class="email-list">
+        {{#each emails}}
+            {{>emailItemVerification}}
+        {{/each}}
+    </ul>
+</template>
+
+<template name="emailItemVerification">
+    {{#if verified}}
+        <li>
+            <i class="fa fa-check-circle"></i><p>{{address}}</p>
+        </li>
+    {{else}}
+        <li class="pending">
+            <i class="status fa fa-exclamation"></i><p>{{address}}</p>
+            <button><i class="fa fa-check-circle"></i> verify</button>
+        </li>
+    {{/if}}
+</template>
+
+<template name="searchEmails">
+    <div class="search-username-box">
+        {{#if searching}}
+            <div class="searching-box">
+                <p>Searching your emails ...</p>
+                <p class="text-center"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom"></i></p>
+            </div>
+        {{else}}
+            <div class="user-header">
+                <p>You are not signed in! You must search your emails by username.</p>
+                <p>Search your emails!</p>
+            </div>
+            <form>
+                <div class="form-group-flex">
+                    <label><i class="fa fa-user"></i></label>
+                    <input type="text" placeholder="Enter your username" autocomplete="off"/>
+                    <button type="submit"><i class="fa fa-search"></i></button>
+                </div>
+            </form>
+            {{#if messageError}}
+                <p class="message-error"><i class="fa fa-exclamation-triangle"></i> {{messageError}}</p>
+            {{/if}}
+        {{/if}}
+    </div>
+</template>
+
+
+<template name="verifyState">
+    <div class="container-fluid">
+        <div class="row text-center">
+            <div class="col-xs-12">
+                <div class="verifications-page">
+                    <div class="verifications-wrapper">
+                        <div class="verifications-header">
+                            <div class="verifications-status-wrapper">
+                                {{#if verifying}}
+                                    <img src="/duck_icon.ico">
+                                    <h3>Check Email Verification link</h3>
+                                    <p>verifying your email ...</p>
+                                    <p class="spinner text-center"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom"></i></p>
+                                {{else}}
+                                    <div class="verified-status">
+                                        {{#if verified}}
+                                            <i class="fa fa-check verified"></i>
+                                            <h3>Verification Success!</h3>
+                                            <p>Verified, thanks!</p>
+                                            <p>Now you'll can send emails to others users and <br/>
+                                                you will not have to worry if you forgot password. <br/>
+                                                you will can recover it!
+                                            </p>
+                                            <button id='done-button' type="button">Ok</button>
+                                        {{else}}
+                                            <i class="fa fa-exclamation not-verified"></i>
+                                            <h3>Verification Failed!</h3>
+                                            <p>Sorry, an error occurs while verifying!</p>
+                                            <button id='try-again-button' type="button">Try again!</button>
+                                        {{/if}}
+                                    </div>
+                                {{/if}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
