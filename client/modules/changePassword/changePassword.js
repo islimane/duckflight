@@ -22,6 +22,9 @@ Template.changePassword.events({
             Session.set('errormsg','Password do not match!');
         }
         $('input').val('');
+    },
+    'click #back': function(){
+        Router.go('profile',{_id: Meteor.userId()});
     }
 });
 
@@ -53,6 +56,12 @@ Template.unlockerByPassword.events({
         });
         $('#password').val('');
 
+    },
+    'click #recover-password-button': function(){
+        Router.go('recoverPassword');
+    },
+    'click #back': function(){
+        Router.go('profile',{_id: Meteor.userId()});
     }
 });
 

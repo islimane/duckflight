@@ -70,6 +70,20 @@ Meteor.startup(function(){
 			return emailBody;
 		}
 	};
+	Accounts.emailTemplates.resetPassword = {
+		subject: function() {
+			return '[DuckFlight] Reset Password Process.';
+		},
+		text: function(user,url) {
+			var urlWithoutHash = url.replace( '#/', '' );
+			var supportEmail   = "duckflight.team@gmail.com";
+			var emailBody      = 'To reset your password visit the following link:\n\n' + urlWithoutHash
+				+ '\n\n Please, do not answer this message!. If you feel something is wrong,'
+				+ ' please contact our support team: ' + supportEmail;
+
+			return emailBody;
+		}
+	}
 });
 
 Accounts.onCreateUser(function(options,user){

@@ -27,6 +27,9 @@ Meteor.methods({
     'sendVerificationLink': function(userId,emailAddress) {
         return Accounts.sendVerificationEmail(userId,emailAddress);
     },
+    'sendRecoverLink': function(userId,emailAddress){
+        return Accounts.sendResetPasswordEmail(userId,emailAddress);
+    },
     'checkPassword': function(passwordString) {
         if (Meteor.user()) {
             var user = Meteor.user();

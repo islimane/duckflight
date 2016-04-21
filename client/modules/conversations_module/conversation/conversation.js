@@ -31,6 +31,13 @@ Template.conversation.helpers({
 });
 
 Template.conversation.events({
+    'keyup #message-input': function(){
+        /*var cWrapper = $('.conversation-wrapper');
+        var cFooter = $('.conversation-footer');
+        cWrapper.css('padding-bottom', cFooter.height() + 20 + 'px');
+        var content = document.getElementById("messages-list");
+        content.scrollTop = content.scrollHeight;*/
+    },
     'click #send-button': function(){
         var message = $('#message-input').html();
         if (message){

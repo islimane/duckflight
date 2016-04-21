@@ -72,6 +72,9 @@
   height: 100%;
   overflow-y: scroll;
   padding: 15px 0px;
+  .container-fluid{
+    max-width: 100%;
+  }
   .bg-img{
     position: absolute;
     top: 0;

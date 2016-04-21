@@ -51,6 +51,7 @@ Template.emailItemVerification.events({
                 Session.set('sent',true);
             }
         });
+
     }
 });
 

@@ -57,6 +57,14 @@
       margin-top: 25px;
       width: 100%;
 
+      .searching-box{
+        color: #6F6E6E;
+        font-size: 18px;
+        padding: 20px;
+        i{
+          color: #EB7171;
+        }
+      }
       button{
         &:focus{outline: 0px;}
         background: #DCE1DD;
@@ -132,12 +140,7 @@
         background: white;
         font-size: 18px;
         color: #6F6E6E;
-        .searching-box{
-          padding: 20px;
-          i{
-            color: #EB7171;
-          }
-        }
+
         .message-error{
           color: #F95656;
         }
