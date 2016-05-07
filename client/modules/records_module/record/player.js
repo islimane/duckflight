@@ -1,9 +1,15 @@
 Template.player.helpers({
+    loading: function(){
+        return Session.get('loading');
+    },
+    errorLoad: function(){
+        return Session.get('errorLoad');
+    },
+    record: function(){
+        return Records.findOne(this.recordId);
+    },
     playing: function(){
         return Session.get('playing');
-    },
-    isReply: function(){
-        return this.record.isReply;
     },
     hVol:function(){
         return Session.get('audioVolume') === 'hight';
@@ -62,7 +68,8 @@ Template.player.events({
         this.recordPlayer.updateCover($(e.target));
     },
     'click #view-parent': function(){
-        Router.go('channel',{_id: this.record.parent_id});
+        console.log(this);
+        Router.go('record',{_id: this.parent_id});
     },
     'click #browse-channel': function(){
         console.log(this);
@@ -74,11 +81,14 @@ Template.player.events({
     'click #create-reply': function(){
         Session.set('dataRecordingObject',this.recordPlayer.getState());
         console.log(Session.get('dataRecordingObject'));
+        console.log(this);
+        var record = Records.findOne(this.recordId);
+        console.log(record);
         var query = '';
-        query += (this.record.channel_id)? 'channel=' + this.record.channel_id + '&' : '';
-        query += (this.record.lesson_id)? 'lesson=' + this.record.lesson_id + '&' : '';
-        query += (this.record.section_id)? 'section=' + this.record.section_id + '&' : '';
-        query += 'parent=' + this.record._id;
+        query += (record.channel_id)? 'channel=' + record.channel_id + '&' : '';
+        query += (record.lesson_id)? 'lesson=' + record.lesson_id + '&' : '';
+        query += (record.section_id)? 'section=' + record.section_id + '&' : '';
+        query += 'parent=' + record._id;
         Router.go('recordSubmit',{},{query: query});
     },
     'click .nav-button-pl': function(e){
@@ -114,35 +124,16 @@ Template.player.events({
         Meteor.call('updateSectionPlayOption',this.section_id,'auto-repeat',$(e.currentTarget).is(':checked'));
     }
 });
+Template.player.created = function(){
+    Session.set('loading',true);
+    Session.set('errorLoad',true);
+};
 
 Template.player.rendered = function(){
     var recordPlayer = this.data.recordPlayer;
     var editorPlayerManager = this.data.editorPlayerManager;
-    var track_id = this.data.record.track.id;
-    if (this.data.record.lesson_id && !this.data.record.isReply){
-        Session.set('currentRecordId',this.data.record._id);
-    }
-
-    //params to recordPlayer
-    var $elements = {
-        playButton: $('#play'),
-        pauseButton: $('#pause'),
-        progress: $('#progress'),
-        seeker: $('#seeker'),
-        playedProgress: $('#played-bar'),
-        timer: $('#timer'),
-        touchScreenWrapper: $('.touch'),
-        playerActionsWrapper: $('.player-actions')
-    };
-
-    //params to editorPlayer
-    var editorParams = {
-        id: 'editor',
-        RC: this.data.record.RC,
-        startDocs: Documents.find({start: true},{params: {doc: 1}}).fetch(),
-        finishDocs: Documents.find({start: false},{params: {doc: 1}}).fetch(),
-    };
-
+    var record = Records.findOne(this.data.recordId);
+    var trackId = this.data.trackId;
 
     //SoundCloud initialization
     SC.initialize({
@@ -153,23 +144,51 @@ Template.player.rendered = function(){
 
     //SoundCloud connect process.
     SC.connect().then(function(){
-        SC.stream('/tracks/' + track_id).then(function(s){
+        SC.stream('/tracks/' + trackId).then(function(s){
             console.log(s);
+            //params to recordPlayer
+            var $elements = {
+                playButton: $('#play'),
+                pauseButton: $('#pause'),
+                progress: $('#progress'),
+                seeker: $('#seeker'),
+                playedProgress: $('#played-bar'),
+                timer: $('#timer'),
+                touchScreenWrapper: $('.touch'),
+                playerActionsWrapper: $('.player-actions')
+            };
+
+            //params to editorPlayer
+            var editorParams = {
+                id: 'editor',
+                startDocs: Documents.find({start: true},{params: {doc: 1}}).fetch(),
+                finishDocs: Documents.find({start: false},{params: {doc: 1}}).fetch(),
+                RC: record.RC
+            };
+
             $elements.stream = s;
             $elements.duration = s.options.duration;
+
+            Session.set('errorLoad',false);
+            Session.set('loading',false);
+
             editorPlayerManager.initialize(editorParams);
             recordPlayer.initialize($elements,editorPlayerManager);
             recordPlayer.play();
         }).catch(function(error){
+            Session.set('loading',false);
             console.log(error);
         });
     });
+
 
 };
 
 Template.player.destroyed = function(){
     this.data.recordPlayer.destroy();
     Session.set('currentRecordId',null);
+    Session.set('loading',null);
+    Session.set('errorLoad',null);
 };
 
 Template.recordItemPlayList.helpers({
@@ -201,7 +220,6 @@ Template.countDown.events({
         var section = Sections.findOne();
         var currentIdx = parseInt(this.objectCountDown.record.order)
         var index = (section.auto_repeat &&  currentIdx == RecordsPLArray.length -1) ? 0 : currentIdx + 1;
-
         if(index <= RecordsPLArray.length -1 || index >= 0){
             var record_id = _(RecordsPLArray).find(function(elem){return elem.order == index;})._id;
             Router.go('record',{_id: record_id});

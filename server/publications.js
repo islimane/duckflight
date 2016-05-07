@@ -444,7 +444,9 @@ Meteor.publish('allUsers',function(){
 });
 
 Meteor.publish('usersBySearch',function(searchVal){
-	return Meteor.users.find({username: new RegExp(searchVal)});
+	return Meteor.users.find({$where: function(){
+		return this.username.toLowerCase().match(new RegExp(searchVal));
+	}});
 });
 
 Meteor.publish('userById',function(user_id){
@@ -474,6 +476,23 @@ Meteor.publishComposite('contactsByUser',function(user_id){
 			}
 		}]
 	}
+	return sub;
+});
+
+Meteor.publishComposite('contactsByUserWithEmail',function(user_id){
+	var sub = {
+		collection: 'Relations',
+		find: function(){
+			return Relations.find({users: user_id});
+		},
+		children: [{
+			find: function(relation){
+				var contactId = _(relation.users).find(function(id){return id !== user_id;});
+				//return Meteor.users.find({_id: contactId, emails:  {$exists: true, $elemMatch: {verified: true}}},{fields: {username: 1, avatar: 1, emails: 1}});
+				return Meteor.users.find({_id: contactId, emails:  {$exists: true}},{fields: {username: 1, avatar: 1,emails: 1}});
+			}
+		}]
+	};
 	return sub;
 });
 

@@ -262,10 +262,6 @@ body{
 
 }
 
-#record-button{
-  margin-left: 2.5em;
-}
-
 @media only screen and (max-width: 1000px) {
   #editor{
     width: 40em;

@@ -51,7 +51,6 @@
   font-weight: 100;
   background: #262525;
   border-radius: 10px;
-  min-width: 740px;
   box-shadow: 0px 2px 10px grey;
   #editor-recorder{
     z-index: 0;
@@ -60,67 +59,167 @@
 
 .header-editor{
   background: #3A3838;
-  padding: 10px 0px;
+  padding: 10px 0px 0px;
   color: white;
   font-size: 20px;
-  p{margin: auto;}
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+  .navbar-editor{
+    border-bottom: 1px solid #DD3F3F;
+    font-size: 16px;
+    text-align: left;
+    p{
+      line-height: 30px;
+      background: #2E2D2D;
+      margin: auto;
+      button{
+        background: #DD3F3F;
+        vertical-align: middle;
+        border: none;
+        height: 32px;
+        width: 40px;
+        text-align: center;
+        &:focus{outline: 0px;}
+      }
+      span{
+        font-size: 14px;
+        margin-left: 10px;
+      }
+    }
+  }
 }
 .work-space{
   height: 400px;
+  padding: 0px;
+  position: relative;
 
-  .sidebar-editor{
+  .documents-editor{
+    transform: scale(.2,.2);
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
     height: 100%;
-    background: #4C4C4C;
-    .add-doc-button{
-      background: #535252;
-      padding: 10px;
-      color: #D6D4D4;
-      p{margin:auto;}
-      i{
-        font-size: 20px;
-        cursor: pointer;
-        color: #EB433B;
-        &:hover {
-          color: #EE5047;
-        }
-      }
+    background: #2E2D2D;
+    z-index: 2;
+    padding: 0px;
+    transition: all .2s ease-in;
+    &.active{
+      transform: scale(1,1);
+      opacity: 1;
+      visibility: visible;
+      transition: all .2s ease-in;
     }
-    .docs-list{
-      padding: 0px 0px 10px;
-      height: 361px;
-      .doc-item{
-        padding: 8px 15px;
+    .documents-editor-wrapper{
+      height: 100%;
+      position:relative;
+      padding-top: 160px;
+      #close{
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        background: #3A3A3A;
+        padding: 5px 10px;
+        border-radius: 50%;
         cursor: pointer;
-        &.selected{
-          background: #EE5047;
-          color: white;
-          .options{
-            background: #CA7272;
-            span{
-              background: #740404;
-            }
+        z-index:3;
+      }
+      .documents-header{
+        border-bottom: 1px solid #343333;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 160px;
+        padding: 15px;
+        color: #888787;
+        font-weight: 100 !important;
 
-          }
+        img{
+          height: 90px;
+          width: 90px;
+          border-radius: 50%;
         }
-        .config-doc{
-          margin-top: 3px;
+        button{
+          position: absolute;
+          vertical-align: top;
+          box-shadow: none;
+          background: #FF7575;
         }
-        .options{
+        h3{margin: 8px;font-weight:100;}
+      }
+      .docs-list-wrapper{
+        border-top: 1px solid #343333;
+        padding: 10px;
+        background: #292828;
+        height: 100%;
+        .docs-list{
+          height: 100%;
+          overflow-y: scroll;
+          padding: 5px;
+        }
+        .doc-item{
+          color: #807F7F;
           border-radius: 10px;
-          background: #474646;
-          padding: 2px 10px 5px;
-          margin-top: 5px;
-          span{
-            font-size: 10px;
-            background: #747474;
-            padding: 2px 5px 3px;
+          padding: 8px 15px;
+          cursor: pointer;
+          display: flex;
+          .doc-icon{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            i{
+              height: 50px;
+              font-size: 20px;
+              width: 50px;
+              line-height: 50px;
+              background: #848383;
+              border-radius: 50%;
+              color: #353434;
+              text-align: center;
+            }
+          }
+          .doc-info{
+            flex: 1;
+          }
+          &.selected{
+            background: #EE5047;
+            color: white;
+            .doc-icon i{
+              background: #292828;
+              color: white;
+            }
+            .options{
+              background: #CA7272;
+              color: white;
+              span{
+                background: #740404;
+              }
+
+            }
+          }
+          .config-doc{
+            margin-top: 3px;
+          }
+          .options{
             border-radius: 10px;
+            background: #474646;
+            padding: 2px 10px 5px;
+            margin-top: 5px;
+            color: #302F2F;
+            span{
+              font-size: 10px;
+              background: #747474;
+              padding: 2px 5px 3px;
+              border-radius: 10px;
+            }
           }
         }
       }
     }
+
   }
   .editor-wrapper{
     height: 100%;
@@ -150,6 +249,20 @@
     .information-start{
       padding: 30px;
       font-size: 20px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      .information-message{
+        button{
+          background: transparent;
+          padding: 10px 20px;
+          border: 1px solid #333;
+          &:focus{outline: 0px;}
+        }
+      }
+
     }
   }
 }
@@ -232,6 +345,16 @@
     70%{opacity: 0;}
 }
 
+@keyframes bring-from-back{
+  0%{
+    transform: scale(.2,.2);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+}
 .second-editor{
   width: 500px;
   height: 300px;

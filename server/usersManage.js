@@ -27,11 +27,15 @@ Meteor.methods({
 		var result;
 		if (validateCreateUser(user,errors)){
 			console.log('validate');
+			console.log(user);
 			var id = Accounts.createUser({
 					username: user.username,
 					password: user.password,
 					email: user.email,
 				});
+			if (user.email){
+				Accounts.sendVerificationEmail(id);
+			}
 			console.log('created user with id: ' + id);
 			result = [true];
 		}else{
@@ -96,9 +100,6 @@ Accounts.onCreateUser(function(options,user){
 		user.avatar = get_avatar_from_service(userService,100);
 	}else{
 		user.avatar = '/usericon.png';
-	}
-	if (user.emails){
-		Accounts.sendVerificationEmail(user._id,user.emails[0].address);
 	}
 	return user;
 });

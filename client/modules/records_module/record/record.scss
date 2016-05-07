@@ -170,6 +170,26 @@
     margin-left: 0px;
     z-index: 0;
   }
+  .loading-process-layer{
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 11;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #474646;
+    font-size: 31px;
+    color: #979797;
+    text-align: center;
+    padding: 0px 15px;
+    i{font-size: 40px;
+    color:#FA3D3D;}
+    .error{
+      font-size: 22px;
+    }
+  }
   .auto-play-loader-wrapper{
     position: absolute;
     top: 0;

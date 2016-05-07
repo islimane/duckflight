@@ -239,6 +239,9 @@ Template.sectionItem.helpers({
     isOwner: function(){
         return Router.current().data().author === Meteor.userId();
     },
+    isEmpty: function(){
+        return !this.records_count;
+    },
     tracks: function(){
         return Records.find({section_id: this._id, isReply: false},{sort: {order: 1}});
     },
@@ -260,6 +263,11 @@ Template.sectionItem.helpers({
 });
 
 Template.sectionItem.events({
+    'click .delete-section': function(){
+        Meteor.call('removeSection',this._id,function(err){
+            if(err) throw new Meteor.Error('500','ERROR removeSection: ' + err.reason);
+        });
+    },
     'click .show-tracks': function(e,template){
         if ($(template.find('.sectionItem-vertical')).hasClass('active')){
             if($(template.find('.section-track-list')).hasClass('active')){
@@ -320,6 +328,9 @@ Template.trackItemConfig.helpers({
     },
     notLast: function(){
         return this.order < Records.find({section_id: this.section_id}).count() - 1;
+    },
+    notReplies: function(){
+        return !this.replies_count;
     }
 });
 
@@ -333,5 +344,11 @@ Template.trackItemConfig.events({
         });
     },
 
-    'click .delete-track': function(){console.log('delete');}
+    'click .delete-track': function(){
+
+        Meteor.call('recordRemove',this._id,function(err){
+            Session.set('removing',false);
+            if (err)throw new Meteor.Error('500','ERROR: removing a record');
+        });
+    }
 });

@@ -1,0 +1,128 @@
+<template name="sendEmail">
+    <div class="container-fluid">
+        <div class="row text-center">
+            <div class="col-xs-12">
+                <div class="verifications-page">
+                    <div class="verifications-wrapper">
+                        <div class="verifications-header">
+                            <img src="/duck_icon.ico">
+                            <h3>DuckFlight Email Sender</h3>
+                            {{#if submit}}
+                                <div class="verifications-status-wrapper">
+                                    {{#if sending}}
+                                        <i class="fa fa-envelope-o"></i>
+                                        <p>sending your mail ...</p>
+                                        <p class="spinner text-center"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom"></i></p>
+                                    {{else}}
+                                        <div class="verified-status">
+                                            {{#if sent}}
+                                                <i class="fa fa-check verified"></i>
+                                                <h3>Success!</h3>
+                                                <p>Your mail has been sent!</p>
+
+                                                <button id='done-button' type="button" class="generic">Ok</button>
+                                            {{else}}
+                                                <i class="fa fa-exclamation not-verified"></i>
+                                                <h3>Oops!</h3>
+                                                <p>Has been a problem sending your mail!</p>
+                                                <button id='try-again-button' type="button" class="generic">Try again</button>
+                                            {{/if}}
+                                        </div>
+                                    {{/if}}
+                                </div>
+                            {{else}}
+                                <i class="fa fa-envelope-o"></i>
+                                <p>Create a Email</p>
+                                <p>For this process is necessary you have a verified email!</p>
+                            {{/if}}
+                        </div>
+                        {{#if submit}}
+                        {{else}}
+                                <div class="verifications-form">
+                                    <div class="user-header">
+                                        <img class='avatar' src="{{user.avatar}}"/>
+                                        <p class="username">{{user.username}}</p>
+                                    </div>
+                                    {{#if emailFrom}}
+                                        {{>emailWritter}}
+                                    {{else}}
+                                        <div class="emails-wrapper">
+                                            {{#if user.emails}}
+                                                {{#if hasEmailsVerified}}
+                                                    {{>emailsListToChoose emails = emailsVerified}}
+                                                {{else}}
+                                                    <div class="error-mails">
+                                                        <p>Sorry, you has not mails verified already.</p>
+                                                        {{#if currentUser}}
+                                                            <p>Verify almost one of your emails!</p>
+                                                            <button id='verify-mails' type="button">Verify Emails</button>
+                                                        {{/if}}
+                                                    </div>
+                                                {{/if}}
+
+                                            {{else}}
+                                                <div class="error-mails">
+                                                    <p>Sorry, you has not mails already.</p>
+                                                    {{#if currentUser}}
+                                                        <p>Add mails at your profile edit page!</p>
+                                                        <button id='add-mails' type="button">Add mails</button>
+                                                    {{/if}}
+                                                </div>
+                                            {{/if}}
+                                        </div>
+                                        <div class="notions">
+                                            <p>Choose a email to start sending a mail! May you should verify one of them before!</p>
+                                        </div>
+                                    {{/if}}
+
+                                </div>
+                        {{/if}}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="emailsListToChoose">
+    <p class="text-left"><i class="fa fa-envelope"></i> Your Emails: </p>
+    <ul class="email-list">
+        {{#each emails}}
+            {{>emailItemChoose}}
+        {{/each}}
+    </ul>
+</template>
+
+<template name="emailItemChoose">
+    <li>
+        <i class="fa fa-check-circle"></i><p>{{address}}</p>
+        <button class="generic"><i class="fa fa-check generic"></i> Choose</button>
+    </li>
+</template>
+
+<template name="emailWritter">
+    <div class="email-writter-wrapper">
+        <form id="email-writter-form">
+            <p>From: {{emailFrom}}</p>
+            <button id="change-from" class='generic' type="button"><i class="fa fa-envelope-o"></i> Change Email From</button>
+            <div class="row input-members-section">
+                <p>Choose from your contacts to send them: </p>
+                {{>inputMemberBox storageDynamic='true'}}
+            </div>
+            <div class="row">
+                <div class="col-xs-12 text-left">
+                    <div id="body-email-writter">
+                        <p class="text-center">Subject:</p>
+                        <input type="text" name="subject" autocomplete='off' placeholder="Enter a subject" required/>
+                        <textarea id="editor-mail" name="content"></textarea>
+                    </div>
+                </div>
+            </div>
+            {{#if error}}
+                <p class="errormsg"><i class="fa fa-exclamation-triangle"></i> {{error}}</p>
+            {{/if}}
+            <button type="submit" class="generic"><i class="fa fa-paper-plane-o"></i> Send </button>
+        </form>
+    </div>
+</template>

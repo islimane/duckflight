@@ -33,6 +33,9 @@ Template.profile.helpers({
     description: function(){
         return Meteor.users.findOne(Session.get('currentProfileId')).description;
     },
+    hasEmails: function(){
+        return Meteor.users.findOne(Session.get('currentProfileId')).emails;
+    },
     hasNotVerifiedEmails: function(){
         var emails = Meteor.users.findOne(Session.get('currentProfileId')).emails;
         return _(emails).any(function(e){return !e.verified;});
@@ -64,6 +67,12 @@ Template.profile.events({
     },
     'click .profile-img': function(){
         Router.go('profile',{_id: Session.get('currentProfileId')});
+    },
+    'click #open-manager': function(){
+        Router.go('profileContentManager',{_id: Session.get('currentProfileId')});
+    },
+    'click #send-email-button': function(){
+        Router.go('sendEmail');
     },
     'click #verify-emails-button': function(){
         Router.go('verificationEmail');
@@ -482,6 +491,10 @@ Template.contactItem.helpers({
     description: function(){
         var contactId = _(this.users).filter(function(item){return item !== Session.get('currentProfileId')});
         return Meteor.users.findOne(contactId[0]).description;
+    },
+    emails: function(){
+        var contactId = _(this.users).filter(function(item){return item !== Session.get('currentProfileId')});
+        return Meteor.users.findOne(contactId[0]).emails;
     }
 });
 
@@ -492,9 +505,13 @@ Template.contactItem.events({
         Session.set('currentSection','channelsTabContent');
         Router.go('profile',{_id: contactId[0]});
     },
-    'click .action-button': function(){
+    'click .create-conversation-contact': function(){
         var user_id = _(this.users).find(function(u_id){ return u_id !== Meteor.userId()});
         Router.go('conversationSubmit',{},{query: 'userToSend=' + user_id});
+    },
+    'click .send-email-contact': function(){
+        var user_id = _(this.users).find(function(u_id){ return u_id !== Meteor.userId()});
+        Router.go('sendEmail',{},{query: 'userToSend=' + user_id});
     }
 });
 
@@ -602,7 +619,14 @@ Template.autoCompleteContacts.helpers({
         return Session.get('hasResults');
     },
     results: function(){
-        return Meteor.users.find({username: new RegExp(Session.get('searchValue'))});
+        if (Session.get('searchValue')){
+            return Meteor.users.find({$where: function(){
+                console.log(this.username);
+                return this.username.toLowerCase().match(new RegExp(Session.get('searchValue').toLowerCase()))}});
+        }else{
+            return [];
+        }
+
     },
     resultTemplate: function(){
         return Session.get('resultTemplate');
@@ -635,14 +659,18 @@ Template.autoCompleteContacts.rendered = function(){
 
     var self = this;
     var resultsDecisor = function(){
-        Session.set('hasResults',Meteor.users.find({username: new RegExp(Session.get('searchValue'))}).count() > 0);
+        Session.set('hasResults',Meteor.users.find({$where: function(){
+                console.log(this.username.toLowerCase().match(new RegExp(Session.get('searchValue').toLowerCase())));
+                return this.username.toLowerCase().match(new RegExp(Session.get('searchValue').toLowerCase()));
+            }}).count() > 0);
         Session.set('searching',false);
     };
     self.autorun(function(){
 
         if (Session.get('searchValue')){
             if(self.data.feedDynamic != 'false'){
-                Meteor.subscribe('usersBySearch',Session.get('searchValue'), resultsDecisor);
+                console.log(Session.get('searchValue').toLowerCase());
+                Meteor.subscribe('usersBySearch',Session.get('searchValue').toLowerCase(), resultsDecisor);
             }else{
                 resultsDecisor();
             }

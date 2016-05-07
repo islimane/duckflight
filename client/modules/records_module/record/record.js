@@ -17,12 +17,16 @@ Template.record.helpers({
 		return Session.get('currentSection');
 	},
 	playerObjectData: function(){
-		console.log(this);
-		return {
+
+		//object to initalize player.
+		var playerObjectData = {
 			recordPlayer: new RecordPlayer(),
 			editorPlayerManager: new EditorPlayerManager(),
-			record: this
+			recordId: this._id,
+			trackId: this.track.id
 		};
+
+		return playerObjectData;
 	},
 	isALessonRecord: function(){
 		return this.lesson_id;
@@ -81,6 +85,12 @@ Template.record.events({
 		}
 	}
 });
+Template.record.created = function(){
+	Session.set('loading',true);
+	Session.set('loaded',false);
+	Session.set('playerObjectData',null);
+	Session.set('currentRecordId',this.data._id);
+};
 
 Template.record.rendered = function(){
 	Session.set('docAct',false);
@@ -90,13 +100,14 @@ Template.record.rendered = function(){
 	$('#replies_counter').tooltip({placement: 'right',title: 'replies'});
 };
 
+
 //Replies tab
 Template.repliesTabContent.helpers({
 	replies_count: function(){
-		return Records.find({isReply: true}).count();
+		return Records.find({isReply: true,parent_id: Session.get('currentRecordId')}).count();
 	},
 	timeMarks: function(){
-		var timeMarksArray = _(Records.find({isReply: true}).fetch()).pluck('timeMark');
+		var timeMarksArray = _(Records.find({isReply: true,parent_id: Session.get('currentRecordId')}).fetch()).pluck('timeMark');
 		return _(timeMarksArray).uniq();
 	}
 });
@@ -109,7 +120,7 @@ Template.timeMarkList.helpers({
 		return min + ':' + sec;
 	},
 	records: function(){
-		return Records.find({timeMark: parseFloat(this.toString())},{sort: {createdAt: 1}});
+		return Records.find({timeMark: parseFloat(this.toString()),parent_id: Session.get('currentRecordId')},{sort: {createdAt: 1}});
 	}
 });
 //Related tab

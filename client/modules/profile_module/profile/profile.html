@@ -14,7 +14,7 @@
                                             <span id="edit-profile"><i class="fa fa-pencil pull-right"></i></span>
                                         </div>
                                         <div class="banner-options">
-                                            <span class="visitator-action" id="open-manager"><i class="fa fa-archive"></i> manage your content</span>
+                                            <span class="visitator-action" id="open-manager"><i class="fa fa-trash"></i> Trash manager</span>
                                         </div>
                                     {{else}}
                                         <div class="banner-options">
@@ -45,9 +45,14 @@
                                 <div class="col-xs-12">
                                     <div class="banner-services">
                                         <h4>Services</h4>
-                                        {{#if hasNotVerifiedEmails}}
-                                            <button id='verify-emails-button' type="button"><i class="fa fa-envelope-o"></i> verify your emails</button>
+                                        {{#if hasEmails}}
+                                            {{#if hasNotVerifiedEmails}}
+                                                <button id='verify-emails-button' type="button"><i class="fa fa-envelope-o"></i> verify your emails</button>
+                                            {{else}}
+                                                <button id='send-email-button' type="button"><i class="fa fa-paper-plane-o"></i> Send a email</button>
+                                            {{/if}}
                                         {{/if}}
+
                                         {{#each services}}
                                             {{#if isService 'password'}}<button type="button" id="change-password-button"><i class="fa fa-key"></i> change your password</button>{{/if}}
                                             {{#if isService 'facebook'}}<button id='view-facebook' type="button" class="facebook"><i class="fa fa-facebook"></i> view profile</button>{{/if}}
@@ -421,7 +426,7 @@
     <div class="auto-complete-wrapper text-center">
         <div class="search-box">
             <i class="fa fa-search"></i>
-            <input id="auto-complete-input" class="target" type="text" placeholder="Search a user">
+            <input id="auto-complete-input" class="target" type="text" autocomplete='off' placeholder="Search a user">
             {{#if searching}}
                 <i class="fa fa-spinner fa-pulse"></i>
             {{/if}}
@@ -496,8 +501,10 @@
                         <span class="author">{{username}}</span>
                         <span class="status"><i class="fa fa-circle"></i> {{status}}</span>
                         {{#if isOwner}}
-                            <span class="action-button pull-right"><i class="fa fa-envelope-o"></i></span>
-                            <span class="action-button pull-right"><i class="fa fa-comments"></i></span>
+                            {{#if emails}}
+                                <span class="send-email-contact action-button pull-right"><i class="fa fa-envelope-o"></i></span>
+                            {{/if}}
+                            <span class="create-conversation-contact action-button pull-right"><i class="fa fa-comments"></i></span>
                         {{/if}}
                     </p>
                     <span class="date"><i class="fa fa-clock-o"></i> at contacts since {{dateFrom createAt}}</span>

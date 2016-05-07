@@ -66,6 +66,10 @@ a{
   box-shadow: 0px 2px 10px grey;
   min-width: 700px;
   margin-bottom: 20px;
+  &.transparent{
+    background: transparent;
+    box-shadow: none;
+  }
 }
 
 .content-body{

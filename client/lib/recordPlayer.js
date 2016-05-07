@@ -12,7 +12,6 @@ RecordPlayer = function(){
         duration,
         editorManager,
         ended;
-
 //FUNCTIONS
     function getCurrentTime(){
         var d = new Date($audio.currentTime());
@@ -75,7 +74,7 @@ RecordPlayer = function(){
         }else{
             Session.set('audioVolume','normal');
         }
-        $audio.volume = newVol;
+        $audio.setVolume(newVol);
     };
 
     this.updateCover = function($cover){

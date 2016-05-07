@@ -172,6 +172,7 @@ Template.docEntry.events({
         editor.getSession().setMode(this.mode);
         editor.setValue(this.value);
         Session.set('titleAct',this.title);
+        $('.documents-editor').removeClass('active');
 
         if ($(e.target).hasClass('config-doc')){
             Session.set('createDoc',false);
@@ -236,6 +237,9 @@ Template.recordProgressBar.rendered = function(){
  */
 
 Template.recordSubmit.helpers ({
+    'titleAct': function(){
+        return Session.get('titleAct');
+    },
     'recording': function(){ 
         return Session.get("recording"); 
     },
@@ -260,7 +264,12 @@ Template.recordSubmit.helpers ({
 });
 
 Template.recordSubmit.events = {
-
+    'click #explore-documents': function(){
+        $('.documents-editor').addClass('active');
+    },
+    'click #close': function(){
+        $('.documents-editor').removeClass('active');
+    },
     'click #add-document': function() {
         if (!Session.get('stop')){
             Session.set('editDoc','');
@@ -339,7 +348,9 @@ Template.recordSubmit.events = {
         docForm.find('.lang').removeClass('active');
         docForm.find('.theme').removeClass('active');
         docForm.removeClass('active');
+        $('.documents-editor').removeClass('active');
         Session.set('editDoc','');
+
     },
 
     'click #cancel': function(){

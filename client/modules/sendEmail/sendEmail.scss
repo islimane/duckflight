@@ -1,0 +1,42 @@
+.email-writter-wrapper{
+  background: #F8F6F6;
+  padding: 10px;
+  font-size: 16px;
+  color: #555555;
+  .errormsg{
+    margin: 0px 15px 20px;
+  }
+  .input-members-section{
+    padding: 10px;
+  }
+  #body-email-writter{
+    padding: 10px 15px 20px;
+    .fr-box{
+      .fr-toolbar, .fr-wrapper{
+        border-top: 1px solid #BAB9B9;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+      .fr-wrapper{
+        min-height: 100px;
+        border-bottom: 1px solid #BAB9B9;
+        a{
+          color: blue;
+          &:hover{color: blue;}
+          text-decoration:underline;
+        }
+      }
+
+    }
+    input{
+      &:focus{outline: 0px}
+      border: none;
+      padding: 5px 15px;
+      background: #D9D7D7;
+      border-radius: 5px;
+      color: #4E4E4E;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+}

@@ -190,8 +190,8 @@ Template.navResultFilter.events({
 Template.navResultFilter.rendered = function(){
     if (this.data.initialActive){
         Session.set('currentResultTab',this.data.template);
+        Session.set('resultTemplate',this.data.resultTemplate);
     }
-    Session.set('resultTemplate',this.data.resultTemplate);
 };
 //---------------------------------------------------------------
 

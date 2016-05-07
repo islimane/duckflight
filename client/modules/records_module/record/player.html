@@ -1,5 +1,22 @@
 <template name="player">
     <div class="col-xs-12 player">
+        {{#if loading}}
+            <div class="loading-process-layer">
+                <p><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom"></i></p>
+                <p>loading</p>
+            </div>
+        {{else}}
+            {{#if errorLoad}}
+                <div class="loading-process-layer">
+                    <p class="error">Error occurs while loading player.
+                        <br>
+                        Audio may not be available from SoundCloud or is being Processing.
+                        <br>
+                        Please, try again later or refresh!
+                    </p>
+                </div>
+            {{/if}}
+        {{/if}}
         <div id="editor"></div>
         <div class="touch-display-layer">
             <div class="touch">
@@ -96,10 +113,10 @@
             {{#if lesson_id}}
                     <button id="browse-lesson">lesson <i class="fa fa-graduation-cap"></i></button>
             {{/if}}
+            {{#if isReply}}
+                <button id="view-parent">parent <i class="fa fa-eye"></i></button>
+            {{/if}}
         {{/with}}
-        {{#if isReply}}
-            <button id="view-parent">parent <i class="fa fa-eye"></i></button>
-        {{/if}}
         <button id="create-reply" disabled="{{playing}}">reply <i class="fa fa-code-fork"></i></button>
     </div>
 </template>

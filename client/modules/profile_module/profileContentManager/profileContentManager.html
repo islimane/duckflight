@@ -1,0 +1,195 @@
+<template name="profileContentManager">
+    {{#if removing}}
+        <div class="floating-message-wrapper fade-in">
+            <div class="floating-message fade-in">
+                <i class="fa fa-trash"></i>
+                <div class="message">
+                    <p>Removing... Please wait!</p>
+                    <div class="progress">
+                        <div class="loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/if}}
+    <div class="content-wrapper type-2">
+        <div class="page-banner type-2 transparent">
+            <div>
+                <div class="container-fluid">
+                    <div class="page-banner-content-transparent">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="content-manager-banner text-center">
+                                    <h3><i class="fa fa-trash"></i> Trash Manager</h3>
+                                    <img src="{{avatar}}">
+                                    <p class="username">{{username}}</p>
+                                    <p>Here you can manage your content.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-banner-content">
+                        <div class="row text-center">
+                            <div class="col-xs-12">
+                                {{> navbarBanner tabs=tabNamesArray widthType='large'}}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="content-tab-wrapper type-2">
+            <div class="content transparent">
+                <div class="container-fluid">
+                    {{> Template.dynamic template=sectionActive}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="channelsManage">
+    {{#if has}}
+        <p class="delete-info"><i class="fa fa-exclamation-triangle"></i> you can delete channels that do not have recordings</p>
+        <div class="list-remove">
+            {{#each channels}}
+                {{>channelRemoveItem}}
+            {{/each}}
+        </div>
+    {{else}}
+    {{/if}}
+</template>
+
+<template name="removeItem">
+    <div class="remove-item">
+        {{#if users}}
+            <div class="contact-avatar text-center">
+                <img src="{{avatar}}">
+            </div>
+        {{else}}
+            <div class="thumbnail-item text-center">
+                <img src="{{img}}">
+                {{#if duration}}
+                    <div class="duration">
+                        <i class="fa fa-clock-o"></i>
+                        {{#with getDuration duration}}
+                            <span>{{min}}</span>:<span>{{sec}}</span>
+                        {{/with}}
+                    </div>
+                {{/if}}
+            </div>
+        {{/if}}
+
+        <div class="caption-item">
+            {{#if users}}
+                <p class="title">{{username}}</p>
+            {{else}}
+                <p class="title">{{title}}</p>
+            {{/if}}
+            {{#if users}}
+                <p class="date"><i class="fa fa-clock-o"></i> In your contacts since ... {{smartDate createAt}}</p>
+            {{else}}
+                <p class="date"><i class="fa fa-clock-o"></i> {{smartDate createdAt}}</p>
+            {{/if}}
+
+            {{#unless users}}
+                <p class="counters">
+                    {{#if exists records_count}}
+                        <span><i class="fa fa-film"></i> {{records_count}}</span>
+                    {{/if}}
+                    {{#if exists sections_count}}
+                        <span><i class="fa fa-bookmark"></i> {{sections_count}}</span>
+                    {{/if}}
+                    {{#if exists docs_count}}
+                        <span><i class="fa fa-file-o"></i> {{docs_count}}</span>
+                    {{/if}}
+                    {{#if exists comments_count}}
+                        <span><i class="fa fa-comments"> {{comments_count}}</i></span>
+                    {{/if}}
+                    {{#if exists votes_count}}
+                        <span><i class="fa fa-heart"> {{votes_count}}</i></span>
+                    {{/if}}
+                    {{#if exists users_count}}
+                        <span><i class="fa fa-user"> {{users_count}}</i></span>
+                    {{/if}}
+                    {{#if exists replies_count}}
+                        <span><i class="fa fa-reply"> {{replies_count}}</i></span>
+                    {{/if}}
+                </p>
+            {{/unless}}
+            {{#if users}}
+                <p class="description">{{ellipsis getContactDescription 100}}</p>
+            {{else}}
+                <p class="description">{{ellipsis description 100}}</p>
+            {{/if}}
+
+        </div>
+        {{#if isPossibleToDelete}}
+            <div class="actions-item">
+                <button type="button"><i class="fa fa-trash"></i></button>
+            </div>
+        {{/if}}
+    </div>
+</template>
+<template name="channelRemoveItem">
+    {{>removeItem}}
+</template>
+
+<template name="lessonsManage">
+    {{#if has}}
+        <p class="delete-info"><i class="fa fa-exclamation-triangle"></i> you can delete the lessons that have no sections with recordings
+        </p>
+        <div class="list-remove">
+            {{#each lessons}}
+                {{>lessonRemoveItem}}
+            {{/each}}
+        </div>
+    {{else}}
+    {{/if}}
+</template>
+
+<template name="lessonRemoveItem">
+    {{>removeItem}}
+</template>
+
+<template name="teamsManage">
+    <div class="list-remove">
+        {{#each teams}}
+            {{>teamRemoveItem}}
+        {{/each}}
+    </div>
+</template>
+
+<template name="recordsManage">
+    {{#if has}}
+        <p class="delete-info"><i class="fa fa-exclamation-triangle"></i> you can delete the recordings that have not been answered</p>
+        <div class="list-remove">
+            {{#each records}}
+                {{>recordRemoveItem}}
+            {{/each}}
+        </div>
+    {{else}}
+    {{/if}}
+</template>
+
+<template name="recordRemoveItem">
+    {{>removeItem}}
+</template>
+
+<template name="contactsManage">
+    {{#if has}}
+        <div class="list-remove">
+            {{#each contacts}}
+                {{>contactRemoveItem}}
+            {{/each}}
+        </div>
+    {{else}}
+    {{/if}}
+
+</template>
+
+<template name="contactRemoveItem">
+    {{>removeItem}}
+</template>

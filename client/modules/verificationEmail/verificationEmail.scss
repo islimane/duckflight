@@ -55,8 +55,8 @@
     .verifications-form{
       box-shadow: 0px 2px 10px rgba(0,0,0,0.5);
       margin-top: 25px;
-      width: 100%;
-
+      max-width: 570px;
+      background: rgb(248, 246, 246);
       .searching-box{
         color: #6F6E6E;
         font-size: 18px;
@@ -65,7 +65,7 @@
           color: #EB7171;
         }
       }
-      button{
+      button.generic{
         &:focus{outline: 0px;}
         background: #DCE1DD;
         padding: 5px 20px;
@@ -101,7 +101,6 @@
         p{margin: 0px;}
       }
       .emails-wrapper{
-        background: white;
         padding: 20px;
         color: #6F6E6E;
         font-size: 16px;

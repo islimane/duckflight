@@ -9,10 +9,6 @@ Template.signInForm.events({
 		Session.set("formType",'signUpForm');
 	},
 
-	"click #forgot": function(){
-		Session.set("formType", 'forgotPasswordForm');
-	},
-
 	'click .facebook-button': function(){
 		Meteor.loginWithFacebook({}, function(err){
 			if (err) {

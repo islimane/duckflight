@@ -59,26 +59,6 @@
 
         <div class="sidebar-section">
 
-            <p id="sidebar-teams-browse" class="section-title close-toggle">
-                <a href="{{pathFor 'teams'}}">
-                    <i class="fa fa-users ikon-section"></i>
-                    <span>TEAMS</span>
-                </a>
-                <a  href="{{pathFor 'teamSubmit'}}"><i class="fa fa-plus-circle pull-right"></i></a>
-            </p>
-
-            <ul class="nav-sidebar">
-                {{#each teams}}
-                    <li class="team-item close-toggle"><a href="{{pathFor 'team' _id=this._id}}"><span>@ {{title}}</span></a></li>
-                {{/each}}
-            </ul>
-
-            <a href="{{pathFor 'profile' _id=userId query='initialSection=teamsTabContent'}}" id="teamsTabContent" class="more close-toggle">+ View More...</a>
-
-        </div>
-
-        <div class="sidebar-section">
-
             <p id="sidebar-lessons-browse" class="section-title close-toggle">
                 <a href="{{pathFor 'lessons'}}">
                     <i class="fa fa-graduation-cap ikon-section"></i>
@@ -111,11 +91,6 @@
                 <li id="my-records" class="close-toggle">
                     <a href="{{pathFor 'profile' _id=userId query='initialSection=recordsTabContent'}}">
                         <span>My records</span>
-                    </a>
-                </li>
-                <li class="close-toggle">
-                    <a href="{{pathFor 'profile' _id=userId query='initialSection=recordsTabContent'}}">
-                        <span>Last played</span>
                     </a>
                 </li>
             </ul>

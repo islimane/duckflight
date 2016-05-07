@@ -375,7 +375,9 @@ Template.inputMemberBox.rendered = function(){
     Session.set('resultTemplate','memberResult');
     if(this.data.storageDynamic === 'true'){
         var members = Session.get('memberList');
-        members.push(Meteor.users.findOne(Meteor.userId()));
+        if (Router.current().route.getName() !== 'sendEmail'){
+            members.push(Meteor.users.findOne(Meteor.userId()));
+        }
         if(Session.get('userToSend')){
             members.push(Meteor.users.findOne(Session.get('userToSend')));
         }
@@ -409,10 +411,11 @@ Template.memberResult.events({
 Template.member.helpers({
     isPossibleToDelete: function(){
         var isNotUserToSend = true;
+        var posibleCurrentUser = Router.current().route.getName() == 'sendEmail';
         if(Session.get('userToSend')){
            isNotUserToSend = this._id != Session.get('userToSend');
         }
-        return this._id !== Meteor.userId() && isNotUserToSend;
+        return (posibleCurrentUser)? isNotUserToSend : this._id !== Meteor.userId() && isNotUserToSend;
     },
     avatar: function(){
         return Meteor.users.findOne(this._id).avatar;
