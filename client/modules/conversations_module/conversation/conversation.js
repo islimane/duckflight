@@ -121,7 +121,7 @@ Template.memberInfo.helpers({
 
 Template.memberInfo.events({
     'click button': function(){
-        Router.go('profile',{_id: this._id});
+        Router.go('profile',{_id: this._id},{query: 'initialSection=channelsTabContent'});
     }
 })
 
@@ -154,7 +154,7 @@ Template.conversationExiting.helpers({
         return Session.get('exited');
     },
     isLeader: function(){
-        return Conversations.findOne().author == Meteor.userId();
+        return this.author == Meteor.userId();
     }
 });
 
@@ -185,7 +185,7 @@ Template.conversationExiting.events({
         Router.go('profile',{_id: Meteor.userId()},{ query: 'initialSection=conversationsTabContent'});
     },
     'click #view-edit-page': function(){
-        Router.go('conversationEdit',{_id: Conversations.findOne()._id});
+        Router.go('conversationEdit',{_id: this._id});
     }
 });
 

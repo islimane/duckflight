@@ -76,6 +76,7 @@ Template.comment.events({
 			Meteor.call('insertComment',reply);
 			Meteor.call('incrementChannelComment',this.contextId);
 			Meteor.call('incrementCommentReply',this._id);
+
 			$(e.currentTarget).find('textarea').val('');
 			$(template.find('.cancel-publish-reply')).click();
 		}
@@ -85,27 +86,37 @@ Template.comment.events({
 				from: Meteor.userId(),
 				type: Session.get('contextType'),
 				createdAt: new Date(),
-				parentContext_id: this.contextId
+				urlParameters: {_id: this.contextId}
 			};
 			switch(Session.get('contextType')){
 				case 'channel':
 					paramsNotification.action = 'replyCommentChannel';
+					paramsNotification.type = 'channel';
+					paramsNotification.urlParameters.template = 'channel';
 					break;
 				case 'lesson':
 					paramsNotification.action = 'replyCommentLesson';
+					paramsNotification.type = 'lesson';
+					paramsNotification.urlParameters.template = 'lesson';
 					break;
 				case 'record':
-					paramsNotification.action = 'reply';
+					paramsNotification.action = 'replyComment';
+					paramsNotification.type = 'record';
+					paramsNotification.urlParameters.template = 'record';
 					break;
 				case 'innerRecordChannel':
-					paramsNotification.parentContext_id = Records.findOne(this.context_id).context_id;
+					paramsNotification.contextTitle = Channels.findOne(Records.findOne(this.contextId).channel_id).title;
 					paramsNotification.action = 'replyCommentRecord';
-					paramsNotification.context.title = Channels.findOne(paramsNotification.context_id).title;
+					paramsNotification.type = 'channel';
+					paramsNotification.context = {title: Records.findOne(this.contextId).title};
+					paramsNotification.urlParameters.template = 'record';
 					break;
 				case 'innerRecordLesson':
-					paramsNotification.parentContext_id = Records.findOne(this.context_id).context_id;
+					paramsNotification.contextTitle = Lessons.findOne(Records.findOne(this.contextId).lesson_id).title;
 					paramsNotification.action = 'replyCommentRecord';
-					paramsNotification.context.title = Lessons.findOne(paramsNotification.context_id).title;
+					paramsNotification.type = 'lesson';
+					paramsNotification.context = {title: Records.findOne(this.contextId).title};
+					paramsNotification.urlParameters.template = 'record';
 					break;
 			};
 			NotificationsCreator.createNotification(paramsNotification,function(err,result){

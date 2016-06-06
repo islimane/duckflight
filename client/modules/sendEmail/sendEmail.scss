@@ -1,3 +1,5 @@
+@import '../../mixins';
+
 .email-writter-wrapper{
   background: #F8F6F6;
   padding: 10px;
@@ -15,7 +17,7 @@
       .fr-toolbar, .fr-wrapper{
         border-top: 1px solid #BAB9B9;
         background: transparent !important;
-        box-shadow: none !important;
+        @include box-shadow(none !important);
       }
       .fr-wrapper{
         min-height: 100px;
@@ -33,7 +35,7 @@
       border: none;
       padding: 5px 15px;
       background: #D9D7D7;
-      border-radius: 5px;
+      @include border-radius(5px);
       color: #4E4E4E;
       width: 100%;
       margin-bottom: 10px;

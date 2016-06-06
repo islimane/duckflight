@@ -201,13 +201,13 @@ Template.resultsTabContent.helpers({
         var results = [];
         switch(Session.get('currentResultTab')){
             case 'records':
-                results = Session.get('results').records;
+                results = Session.get('results').records.slice(0,Session.get('limit'));
                 break;
             case 'channels':
-                results = Session.get('results').channels;
+                results = Session.get('results').channels.slice(0,Session.get('limit'));
                 break;
             case 'lessons':
-                results = Session.get('results').lessons;
+                results = Session.get('results').lessons.slice(0,Session.get('limit'));
                 break;
         }
         return results;
@@ -216,6 +216,17 @@ Template.resultsTabContent.helpers({
         return Session.get('resultTemplate');
     }
 });
+
+Template.resultsTabContent.events({
+    'click #load-more-button': function(){
+        Session.set('limit', Session.get('limit') + MORE_LIMIT);
+    }
+});
+
+Template.resultsTabContent.rendered = function(){
+    Session.set('limit',LOAD_INITIAL);
+};
+
 
 /*======================================================
     AUTOCOMPLETE TABS

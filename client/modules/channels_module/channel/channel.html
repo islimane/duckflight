@@ -10,8 +10,8 @@
                                     <a href="{{pathFor 'channel' _id=this._id}}"><img class="channel-img" src="{{img}}"/></a>
                                     <img class="banner-bg-img" src="{{banner}}"/>
                                     <div class="footer-creator-box">
-                                        <a href="{{pathFor 'profile' _id=this.author}}"><img src="{{avatar}}"></a>
-                                        <a href="{{pathFor 'profile' _id=this.author}}"><span class="username"> {{username}}</span></a>
+                                        <a href="{{pathFor 'profile' _id=this.author query='initialSection=channelsTabContent'}}"><img src="{{avatar}}"></a>
+                                        <a href="{{pathFor 'profile' _id=this.author query='initialSection=channelsTabContent'}}"><span class="username"> {{username}}</span></a>
                                         <span>· <i class="fa fa-clock-o"></i> {{dateFrom createdAt}} · </span>
                                         <p>
                                             <span class="records-count" data-toggle="tooltip"><i class="fa fa-film"></i> {{records_count}}</span>

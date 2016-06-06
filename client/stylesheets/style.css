@@ -269,9 +269,6 @@ body{
   #editor-container{
     width: 60em;
   }
-  #record-button{
-    margin-left: 5em;
-  }
   .popover {
     margin-left: -5em;
   }

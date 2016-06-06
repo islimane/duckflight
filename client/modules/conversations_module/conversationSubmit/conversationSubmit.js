@@ -35,7 +35,14 @@ Template.conversationSubmit.events({
                 createdAt: new Date(),
                 message: message
             };
-
+            var notification = {
+                type: 'conversation',
+                action: 'created',
+                createdAt: new Date(),
+                contextTitle: subject,
+                from: Meteor.userId(),
+                to: _(membersArray.slice(1)).pluck('_id')
+            };
             var conversation = {
                 members: membersArray,
                 members_count: membersArray.length,
@@ -48,11 +55,15 @@ Template.conversationSubmit.events({
                 if (err) console.log('insertConversation ERROR: ' + err.reason);
                 if (conversation_id){
                     message.conversation_id = conversation_id;
+                    notification.urlParameters = {template: 'conversation', _id: conversation_id};
                     Meteor.call('insertConversationAlerts',conversation_id,Session.get('memberList'),function(err,res){
                         if(err) console.log('insertConversationAlerts ERROR: ' + err.reason);
                     });
                     Meteor.call('insertMessage',message,function(err,message_id){
                         if (err) console.log('insertMessage ERROR: ' + err.reason);
+                    });
+                    NotificationsCreator.createNotification(notification,function(err){
+                        if (err) console.log('insertNotification ERROR: ' + err.reason);
                     });
                     Router.go('conversation',{_id: conversation_id});
                 }

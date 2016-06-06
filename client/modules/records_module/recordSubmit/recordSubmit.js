@@ -29,12 +29,19 @@ var DocsManagerRecorder = function(){
 
     this.initialize = function(startDocsVal){
         //hago una copia para despues almacenar los iniciales.
+        Session.set("titleAct","");
         if(startDocsVal.length) startDocsValue = copyDocs(startDocsVal,[]);
         docs = new ReactiveVar(startDocsVal);
+        console.log(docs);
         docsRC = new ReactiveVar([]);
         functions = [];
     };
-
+    this.isTitleValid = function(title){
+        var arrayDocs = (Session.get('recording'))? docsRC : docs;
+        return _(arrayDocs.get()).all(function(doc){
+            return doc.title != title;
+        });
+    };
     this.createDoc = function(title,mode,theme,value){
         var nDoc = new Doc(title,mode,theme,value);
         var ObjectDocs = (Session.get('recording'))? docsRC : docs;
@@ -92,6 +99,7 @@ var DocsManagerRecorder = function(){
             }
         });
         objDocs.set(docsArray);
+        Session.set('titleAct',newTitle);
     };
 
     this.saveValue = function(title,value){
@@ -108,6 +116,7 @@ var DocsManagerRecorder = function(){
     };
 
     this.reset = function(){
+        Session.set("titleAct","");
         docs.set(startDocsValue);
         docsRC.set([]);
         functions = [];
@@ -181,11 +190,11 @@ Template.docEntry.events({
             formDocEditor.find('[name="title"]').focus().val(this.title);
 
             var docItem = this;
-            var optMode = _($('.lang')).find(function(option){return "ace/mode/" + $(option).text() == docItem.mode;});
+            var optMode = _($('.lang')).find(function(option){return "ace/mode/" + $(option)[0].id == docItem.mode;});
             $('.lang').removeClass('active');
             $(optMode).addClass('active');
 
-            var optTheme = _($('.theme')).find(function(option){return "ace/theme/" + $(option).text() == docItem.theme;});
+            var optTheme = _($('.theme')).find(function(option){return "ace/theme/" + $(option)[0].id == docItem.theme;});
             $('.theme').removeClass('active');
             $(optTheme).addClass('active');
         }else{
@@ -208,24 +217,24 @@ Template.docEntry.rendered = function(){
     if (!editor){
         console.log('no hay editor');
         editor = ace.edit("editor-recorder");
-        editor.$blockScrolling = Infinity;
+        editor.setShowPrintMargin(false);
     }else{
         docsManagerRecorder.saveValue(Session.get('titleAct'),editor.getValue());
     }
-
     editor.setValue(this.data.value);
     editor.setTheme(this.data.theme);
-    console.log(this.data.mode);
     editor.getSession().setMode(this.data.mode);
     editor.setShowPrintMargin(false);
 
     Session.set('titleAct',this.data.title);
-
 };
 
 //ACTIONS
 Template.startRecord.helpers({
-    notSelected: function(){return Session.get('titleAct') === '';}
+    notSelected: function(){
+        console.log(Session.get('titleAct'));
+        return Session.get('titleAct') === '';
+    }
 });
 
 Template.recordProgressBar.rendered = function(){
@@ -238,6 +247,7 @@ Template.recordProgressBar.rendered = function(){
 
 Template.recordSubmit.helpers ({
     'titleAct': function(){
+        console.log(Session.get('titleAct'));
         return Session.get('titleAct');
     },
     'recording': function(){ 
@@ -260,6 +270,12 @@ Template.recordSubmit.helpers ({
     },
     uploading: function(){
         return Session.get('uploading');
+    },
+    loadingRecorder: function(){
+        return Session.get('loading');
+    },
+    supported: function(){
+        return Session.get('supported');
     }
 });
 
@@ -279,6 +295,12 @@ Template.recordSubmit.events = {
             docForm.find('[name="title"]').val('').blur();
             docForm.find('.lang').removeClass('active');
             docForm.find('.theme').removeClass('active');
+            $('.form-body').animate(
+                {scrollTop: - $('.form-body').height()},
+                '500',
+                'swing',
+                function(){console.log('finish');}
+            );
         }
     },
 
@@ -295,61 +317,75 @@ Template.recordSubmit.events = {
     'submit .form-editor': function(e){
         e.preventDefault();
         var title = $(e.target).find('[name="title"]').val();
-        var mode = $(e.target).find('.lang.active').text();
-        var theme = $(e.target).find('.theme.active').text();
+        var mode = $(e.target).find('.lang.active')[0].id;
+        var theme = $(e.target).find('.theme.active')[0].id;
 
-        if (Session.get('createDoc')){
-            docsManagerRecorder.createDoc(title,mode,theme);
+        var validTitle = docsManagerRecorder.isTitleValid(title);
 
-            if (Session.get('recording')){
-                docsManagerRecorder.insertFunctions([
-                    {
-                        time: new Date() - date,
-                        type: 'newDoc',
-                        arg: [title,mode,theme]
-                    },
-                    {
-                        time: new Date() - date,
-                        type: 'session',
-                        arg: title
-                    }
-                ]);
+        if (validTitle){
+            if (Session.get('createDoc')){
+                docsManagerRecorder.createDoc(title,mode,theme);
+
+                if (Session.get('recording')){
+                    docsManagerRecorder.insertFunctions([
+                        {
+                            time: new Date() - date,
+                            type: 'newDoc',
+                            arg: [title,mode,theme]
+                        },
+                        {
+                            time: new Date() - date,
+                            type: 'session',
+                            arg: title
+                        }
+                    ]);
+                }
+            }else{
+                docsManagerRecorder.updateDoc(Session.get('editDoc'),title,mode,theme);
+                editor.setTheme("ace/theme/" + theme);
+                editor.getSession().setMode("ace/mode/" + mode);
+
+                if(Session.get('recording')){
+                    docsManagerRecorder.insertFunctions([
+                        {
+                            time: new Date() - date,
+                            type: 'editDoc',
+                            arg: [Session.get('editDoc'),title,mode,theme]
+                        },
+                        { //solo si se le aplica a un documento durante la grabacion
+                            time: new Date() - date,
+                            type: 'mode',
+                            arg: mode,
+                            toDo: 'editor.getSession().setMode("ace/mode/" + arg)'
+                        },
+                        { //solo si se le aplica a un documento durante la grabacion
+                            time: new Date() - date,
+                            type: 'theme',
+                            arg: theme,
+                            toDo: 'editor.setTheme("ace/theme/" + arg)'
+                        }
+                    ]);
+                }
             }
+
+            var docForm = $('.form-doc-editor');
+            docForm.find('[name="title"]').val('');
+            docForm.find('.lang').removeClass('active');
+            docForm.find('.theme').removeClass('active');
+            docForm.removeClass('active');
+            $('.documents-editor').removeClass('active');
+            Session.set('editDoc','');
+            $(".errormsg").remove();
         }else{
-            docsManagerRecorder.updateDoc(Session.get('editDoc'),title,mode,theme);
-            editor.setTheme("ace/theme/" + theme);
-            editor.getSession().setMode("ace/mode/" + mode);
-
-            if(Session.get('recording')){
-                docsManagerRecorder.insertFunctions([
-                    {
-                        time: new Date() - date,
-                        type: 'editDoc',
-                        arg: [Session.get('editDoc'),title,mode,theme]
-                    },
-                    { //solo si se le aplica a un documento durante la grabacion
-                        time: new Date() - date,
-                        type: 'mode',
-                        arg: mode,
-                        toDo: 'editor.getSession().setMode("ace/mode/" + arg)'
-                    },
-                    { //solo si se le aplica a un documento durante la grabacion
-                        time: new Date() - date,
-                        type: 'theme',
-                        arg: theme,
-                        toDo: 'editor.setTheme("ace/theme/" + arg)'
-                    }
-                ]);
-            }
+            $('.title-document-input').append('<p class="errormsg">Sorry, already exists a document with this title!</p>');
+            $('.form-body').animate(
+                {scrollTop: - $('.form-body').height()},
+                '500',
+                'swing',
+                function(){console.log('finish');}
+            );
         }
 
-        var docForm = $('.form-doc-editor');
-        docForm.find('[name="title"]').val('');
-        docForm.find('.lang').removeClass('active');
-        docForm.find('.theme').removeClass('active');
-        docForm.removeClass('active');
-        $('.documents-editor').removeClass('active');
-        Session.set('editDoc','');
 
     },
 
@@ -361,6 +397,7 @@ Template.recordSubmit.events = {
         docForm.removeClass('active');
         Session.set('editDoc','');
         Session.set('createDoc',false);
+        $(".errormsg").remove();
     },
 
     'click #record-button': function(){
@@ -395,12 +432,11 @@ Template.recordSubmit.events = {
         Session.set('formType','saveRecordForm');
     },
 
-    'click #discard-record': function(){ //dejo todo en estado inicial.
+    'click #discard-record': function(){ //dejo en estado inicial.
         Session.set("stop",false);
         Session.set('formType','formDoc');
         editor = '';
         docsManagerRecorder.reset();
-        Session.set("titleAct","");
     },
 
     'submit #saveForm': function(e){
@@ -439,93 +475,109 @@ Template.recordSubmit.events = {
                 duration: Session.get('audioDuration'),
                 RC: docsManagerRecorder.getFunctions() //aqui almaceno la lista de funciones para la reproducción.
             };
+            var paramsNotif = {
+                createdAt: new Date(),
+                type: 'record'
+            };
+
             //Setting Navigation params!!
-            if(this.lesson_id){
+            if(this.lesson_id){ //vinculado a una lección
                 record.lesson_id = this.lesson_id;
                 record.section_id = this.section_id;
                 record.order = parseInt(this.order);
-            }
-            if(this.channel_id) record.channel_id = this.channel_id;
 
-            if (this.parent_id){
+                //notification
+                paramsNotif.type = 'lesson';
+                paramsNotif.new = {title: title};
+                paramsNotif.contextTitle = Lessons.findOne(this.lesson_id).title;
+                paramsNotif.from = null;
+                paramsNotif = _(UsersEnrolled.find({}).fetch()).pluck('user_id'); //a todos.
+            }
+            if(this.channel_id){ //vinculado a un canal
+                record.channel_id = this.channel_id;
+                //notification
+                paramsNotif.type = 'channel';
+                paramsNotif.new = {title: title}
+                paramsNotif.contextTitle = Channels.findOne(this.channel_id).title;
+                paramsNotif.from = Meteor.userId();
+
+                var contextAuthor = Channels.findOne(this.channel_id).author;
+                if (contextAuthor == Meteor.userId()){ //a todos menos el creador = creador del canal.
+                    paramsNotif.to = _(UsersEnrolled.find({}).fetch()).pluck('user_id');
+                }else{
+                    paramsNotif.to = [contextAuthor]; //a todos menos el creador y tambien al creador del canal.
+                    _(UsersEnrolled.find({}).fetch()).each(function(obj){
+                        if (obj.user_id != Meteor.userId()){
+                            paramsNotif.to.push(obj.user_id);
+                        }
+                    });
+                }
+
+            }
+
+            if (this.parent_id){ //es reply
                 record.parent_id = this.parent_id;
                 record.isReply = true;
                 record.timeMark = this.dataRecordObject.currentTime;
+                //notification
+
+                var contextAuthor = Records.findOne(this.parent_id).author;
+
+                if (contextAuthor != Meteor.userId()){
+                    paramsNotif.action = 'reply';
+                    if (paramsNotif.type != 'record'){
+                        paramsNotif.context = {title: Records.findOne(this.parent_id).title};
+                    }else{
+                        paramsNotif.contextTitle = Records.findOne(this.parent_id).title;
+                    }
+                    paramsNotif.to = [contextAuthor];
+                    paramsNotif.from = Meteor.userId();
+                }else{
+                    paramsNotif = null;
+                }
+
             }else{
                 record.isReply = false;
+                paramsNotif.action = 'newRecord';
             }
 
             Session.set('uploading',true);
+
             SC.connect().then(function(){
-                var upload = SC.upload({
+                console.log('connected');
+               SC.upload({
                     file: currentAudio.get(), // a Blob of your WAV, MP3...
                     title: record.title
-                });
+                }).then(function(track){
+                   console.log(track.uri);
+                   record.track = {
+                       id: track.id,
+                       link: track.uri
+                   };
+                   Meteor.call('insertRecord',record,function(err,res){
+                       if(err){
+                           console.log(err.reason);
+                       }
+                       if(res){
+                           docsManagerRecorder.saveDocs(res._id);
 
-                upload.then(function(track){
-                    console.log(track.uri);
-                    record.track = {
-                        id: track.id,
-                        link: track.uri
-                    };
+                           if (paramsNotif){
+                               paramsNotif.urlParameters = {template: 'record', _id: res._id};
+                               NotificationsCreator.createNotification(paramsNotif,function(err){
+                                   if (err) console.log('ERROR: notifications creator');
+                               });
+                           }
+                           console.log('voy a guardar los documentos');
 
-                    Meteor.call('insertRecord',record,function(err,res){
-                        if(err){
-                            console.log(err.reason);
-                        }
-                        if(res){
-                            docsManagerRecorder.saveDocs(res._id);
-                            console.log('voy a guardar los documentos');
-
-                            Session.set('uploaded',true);
-                        }
-                    });
-                });
+                           Session.set('uploaded',true);
+                       }
+                   });
+               }).catch(function(err){
+                   console.log(err);
+               });
+            }).catch(function(e){
+                console.log(e);
             });
-
-
-
-
-
-
-
-            /*Meteor.call('insertRecord',record,function(err,result){
-             if(err){
-             console.log("error");
-             }
-             if (result){
-             console.log('recordObjectId: ' + result._id);
-             console.log('voy a guardar los documentos');
-             Meteor.call('insertDocs',docs.get(),result._id,true,function(err){
-             if(err) console.log('insertDocs ERROR: ' + err.reason);
-             });
-             Meteor.call('insertDocs',docsRC.get(),result._id,false,function(err){
-             if(err) console.log('insertDocsRC ERROR: ' + err.reason);
-             });
-
-
-
-             AudioRCData.insert(currentAudio.get(),function(err,fileObj){
-             if(err)console.log('insertAudioRCData ERROR: ' + err.reason);
-             if (fileObj) {
-             console.log('voy a guardar el audioRecording!');
-             Meteor.call('insertAudioRecording',{
-             audioData_id: fileObj._id,
-             record_id: result._id
-             },function(err){
-             if (err){
-             console.log('insertAudioRecording ERROR: ' + err.reason);
-             }else{
-             console.log('cambio de plantilla');
-             Session.set('uploading',true);
-             }
-             $('#discard').click();
-             });
-             }
-             });
-             }
-             });*/
-
         }
     },
 
@@ -540,36 +592,48 @@ Template.recordSubmit.created = function(){
     docsManagerRecorder = new DocsManagerRecorder();
 
     if (this.data.parent_id && !this.data.dataRecordObject){
-        console.log('es un reply pero no estan los documentos');
+        //es una respuesta pero no hay datos sobre el instante ni los documentos
+        //los buscamos en la collección.
         arrayDocs = docsManagerRecorder.copyDocsFromCollection();
     }else{
-        console.log('es un reply y si estan los documentos o no es un reply');
-        console.log(this.data.dataRecordObject);
+        //es una respuesta y si estan los documentos o no es una respuesta
+        //si es una respuesta entonces extraemos los documentos.
         arrayDocs = (this.data.dataRecordObject)? this.data.dataRecordObject.docs : [];
     };
 
+    //inicializamos el manejador de documentos.
     docsManagerRecorder.initialize(arrayDocs);
 };
 
 Template.recordSubmit.rendered = function(){
-    console.log(this.data);
-    /*window.onbeforeunload = function(){
-       return 'perderás el acceso a los documentos iniciales';
-    };*/
-    $.getScript("https://webrtcexperiment-webrtc.netdna-ssl.com/RecordRTC.js",function(){
+    //cargamos el código fuente del grabador.
+    //https://cdn.WebRTC-Experiment.com/RecordRTC.js
+    // https://webrtcexperiment-webrtc.netdna-ssl.com/RecordRTC.js
+    Session.set('loading',true);
+    Session.set('supported',false);
+    $.getScript("https://cdn.WebRTC-Experiment.com/RecordRTC.js",function(){
         recorder = new AudioRecorder();
         recorder.initialize();
+        if (recorder.isSupported()){
+            Session.set('supported',true);
+        }
+        Session.set('loading',false);
     });
-    SC.initialize({
-        client_id: '9f2574ebd5266f995dca197f71cba11b',
-        redirect_uri: 'http://localhost:3000/redirect.html',
-        oauth_token: '1-172665-142059135-cd9567b1cb50c'
+    Meteor.call('getClientSC',function(err,res){
+        if (res){
+            SC.initialize({
+                client_id: res.client_id,
+                redirect_uri: res.redirect_uri,
+                oauth_token: res.access_token,
+                scope: 'non-expiring'
+            });
+        }
     });
+
     //variables de sesion.
     Session.set('formType','formDoc');
     Session.set("recording",false);
     Session.set("stop",false);
-    Session.set("titleAct","");
     Session.set("createDoc",false);
     Session.set("editDoc",'');
     Session.set('uploading',false);
@@ -581,6 +645,8 @@ Template.recordSubmit.destroyed = function(){
     editor = null;
     Session.set('dataRecordingObject',null);
     Session.set('audioDuration',null);
+    Session.set('tagsChoosen',null);
+    Session.set('loading',false);
 };
 
 /**
@@ -597,6 +663,7 @@ Tracker.autorun(function(){
 
         //eventos del editor
 
+        //change content events.
         editor.getSession().on('change', function(e) {
             switch (e.action) {
                 case "remove":
@@ -625,6 +692,7 @@ Tracker.autorun(function(){
             }
         });
 
+        //selection events
         editor.getSession().selection.on('changeSelection', function(e) {
             var selection = editor.getSession().selection;
 
@@ -647,6 +715,7 @@ Tracker.autorun(function(){
             }
         });
 
+        //cursor events
         editor.getSession().selection.on('changeCursor',function(e){
             docsManagerRecorder.insertFunctions([
                 {
@@ -655,6 +724,30 @@ Tracker.autorun(function(){
                     toDo: 'editor.getSession().selection.moveCursorToPosition(arg);'
                 }
             ]);
+        });
+
+        //scroll events
+        editor.getSession().on('changeScrollTop',function(sT){
+            if (Session.get('recording')){
+                docsManagerRecorder.insertFuncions([
+                    {
+                        time: new Date() - date,
+                        type: 'scroll',
+                        arg: {type: 'top', value: sT}
+                    }
+                ])
+            }
+        });
+        editor.getSession().on('changeScrollLeft',function(sL){
+            if (Session.get('recording')){
+                docsManagerRecorder.insertFuncions([
+                    {
+                        time: new Date() - date,
+                        type: 'scroll',
+                        arg: {type: 'left', value: sL}
+                    }
+                ])
+            }
         });
     }
 });

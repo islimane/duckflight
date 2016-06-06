@@ -6,14 +6,14 @@ var notificationsCreator = function(){
             to: params.to,
             createdAt: params.createdAt,
             from: params.from,
-            parentContext_id: params.parentContext_id,
+            contextTitle: params.contextTitle,
             urlParameters: params.urlParameters,
             type: params.type
         };
         return obj;
     };
 
-    var createMessageRecord = function(){
+    var createMessageRecord = function(params){
         var message;
         switch(params.action){
             case 'newComment':
@@ -38,25 +38,28 @@ var notificationsCreator = function(){
         var message;
         switch(params.action){
             case 'newCommentChannel':
-                message = 'has written a comment to your channel'
+                message = 'has written a comment to your channel';
                 break;
             case 'replyCommentChannel':
                 message = 'has written a reply for your comment';
+                break;
+            case 'likeRecord':
+                message = 'likes your record <span>' + params.context.title + '</span>';
+                break;
+            case 'removeLikeRecord':
+                message = 'now does not like your record <span>' + params.context.title + '</span>';
                 break;
             case 'newCommentRecord':
                 message = 'has written a comment for your record <span>' + params.context.title + '</span>'
                 break;
             case 'replyCommentRecord':
-                message = 'has writen a reply for your comment at the record <span>' + parent.context.title + '</span';
+                message = 'has writen a reply for your comment at the record <span>' + params.context.title + '</span';
                 break;
             case 'likeChannel':
                 message = 'likes your channel';
                 break;
             case 'removeLikeChannel':
                 message = 'now does not like your channel';
-                break;
-            case 'likeRecord':
-                message = 'likes your record <span>' + params.context.title + '</span>';
                 break;
             case 'subscription':
                 message = 'has been subscribed to your channel';
@@ -68,7 +71,7 @@ var notificationsCreator = function(){
                 message = 'has created a new record <span>' + params.new.title + '</span>';
                 break;
             case 'reply':
-                message = 'has created a reply <span>' + params.new.title + '</span> for the record <span>' + params.new.parent.title+ '</span>'
+                message = 'has created a reply <span>' + params.new.title + '</span> for your record <span>' + params.context.title+ '</span>';
                 break;
         }
         return message;
@@ -83,7 +86,7 @@ var notificationsCreator = function(){
             case 'replyCommentLesson': //to lesson's creator.
                 message = 'has written a reply for your comment';
                 break;
-            case 'newCommentRecord': //to lesson's creator.
+            case 'newCommentRecord': //to record's creator.
                 message = 'has written a comment for your record <span>' + params.context.title + '</span>';
                 break;
             case 'replyCommentRecord': //to comment's creator.
@@ -95,26 +98,29 @@ var notificationsCreator = function(){
             case 'removeLikeLesson':
                 message = 'now does not like your lesson';
                 break;
-            case 'likeRecord': //to lesson's creator.
+            case 'likeRecord': //to record's creator.
                 message = 'likes your record <span>' + params.context.title + '</span>';
                 break;
-            case 'removeLikeRecord':
+            case 'removeLikeRecord': //to record's creator
                 message = 'now does not like your record <span>' + params.context.title + '</span>';
                 break;
             case 'subscription': //to lesson's creator.
                 message = 'has been enrolled to your lesson';
                 break;
-            case 'cancelSubscription':
+            case 'cancelSubscription': //to lesson's creator.
                 message = 'has canceled subscription to your lesson';
                 break;
             case 'newSection': //to enrolled users.
-                message = 'has been created a new section <span>' + params.new.title + '</span>'
+                message = 'has been created a new section: <span>' + params.new.title + '</span>';
+                break;
+            case 'removeSection': //to enrolled users.
+                message = 'has been removed a section: <span>' + params.new.title + '</span>';
                 break;
             case 'newRecord': //to enrolled users.
-                message = 'exists a new record <span>' + params.new.title + '</span>';
+                message = 'has been created a new record <span>' + params.new.title + '</span>';
                 break;
-            case 'reply': //to enrolled users.
-                message = 'has been created a reply <span>' + params.new.title + '</span> for the record <span>' + params.new.parent.title+ '</span>'
+            case 'reply':
+                message = 'has created a reply <span>' + params.new.title + '</span> for your record <span>' + params.context.title+ '</span>';
                 break;
         }
         return message;
@@ -147,8 +153,14 @@ var notificationsCreator = function(){
             case 'removed': //to member conversation.
                 message = 'you have been removed from this conversation';
                 break;
-            case 'exit': //to memeber conversation.
-                message = 'you have left the conversation';
+            case 'newLeader': //to new leader.
+                message = 'has chosen you as new leader';
+                break;
+            case 'changedSubject': //to all members.
+                message = 'has changed the subject to <span>' + params.context.title + '</span>';
+                break;
+            case 'added': //to member conversation.
+                message = 'has added you as a member of this conversation';
                 break;
         }
         return message;
@@ -172,7 +184,7 @@ var notificationsCreator = function(){
                 message = createMessageContact(params);
                 break;
             case 'conversation':
-                 message = createMessageConversation();
+                 message = createMessageConversation(params);
                 break;
         }
         notificationObj.message = message;

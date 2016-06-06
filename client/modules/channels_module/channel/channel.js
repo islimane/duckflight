@@ -27,11 +27,6 @@ Template.channel.helpers({
     },
     hasTags: function(){
         return (this.tags)? this.tags.length : false;
-    },
-    getData: function(){
-        return function(){
-            return {saludo: 'hola'};
-        }
     }
 });
 
@@ -44,13 +39,13 @@ Template.channel.events({
         Meteor.call('voteChannel',this._id,Meteor.userId(),($like.hasClass('active'))? 1 : -1);
 
         var paramsNotification = {
-            to: this.author,
+            to: [this.author],
             from: Meteor.userId(),
             createdAt: new Date(),
-            parentContext_id: this._id,
+            contextTitle: this.title,
             type: 'channel',
             action: ($like.hasClass('active'))? 'likeChannel' : 'removeLikeChannel',
-            urlParameters: this._id
+            urlParameters: {template: 'channel', _id: this._id}
         };
 
         NotificationsCreator.createNotification(paramsNotification,function(err){
@@ -75,13 +70,13 @@ Template.channel.events({
         }
         if (this.author != Meteor.userId()){
             var paramsNotification = {
-                to: this.author,
+                to: [this.author],
                 from: Meteor.userId(),
                 createdAt: new Date(),
-                parentContext_id: this._id,
+                contextTitle: this.title,
                 type: 'channel',
                 action: 'newCommentChannel',
-                urlParameters: this._id
+                urlParameters: {template: 'channel', _id: this._id}
             };
 
             NotificationsCreator.createNotification(paramsNotification,function(err,result){
@@ -93,13 +88,13 @@ Template.channel.events({
     'click .subscribe-button': function(){
         Meteor.call('insertUserEnrolledChannel',this._id, Meteor.userId());
         var paramsNotification = {
-            to: this.author,
+            to: [this.author],
             from: Meteor.userId(),
             createdAt: new Date(),
-            parentContext_id: this._id,
+            contextTitle: this.title,
             type: 'channel',
             action: 'subscription',
-            urlParameters: this._id
+            urlParameters: {template: 'channel', _id: this._id}
         };
         NotificationsCreator.createNotification(paramsNotification,function(err){
             if(err) console.log('subscriptionChannel Notification ERROR: ' + err.reason);
@@ -111,14 +106,14 @@ Template.channel.events({
             if(res) console.log(res);
         });
         var paramsNotification = {
-            to: this.author,
+            to: [this.author],
             from: Meteor.userId(),
             createdAt: new Date(),
-            parentContext_id: this._id,
+            contextTitle: this.title,
             type: 'channel',
             action: 'cancelSubscription',
-            urlParameters: this._id
-        }
+            urlParameters: {template: 'channel', _id: this._id}
+        };
         NotificationsCreator.createNotification(paramsNotification,function(err){
             if(err) console.log('cancelSubscriptionChannel Notification ERROR: ' + err.reason);
         });

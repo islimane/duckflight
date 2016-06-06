@@ -1,0 +1,10 @@
+<template name="secondaryLayout">
+    <div id="main-wrapper">
+        {{> galleryFullScreen}}
+        {{> Template.dynamic template=sidebarTemplate}}
+        <div id="page-wrapper">
+            {{> singleHeader}}
+            {{> yield }}
+        </div>
+    </div>
+</template>

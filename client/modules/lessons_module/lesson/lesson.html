@@ -137,11 +137,16 @@
     </div>
     <div class="row content-body">
         <div class="col-xs-12">
-            <div class="row list">
-                {{#each users}}
-                    {{>userItem}}
-                {{/each}}
-            </div>
+            {{#if users_count}}
+                <div class="row list">
+                    {{#each users}}
+                        {{>userItem}}
+                    {{/each}}
+                </div>
+            {{else}}
+                <p class="text-left no-data-found-message">No users already!</p>
+            {{/if}}
+
         </div>
     </div>
 </template>
@@ -208,7 +213,7 @@
         {{/each}}
     {{else}}
         <div class="not-found-message col-xs-12 text-center">
-            <img src="/duck_icon.ico"/>
+            <img src="/DFSingle.png"/>
             <p>This section has not tracks yet!</p>
         </div>
     {{/if}}
@@ -235,7 +240,7 @@
 
     {{else}}
         <div class="not-found-message col-xs-12 text-center">
-            <img src="/duck_icon.ico"/>
+            <img src="/DFSingle.png"/>
             <p>This section has not tracks yet!</p>
         </div>
     {{/if}}
@@ -266,7 +271,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <img src="/duck_icon.ico"><h4 class="modal-title" id="exampleModalLabel">Create new section</h4>
+                    <img src="/DFIcon.png"><h4 class="modal-title" id="exampleModalLabel">Create new section</h4>
                 </div>
                 <div class="modal-body">
                     {{> formAwesome}}

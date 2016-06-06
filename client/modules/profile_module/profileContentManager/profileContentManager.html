@@ -57,8 +57,17 @@
             {{#each channels}}
                 {{>channelRemoveItem}}
             {{/each}}
+            <div class="row text-center">
+                <div class="col-xs-12">
+                    <button id='load-more-button' type="button">Load more</button>
+                </div>
+            </div>
         </div>
     {{else}}
+        <div class="no-data-found-message block text-center">
+            <img src="/DFSingle.png">
+            <p>Sorry, you are not channels yet!</p>
+        </div>
     {{/if}}
 </template>
 
@@ -145,21 +154,23 @@
             {{#each lessons}}
                 {{>lessonRemoveItem}}
             {{/each}}
+            <div class="row text-center">
+                <div class="col-xs-12">
+                    <button id='load-more-button' type="button">Load more</button>
+                </div>
+            </div>
         </div>
+
     {{else}}
+        <div class="no-data-found-message block text-center">
+            <img src="/DFSingle.png">
+            <p>Sorry, you are not lessons yet!</p>
+        </div>
     {{/if}}
 </template>
 
 <template name="lessonRemoveItem">
     {{>removeItem}}
-</template>
-
-<template name="teamsManage">
-    <div class="list-remove">
-        {{#each teams}}
-            {{>teamRemoveItem}}
-        {{/each}}
-    </div>
 </template>
 
 <template name="recordsManage">
@@ -169,8 +180,18 @@
             {{#each records}}
                 {{>recordRemoveItem}}
             {{/each}}
+            <div class="row text-center">
+                <div class="col-xs-12">
+                    <button id='load-more-button' type="button">Load more</button>
+                </div>
+            </div>
         </div>
+
     {{else}}
+        <div class="no-data-found-message block text-center">
+            <img src="/DFSingle.png">
+            <p>Sorry, you are not records yet!</p>
+        </div>
     {{/if}}
 </template>
 
@@ -184,8 +205,17 @@
             {{#each contacts}}
                 {{>contactRemoveItem}}
             {{/each}}
+            <div class="row text-center">
+                <div class="col-xs-12">
+                    <button id='load-more-button' type="button">Load more</button>
+                </div>
+            </div>
         </div>
     {{else}}
+        <div class="no-data-found-message block text-center">
+            <img src="/DFSingle.png">
+            <p>Sorry, your are not contacts yet!</p>
+        </div>
     {{/if}}
 
 </template>

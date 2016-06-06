@@ -2,11 +2,9 @@ Template.lessons.helpers({
     lessons: function(){
         switch(Session.get('filter-active')) {
             case 'recent-filter':
-                return Lessons.find({}, {sort: {createdAt: -1}});
+                return Lessons.find({}, {sort: {createdAt: -1},limit: Session.get('limit')});
             case 'popular-filter':
-                return Lessons.find({}, {sort: {votes_count: -1}});
-            case 'search-filter':
-                return [];
+                return Lessons.find({}, {sort: {votes_count: -1},limit: Session.get('limit')});
         }
     },
     listMode: function(){
@@ -17,6 +15,9 @@ Template.lessons.helpers({
     },
     contextSearch: function(){
         return {context: 'lessons'};
+    },
+    has: function(){
+        return Lessons.find({}).count();
     }
 });
 
@@ -39,12 +40,16 @@ Template.lessons.events({
         $('.filter').removeClass('active');
         $(elem).addClass('active');
         Session.set('filter-active',$(elem)[0].id);
+        Session.set('limit',LOAD_INITIAL);
     },
     'click .button-circle': function(){
         Router.go('lessonSubmit');
     },
     'click .card-author': function(){
-        Router.go('profile',{_id: this.author});
+        Router.go('profile',{_id: this.author},{query: 'initialSection=channelsTabContent'});
+    },
+    'click #load-more-button': function(){
+        Session.set('limit',Session.get('limit') + MORE_LIMIT);
     }
 });
 
@@ -54,7 +59,12 @@ Template.lessons.rendered = function(){
 };
 
 Template.lessons.created = function(){
+    Session.set('limit',LOAD_INITIAL);
     Session.set('filter-active', 'recent-filter');
+};
+
+Template.lessons.destroyed = function(){
+    Session.set('limit',null);
 };
 
 Template.lessonItemHorizontal.helpers({
@@ -74,7 +84,7 @@ Template.lessonItemHorizontal.events({
         Router.go('lesson',{_id: this._id}); //voy a la pagina principal del record.
     },
     'click .card-author': function(){
-        Router.go('profile',{_id: this.author});
+        Router.go('profile',{_id: this.author},{query: 'initialSection=channelsTabContent'});
     }
 });
 
@@ -102,7 +112,7 @@ Template.lessonItemVertical.events({
         Router.go('lesson',{_id: this._id}); //voy a la pagina principal del record.
     },
     'click .card-author': function(){
-        Router.go('profile',{_id: this.author});
+        Router.go('profile',{_id: this.author},{query: 'initialSection=channelsTabContent'});
     }
 });
 

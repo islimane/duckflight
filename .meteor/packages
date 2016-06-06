@@ -9,7 +9,6 @@ underscore
 iron:router
 accounts-base
 accounts-password
-mizzao:bootstrap-3
 momentjs:moment
 blaze
 reactive-var
@@ -42,3 +41,7 @@ accounts-google
 copleykj:jquery-autosize
 froala:editor
 email
+monbro:soundcloud-nodejs-api-wrapper
+mizzao:sharejs-ace
+accounts-github
+mizzao:bootstrap-3

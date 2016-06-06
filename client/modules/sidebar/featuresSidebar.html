@@ -1,0 +1,24 @@
+<template name="featuresSidebar">
+    <div id="close-sidebar"></div>
+    <div id="sidebar-wrapper" class="sencondary-sidebar sidebar-features">
+        <div id="box-site" class="absolute-top">
+            <a href="/" class="close-toggle"><img src="/DFIcon.png"/></a>
+            <a class="site-title close-toggle" href="/">DuckFlight</a>
+            <p class="title-sidebar text-center">Features</p>
+        </div>
+        <div id="sidebar-menu">
+
+            {{#each navFeatures}}
+                <div class="sidebar-section">
+                    <p id="{{id}}" class="section-title close-toggle">
+                        <a href=""><span>{{name}}</span></a>
+                    </p>
+                </div>
+            {{/each}}
+
+        </div>
+        <div id='footer-message' class="absolute-bottom">
+            <p>Enjoy our features!</p>
+        </div>
+    </div>
+</template>

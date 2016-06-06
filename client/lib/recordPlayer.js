@@ -59,7 +59,10 @@ RecordPlayer = function(){
         });
         $audio.on('created',function(){
             $audio.seek(0);
-            console.log('created audio');
+        });
+        $audio.on('metadata',function(){
+            Session.set('errorLoad',false);
+            Session.set('loading',false);
         });
         ended = false;
     };
@@ -112,14 +115,15 @@ RecordPlayer = function(){
     this.ended = function(){
         $touchScreenWrapper.removeClass('active');
         $playerActionsWrapper.addClass('active');
+        $playedProgress.width(0);
+        $progress.val(0);
         window.clearInterval(intervalAudio);
         editorManager.seek(0);
+        this.seek();
         intervalAudio = null;
         Session.set('playing',false);
         Session.set('ended',true);
         $timer.text('00:00');
-        $playedProgress.width(0);
-        $progress.val(0);
         ended = true;
     };
 

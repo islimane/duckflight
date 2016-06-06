@@ -1,4 +1,4 @@
-
+@import '../../mixins';
 /**
  * SIDEBAR
  */
@@ -6,20 +6,19 @@
 /*sidebar wrapper*/
 #sidebar-wrapper{
   position: fixed;
-  width: 240px;
-  height: 100%;
+  @include size(240px,100%);
   padding-top: 115px;
   padding-bottom: 75px;
   top: 0;
   left: 0;
   z-index: 1000;
   background-color: #4d394b;
-  box-shadow: 0px 4px 5px #373636;
-  transition: all .5s ease;
+  @include box-shadow(0px 4px 5px #373636);
+  @include transition(all, .5s, ease);
 
   &.unactive{
     left: -240px;
-    transition: all .5s ease;
+    @include transition(all, .5s, ease);
   }
 }
 
@@ -43,10 +42,9 @@
   padding: 15px 15px 10px;
   background: #DD4242;
   img{
-    height: 45px;
-    width: 45px;
+    @include size(45px);
     background: white;
-    border-radius: 50%;
+    @include border-radius(50%);
   }
 
   .site-title{
@@ -89,7 +87,7 @@
         font-size: 11px;
         background:  #740404;
         padding: 4px 5px 3px 4px;
-        border-radius: 7px;
+        @include border-radius(7px);
         color: white;
         margin-left: 5px;
       }
@@ -155,8 +153,7 @@
       text-indent: 0px;
       width: 94%;
       padding: 2px 10px 2px 25px;
-      border-top-right-radius: 5px;
-      border-bottom-right-radius: 5px;
+      @include border-radius(0px 5px 5px 0px);
       &:hover{
         background: #302636;
       }
@@ -202,8 +199,7 @@
   }
   .notifications-section-title{
     width: 95%;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+    @include border-radius(0px 5px 5px 0px);
     padding: 2px 10px;
     a{
       font-size: 14px;
@@ -222,7 +218,7 @@
       vertical-align: text-top;
       font-size: 10px;
       background: #EE5047;
-      border-radius:5px;
+      @include border-radius(5px);
       padding: 2px 3px;
     }
     .rem-ikon{
@@ -263,7 +259,7 @@
           font-size: 12px;
           background: #48354B;
           padding: 5px 10px 5px 5px;
-          border-radius: 50px;
+          @include border-radius(50px);
         }
         button{
           padding: 0px;
@@ -279,22 +275,25 @@
         color: #FF687A;
       }
       .message-body{
-        display: flex;
+        @include flexbox;
         img{
           margin-left: 10px;
-          width: 30px;
-          height: 30px;
-          border-radius: 50%;
+          @include size(30px,30px);
+          @include border-radius(50%);
         }
-        p{flex: 1;}
-        .who{
-          font-size: 14px;
-          color: #CDCCCD;
+        p{
+          @include flex(1);
+          word-break: break-word;
         }
-        strong{
+        span{
           font-size: 14px;
           font-weight: 500;
           color: #B8BBB9;
+        }
+        .who{
+          font-weight: 100;
+          font-size: 14px;
+          color: #CDCCCD;
         }
       }
 
@@ -343,19 +342,18 @@
         vertical-align: text-top;
         font-size: 10px;
         background: #EE5047;
-        border-radius:5px;
+        @include border-radius(5px);
         padding: 2px 3px;
       }
       .alert-body{
-        display: flex;
+        @include flexbox;
         img{
           margin-left: 10px;
-          width: 30px;
-          height: 30px;
-          border-radius: 50%;
+          @include size(30px);
+          @include border-radius(50%);
         }
         .message-box{
-          flex: 1;
+          @include flex(1);
           strong{
             font-size: 14px;
             font-weight: 500;
@@ -387,12 +385,11 @@
     }
   }
   #logoutButton{
-    height: 25px;
-    width: 25px;
+    @include size(25px);
     color: #E3E2E2;
     border: none;
     background-color: #DD4242;
-    border-radius: 5px;
+    @include border-radius(5px);
     font-size: 13px;
     margin-top: 10px;
     i{margin-top: 5px;}
@@ -402,16 +399,121 @@
     &:focus{outline: 0px;}
   }
   #userImage{
-    height: 43px;
-    width: 43px;
+    @include size(43px);
+    @include border-radius(50%);
     object-fit: cover;
-    border-radius: 50%;
   }
 }
 
 /**
  *  END SIDEBAR
  */
+
+.sencondary-sidebar{
+  padding-bottom: 50px !important;
+  .sidebar-section{
+    .section-title{
+      font-size: 16px !important;
+    }
+    .nav-sidebar{
+      li{
+        width: 100% !important;
+        line-height: 20px;
+        &:hover{
+          background-color: transparent !important;
+        }
+        a{
+          font-weight: 300 !important;
+          @include transition(all, 0.1s, ease);
+          &:hover{
+            margin-left: 5px;
+            font-size: 15px !important;
+            @include transition(all, 0.1s, ease);
+          }
+        }
+      }
+    }
+  }
+
+  #footer-message{
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+
+  }
+  .title-sidebar{
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 0px;
+  }
+  &.sidebar-tutorials{
+    &#sidebar-wrapper{
+      background-color: #5953FE !important;
+    }
+    .nav-sidebar{
+      a{
+        color: #362E6C !important;
+        &.active, &:hover{
+          color: #BFB5FB !important;
+        }
+      }
+    }
+    #box-site{
+      background-color: #5B2AFC;
+      .title-sidebar{
+        color: #ABB0FF;
+      }
+    }
+    #footer-message{
+      background: #5B2AFC;
+      color:#B1AAFF;
+    }
+  }
+  &.sidebar-features{
+    &#sidebar-wrapper{
+      background-color: #DC6026 !important;
+
+    }
+    .sidebar-section{
+      text-indent: 0px !important;
+      padding: 0px 10px !important;
+      .section-title{
+        @include transition(all, 0.5s, ease);
+        cursor: pointer;
+        &:hover, &.active{
+          a{
+            line-height: 17px;
+            font-size: 17px;
+            color: white !important;
+            @include transition(all, 0.5s, ease);
+          }
+        };
+        &:hover{
+          margin-left: 10px;
+          @include transition(all, 0.5s, ease);
+        }
+      }
+    }
+    .nav-sidebar{
+      a{
+        color: #5F2E19 !important;
+        &.active, &:hover{
+          color: #FBD5B5 !important;
+        }
+      }
+    }
+    #box-site{
+      background: #B94B18;
+      .title-sidebar{
+        color: #5F2E19;
+      }
+    }
+    #footer-message{
+      background: #B94B18;
+      color:#FFAB85;
+    }
+  }
+}
 
 
 

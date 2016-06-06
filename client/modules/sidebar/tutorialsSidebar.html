@@ -1,0 +1,118 @@
+<template name="tutorialsSidebar">
+    <div id="close-sidebar"></div>
+    <div id="sidebar-wrapper" class="sencondary-sidebar sidebar-tutorials">
+        <div id="box-site" class="absolute-top">
+            <a href="/" class="close-toggle"><img src="/DFIcon.png"/></a>
+            <a class="site-title close-toggle" href="/">DuckFlight</a>
+            <p class="title-sidebar text-center">Tutorials</p>
+        </div>
+        <div id="sidebar-menu">
+            <div id='channels-section' class="sidebar-section">
+
+                <p class="section-title close-toggle">
+                    <a id='channels' href=""><span>Channels</span></a>
+                </p>
+
+                <ul id='channels-nav' class="nav-sidebar">
+                    {{#each channelsNav}}
+                        <li class="close-toggle"><a href=""><span>{{title}}</span></a></li>
+                    {{/each}}
+                </ul>
+
+            </div>
+            <div id='lessons-section' class="sidebar-section">
+
+                <p class="section-title close-toggle">
+                    <a id='lessons' href=""><span>Lessons</span></a>
+                </p>
+
+                <ul class="nav-sidebar">
+                    {{#each lessonsNav}}
+                        <li class="close-toggle"><a href=""><span>{{title}}</span></a></li>
+                    {{/each}}
+                </ul>
+
+            </div>
+            <div id='records-section' class="sidebar-section">
+
+                <p id="sidebar-channels-browse" class="section-title close-toggle">
+                    <a id='records' href=""><span>Records</span></a>
+                </p>
+
+                <ul class="nav-sidebar">
+                    {{#each recordsNav}}
+                        <li class="close-toggle"><a href=""><span>{{title}}</span></a></li>
+                    {{/each}}
+                </ul>
+
+            </div>
+            <div id='profile-section' class="sidebar-section">
+
+                <p id="sidebar-channels-browse" class="section-title close-toggle">
+                    <a id='profile' href=""><span>Profile</span></a>
+                </p>
+
+                <ul class="nav-sidebar">
+                    <li class="close-toggle"><a href=""><span>Browse your profile</span></a></li>
+                    <li class="close-toggle"><a href=""><span>Change settings</span></a></li>
+                    <li class="close-toggle"><a href=""><span>Change password</span></a></li>
+                    <li class="close-toggle"><a href=""><span>Service profile</span></a></li>
+                    <li class="close-toggle"><a href=""><span>Create content</span></a></li>
+                    <li class="close-toggle"><a href=""><span>Explore your subscriptions</span></a></li>
+                    <li class="close-toggle"><a href=""><span>Explore last played records</span></a></li>
+
+                </ul>
+
+            </div>
+            <div class="sidebar-section">
+
+                <p id="sidebar-channels-browse" class="section-title close-toggle">
+                    <a id='contacts-section' href=""><span>Contacts</span></a>
+                </p>
+
+                <ul class="nav-sidebar">
+                    <li class="close-toggle"><a href=""><span>Send contact request</span></a></li>
+                    <li class="close-toggle"><a href=""><span>Choose a user</span></a></li>
+                    <li class="close-toggle"><a href=""><span>Request status</span></a></li>
+                    <li class="close-toggle"><a href=""><span>Accept a request</span></a></li>
+                </ul>
+
+            </div>
+            <div class="sidebar-section">
+
+                <p id="sidebar-channels-browse" class="section-title close-toggle">
+                    <a id='conversations-section' href=""><span>Conversations</span></a>
+                </p>
+
+                <ul class="nav-sidebar">
+                    <li class="close-toggle"><a href=""><span>Create a new conversation</span></a></li>
+                    <li class="close-toggle"><a href=""><span>Who to invite?</span></a></li>
+                    <li class="close-toggle"><a href=""><span>Change settings</span></a></li>
+                    <li class="close-toggle"><a href=""><span>Add members from contacts</span></a></li>
+                    <li class="close-toggle"><a href=""><span>Conversation Leader</span></a></li>
+                    <li class="close-toggle"><a href=""><span>Conversation alerts</span></a></li>
+                    <li class="close-toggle"><a href=""><span>Exit conversation</span></a></li>
+                </ul>
+
+            </div>
+            <div class="sidebar-section">
+
+                <p id="sidebar-channels-browse" class="section-title close-toggle">
+                    <a id='email-section' href=""><span>Email</span></a>
+                </p>
+
+                <ul class="nav-sidebar">
+                    <li class="close-toggle"><a href=""><span>Add emails to your profile</span></a></li>
+                    <li class="close-toggle"><a href=""><span>Verify your emails</span></a></li>
+                    <li class="close-toggle"><a href=""><span>Who to send?</span></a></li>
+                    <li class="close-toggle"><a href=""><span>Send a email</span></a></li>
+                </ul>
+
+            </div>
+
+        </div>
+        <div id='footer-message' class="absolute-bottom">
+            <p>Enjoy our tutorials!</p>
+        </div>
+    </div>
+</template>

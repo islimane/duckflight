@@ -1,17 +1,18 @@
+@import '../../mixins';
+
 .modal-duckflight{
   display: none;
-  align-content: center;
-  justify-content: center;
+  @include align-content(center);
+  @include justify-content(center);
   .modal-dialog{
     .modal-content{
-      animation: bubble .5s ease-in;
+      @include animation(0s, .5s,bubble,ease-in);
       .modal-header{
         img{
-          height: 40px;
-          widht: 40px;
+          @include size(40px);
           padding: 2px;
           background: white;
-          border-radius: 50%;
+          @include border-radius(50%);
           margin-right: 10px;
           vertical-align: bottom;
         }
@@ -23,6 +24,7 @@
           font-family: roboto, sans-serif;
           font-weight: 100;
           font-size: 20px;
+          vertical-align: super;
         }
       }
       .modal-body{
@@ -57,20 +59,20 @@
   .modal-content{border-radius: 30px;}
   .modal-header{
     .modal-title{font-size: 27px !important;}
-    border-radius: 28px 28px 0px 0px;
+    @include border-radius(28px 28px 0px 0px);
   }
   .modal-body{
-    border-radius: 0px 0px 30px 30px;
+    @include border-radius(0px 0px 30px 30px);
     .awesome-form{
-      border-radius: 0px 0px 28px 28px;
+      @include border-radius(0px 0px 28px 28px);
       .form-field{
         label{
           top: 10px;
           font-size: 20px;
           margin-left: 13px;
           &.active{
-            transform: none;
-            transition: none;
+            @include transform(none);
+            @include transition(none);
             font-size: 20px;
           }
         }
@@ -79,7 +81,7 @@
           font-size: 16px;
         }
         input:-webkit-autofill{
-          -webkit-box-shadow: 0 0 0 1000px white inset !important;
+          @include box-shadow(0 0 0 1000px white inset !important);
         }
       }
     }
@@ -99,43 +101,37 @@
     position: relative;
     border-top: 1px solid grey;
     span{
-      position: absolute;
-      height: 25px;
-      width: 25px;
-      bottom: -14px;
-      right: 47%;
+      @include position(absolute,$bottom: -14px, $right: 47%);
+      @include size(25px);
+      @include border-radius(50%);
       background: white;
-      border-radius: 50%;
       border: 1px solid grey;
     }
   }
 }
 .social-button{
-  display: flex;
+  @include flexbox;
   height: 50px;
   color: white;
-  border-radius: 5px;
+  @include border-radius(5px);
   margin-bottom: 10px;
   cursor: pointer;
   .brand{
-    width: 50px;
-    height: 50px;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include size(50px);
+    @include flexbox;
+    @include align-items(center);
+    @include justify-content(center);
     font-size: 20px;
-    border-radius: 5px 0px 0px 5px;
+    @include border-radius(5px 0px 0px 5px);
   }
   .body{
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include flex(1);
+    @include flexbox;
+    @include align-items(center);
+    @include justify-content(center);
   }
   &:hover{
-    opacity: .9;
+    @include opacity(.9);
   }
   &.facebook-button{
     background: #4F48B8;
@@ -145,16 +141,20 @@
     background: #FD5E49;
     .brand{background: #CB4A39;}
   }
+  &.github-button{
+    background: #5A5959;
+    .brand{background: #3A3939;}
+  }
 }
 
 .signing-container{
   min-height: 320px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include flexbox;
+  @include align-items(center);
+  @include justify-content(center);
   color: #B2B1B2;
   background: #DCD8D8;
-  border-radius: 0px 0px 25px 25px;
+  @include border-radius(0px 0px 25px 25px);
   .signing-msg{
     line-height: 40px;
     i{

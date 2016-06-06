@@ -46,8 +46,16 @@ Meteor.methods({
 	},
 	userUpdate: function(user_id,params){
 		params.avatar = params.img;
-		params = _(params).omit('img');
+		params = _(params).omit(['img','imgDefault','bannerDefault','tagsAllow']);
 		return Meteor.users.update(user_id,{$set: params});
+	},
+	checkEmail: function(address){
+		var usersWithEmails = Meteor.users.find({emails: {$exists: true}},{fields: {emails: 1}}).fetch();
+		return _(usersWithEmails).all(function(u){
+			return _(u.emails).all(function(e){
+				return e.address !== address;
+			});
+		});
 	}
 });
 
@@ -65,9 +73,9 @@ Meteor.startup(function(){
 			return '[DuckFlight] Verification Email Process.';
 		},
 		text: function(user,url) {
-			var urlWithoutHash = url.replace( '#/', '' );
+			var linkUrl = Meteor.absoluteUrl() + url.split('#/')[1];
 			var supportEmail   = "duckflight.team@gmail.com";
-			var emailBody      = 'To verify your email address visit the following link:\n\n' + urlWithoutHash
+			var emailBody      = 'To verify your email address visit the following link:\n\n' + linkUrl
 							     + '\n\n Please, do not answer this message!. If you feel something is wrong,'
 								 + ' please contact our support team: ' + supportEmail;
 
@@ -79,9 +87,9 @@ Meteor.startup(function(){
 			return '[DuckFlight] Reset Password Process.';
 		},
 		text: function(user,url) {
-			var urlWithoutHash = url.replace( '#/', '' );
+			var linkUrl = Meteor.absoluteUrl() + url.split('#/')[1];
 			var supportEmail   = "duckflight.team@gmail.com";
-			var emailBody      = 'To reset your password visit the following link:\n\n' + urlWithoutHash
+			var emailBody      = 'To reset your password visit the following link:\n\n' + linkUrl
 				+ '\n\n Please, do not answer this message!. If you feel something is wrong,'
 				+ ' please contact our support team: ' + supportEmail;
 
@@ -95,9 +103,30 @@ Accounts.onCreateUser(function(options,user){
 	if(options.profile){
 		user.username = options.profile.name;
 		var userService = {service: _(user.services).keys()[0]}
-		userService.id = user.services[userService.service].id;
-
-		user.avatar = get_avatar_from_service(userService,100);
+		if (userService.service){
+			var service = user.services[userService.service]
+			userService.id = service.id;
+			if (service.emails){
+				user.emails = [];
+				_(service.emails).each(function(email){
+					var emailObject = {
+						address: email.email,
+						verified: (email.verified)? true : false
+					};
+					user.emails.push(emailObject);
+				});
+			}
+			if (service.email){
+				user.emails = [{
+					address: service.email,
+					verified: (service.verified_email)? true: false
+				}];
+				user.avatar = service.picture || null;
+			}
+		}
+		if (!user.avatar){
+			user.avatar = get_avatar_from_service(userService,100);
+		}
 	}else{
 		user.avatar = '/usericon.png';
 	}

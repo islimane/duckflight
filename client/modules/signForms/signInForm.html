@@ -56,8 +56,23 @@
                             <span>SIGN IN WITH GOOGLE</span>
                         </div>
                     </div>
+                    <div class="social-button github-button">
+                        <div class="brand">
+                            <i class="fa fa-github"></i>
+                        </div>
+                        <div class="body">
+                            <span>SIGN IN WITH GITHUB</span>
+                        </div>
+                    </div>
                 </div>
             </div>
+            {{#if errorService}}
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p class="errormsg"><i class="fa fa-exclamation"></i>Sorry, {{errorService}}!</p>
+                    </div>
+                </div>
+            {{/if}}
         </div>
         <div class="form-group">
             <div class="row">

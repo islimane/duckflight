@@ -24,6 +24,9 @@ Template.profileContentManager.events ({
     'click #get': function(){
         console.log($('#editor-mail').froalaEditor('html.get',true));
         $('.fr-view').html($('#editor-mail').froalaEditor('html.get',true));
+    },
+    'click #load-more-button': function(){
+        Session.set('limit', Session.get('limit') + MORE_LIMIT);
     }
 });
 
@@ -37,34 +40,24 @@ Template.profileContentManager.destroyed = function(){
 /* LISTS */
 Template.channelsManage.helpers({
     channels: function(){
-        return Channels.find();
+        return Channels.find({},{sort: {createdAt: -1}, limit: Session.get('limit')});
     },
     has: function(){
         return Channels.find().count();
     }
 });
-
 Template.lessonsManage.helpers({
     lessons: function(){
-        return Lessons.find();
+        return Lessons.find({},{sort: {createdAt: -1}, limit: Session.get('limit')});
     },
     has: function(){
         return Lessons.find().count();
     }
 });
 
-Template.teamsManage.helpers({
-    teams: function(){
-        return Teams.find();
-    },
-    has: function(){
-        return Teams.find().count();
-    }
-});
-
 Template.recordsManage.helpers({
     records: function(){
-        return Records.find();
+        return Records.find({},{sort: {createdAt: -1}, limit: Session.get('limit')});
     },
     has: function(){
         return Records.find().count();
@@ -73,7 +66,7 @@ Template.recordsManage.helpers({
 
 Template.contactsManage.helpers({
     contacts: function(){
-        return Relations.find();
+        return Relations.find({},{sort: {createAt: -1}, limit: Session.get('limit')});
     },
     has: function(){
         return Relations.find().count();
@@ -166,11 +159,12 @@ Template.recordRemoveItem.events({
     'click button': function(){
         Session.set('removing',true);
 
+        Meteor.call('deleteTrackSC',this.track.id);
+
         Meteor.call('recordRemove',this._id,function(err){
             Session.set('removing',false);
             if (err)throw new Meteor.Error('500','ERROR: removing a record');
         });
-
     },
     'click img, click .title': function(){
         Router.go('record',{_id: this._id});
@@ -186,7 +180,7 @@ Template.contactRemoveItem.events({
         });
     },
     'click img, click .title': function(){
-        var contactId = _(this.users).filter(function(item){return item !== Session.get('currentProfileId')});
+        var contactId = _(this.users).filter(function(item){return item !== Meteor.userId()});
         Session.set('currentProfileId',contactId[0]);
         Router.go('profile', {_id: contactId[0]});
     }

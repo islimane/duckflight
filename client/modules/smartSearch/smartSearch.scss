@@ -1,3 +1,5 @@
+@import '../../mixins';
+
 .smart-search-box-wrapper{
   padding: 30px 15px 20px;
   position: relative;
@@ -6,12 +8,12 @@
     font-size: 16px;
     color: grey;
     background: #F5F4F4;
-    border-radius: 10px;
+    @include border-radius(10px);
     margin-top: 10px;
     span{
       font-size: 14px;
       background: #C6C5C5;
-      border-radius: 2px;
+      @include border-radius(2px);
       padding: 2px 5px;
       color: #565555;
     }
@@ -22,12 +24,12 @@
     padding: 20px 10px;
     color: #5B5A5A;
     .nav-results{
-      display: flex;
-      align-items: center;
-      justify-items: center;
+      @include flexbox;
+      @include align-items(center);
+      @include justify-content(center);
       border-bottom: 1px solid #AEAEAE;
       .results-filter{
-        flex-grow: 1;
+        @include flex-grow(1);
         padding: 5px 0px;
         cursor: pointer;
         &.active{
@@ -61,13 +63,12 @@
       li{
         margin:5px 0px;
         padding: 5px 10px;
-        border-radius: 10px;
+        @include border-radius(10px);
         cursor: pointer;
         &.user-item{
           img{
-            height: 50px;
-            width: 50px;
-            border-radius: 20px;
+            @include size(50px);
+            @include border-radius(20px);
           }
         }
         &:hover{
@@ -81,7 +82,7 @@
     i{vertical-align: middle;}
     span{
       background: #5F6160;
-      border-radius: 10px;
+      @include border-radius(10px);
       padding: 1px 5px;
       color: white;
       font-weight: 100;
@@ -89,18 +90,18 @@
   }
   .search-box{
     border: 1px solid #C7C7C7;
-    display: flex;
+    @include flexbox;
     width: 100%;
     padding: 5px 10px;
-    border-radius: 20px;
+    @include border-radius(20px);
     color: #666666;
     .search-icon{
       line-height: 25px;
     }
     #input-search-wrapper{
       margin: 0px 10px;
-      flex: 1;
-      display: flex;
+      @include flex(1);
+      @include flexbox;
       background: transparent;
       font-size: 16px;
       height: 25px;
@@ -112,25 +113,26 @@
       }
 
       .modifiers-wrapper{
+        width: auto;
+        @include flex(0 0 auto);
         .modifier{
           border: 1px solid #6FA986;
           background: rgba(94, 188, 96, 0.5);
           padding: 2px 5px;
-          border-radius: 5px;
+          @include border-radius(5px);
           &.incomplete{
             border-right: 0px;
             padding-right: 0px;
-            border-radius: 5px 0px 0px 5px;
+            @include border-radius(5px 0px 0px 5px);
           }
         }
       }
       input{
         margin-top: -1px;
-        flex: 1;
+        @include flex(1 0 30%);
         border: none;
         background: transparent;
         font-size: 16px;
-        min-width: 30%;
         &:focus{outline: 0px;}
       }
     }
@@ -138,7 +140,7 @@
     button{
       border: none;
       background: #ACACAC;
-      border-radius: 10px;
+      @include border-radius(10px);
       padding: 0px 12px;
       color: #555555;
       &:focus{
@@ -149,7 +151,7 @@
   }
 }
 
-@media (max-width: 500px){
+@include mquery(500px){
   .results-filter{
     font-size: 15px;
     span{

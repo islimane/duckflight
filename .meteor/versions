@@ -1,5 +1,6 @@
 accounts-base@1.2.4
 accounts-facebook@1.0.7
+accounts-github@1.0.7
 accounts-google@1.0.7
 accounts-oauth@1.1.10
 accounts-password@1.1.6
@@ -37,7 +38,9 @@ fortawesome:fontawesome@4.5.0
 fourseven:scss@2.1.1
 froala:editor@2.2.4
 geojson-utils@1.0.6
+github@1.1.6
 google@1.1.9
+handlebars@1.0.5
 hot-code-push@1.0.2
 html-tools@1.0.7
 htmljs@1.0.7
@@ -49,7 +52,7 @@ iron:core@1.0.11
 iron:dynamic-template@1.0.12
 iron:layout@1.0.12
 iron:location@1.0.11
-iron:middleware-stack@1.0.11
+iron:middleware-stack@1.1.0
 iron:router@1.0.12
 iron:url@1.0.11
 jquery@1.11.6
@@ -65,6 +68,8 @@ minimongo@1.0.12
 mizzao:bootstrap-3@3.3.1_1
 mizzao:build-fetcher@0.3.2
 mizzao:jquery-ui@1.11.4
+mizzao:sharejs@0.8.0
+mizzao:sharejs-ace@1.3.0
 mizzao:timesync@0.3.4
 mizzao:user-status@0.6.6
 mobile-experience@1.0.2
@@ -72,8 +77,10 @@ mobile-status-bar@1.0.10
 modules@0.5.1
 modules-runtime@0.6.1
 momentjs:moment@2.12.0
+monbro:soundcloud-nodejs-api-wrapper@0.2.6
 mongo@1.1.5
 mongo-id@1.0.2
+mongo-livedata@1.0.10
 npm-bcrypt@0.7.8_2
 npm-mongo@1.4.41
 oauth@1.1.8

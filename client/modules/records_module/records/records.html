@@ -33,18 +33,35 @@
                         <div class="col-xs-12 text-center">
                             {{#if searching}}
                                 {{>smartSearch data=contextSearch}}
-                            {{/if}}
-                            <div class="list-flex">
-                                {{#if listMode}}
-                                    {{#each records}}
-                                        {{>recordItemHorizontal}}
-                                    {{/each}}
+                            {{else}}
+                                {{#if has}}
+                                    <div class="list-flex">
+                                        {{#if listMode}}
+                                            {{#each records}}
+                                                {{>recordItemHorizontal}}
+                                            {{/each}}
+                                        {{else}}
+                                            {{#each records}}
+                                                {{>recordItemVertical}}
+                                            {{/each}}
+                                        {{/if}}
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <button id='load-more-button' type="button">Load more</button>
+                                        </div>
+                                    </div>
                                 {{else}}
-                                    {{#each records}}
-                                        {{>recordItemVertical}}
-                                    {{/each}}
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div class="no-data-found-message">
+                                                <p>Sorry, there are no records currently</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 {{/if}}
-                            </div>
+                            {{/if}}
+
                         </div>
                     </div>
                 </div>
@@ -79,7 +96,7 @@
                     <li>by <span class="card-author">{{authorName}}</span></li>
                     {{#if channel_id}}<li class="button-browse"><button type='button' class="button-from link-channel"><i class="fa fa-desktop"></i> view channel</button></li>{{/if}}
                     {{#if lesson_id}}<li class="button-browse"><button type='button' class="button-from link-lesson"><i class="fa fa-graduation-cap"></i> view lesson</button></li>{{/if}}
-                    {{#if isReply}}<li class="button-browse"><button type='button' class="button-from link-lesson"><i class="fa fa-eye"></i> view parent</button> </li>{{/if}}
+                    {{#if isReply}}<li class="button-browse"><button type='button' class="button-from link-parent"><i class="fa fa-eye"></i> view parent</button> </li>{{/if}}
                     <li class="card-counters">
                         <span>{{dateFrom createdAt}} · </span>
                         <span class="file-count fa fa-file"></span><span class="counter">{{docs_count}}</span>
@@ -116,7 +133,7 @@
                 <li>by <span class="card-author">{{authorName}}</span></li>
                 {{#if channel_id}}<li class="text-center button-browse"><button type='button' class="button-from link-channel"><i class="fa fa-desktop"></i> channel</button></li>{{/if}}
                 {{#if lesson_id}}<li class="text-center button-browse"><button type='button' class="button-from link-lesson"><i class="fa fa-graduation-cap"></i> lesson</button></li>{{/if}}
-                {{#if isReply}}<li class="text-center button-browse"><button type='button' class="button-from link-lesson"><i class="fa fa-eye"></i> parent</button></li>{{/if}}
+                {{#if isReply}}<li class="text-center button-browse"><button type='button' class="button-from link-parent"><i class="fa fa-eye"></i> parent</button></li>{{/if}}
                 <li class="card-counters text-center">
                     <span class="card-date">{{dateFrom createdAt}} · </span>
                     <span class="file-count fa fa-file"></span><span class="counter">{{docs_count}}</span>

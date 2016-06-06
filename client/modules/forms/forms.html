@@ -75,37 +75,9 @@
                 <div class="arrow"></div>
                 <div class="emoticons-list">
                     {{#emoji}}
-                        <span>:smile:</span>
-                        <span>:smiley:</span>
-                        <span>:heart_eyes:</span>
-                        <span>:flushed:</span>
-                        <span>:grin:</span>
-                        <span>:worried:</span>
-                        <span>:blush:</span>
-                        <span>:kissing_heart:</span>
-                        <span>:open_mouth:</span>
-                        <span>:joy:</span>
-
-                        <span>:unamused:</span>
-                        <span>:disappointed_relieved:</span>
-                        <span>:disappointed:</span>
-                        <span>:weary:</span>
-                        <span>:confounded:</span>
-                        <span>:sweat:</span>
-                        <span>:fearful:</span>
-                        <span>:cold_sweat:</span>
-
-                        <span>:scream:</span>
-                        <span>:sob:</span>
-                        <span>:sleepy:</span>
-                        <span>:sleeping:</span>
-                        <span>:neutral_face:</span>
-                        <span>:angry:</span>
-                        <span>:rage:</span>
-                        <span>:triumph:</span>
-                        <span>:innocent:</span>
-                        <span>:zzz:</span>
-                        <span>:boom:</span>
+                        {{#each emojis}}
+                            <span>:{{name}}:</span>
+                        {{/each}}
 
                     {{/emoji}}
                 </div>
@@ -187,6 +159,12 @@
                                 <div class="checkbox-item">
                                     <label><i class="fa fa-circle-o"></i> default</label>
                                 </div>
+                                {{#if hasService}}
+                                    <div id='from-service' class="checkbox-item">
+                                        <label><i class="fa fa-circle-o"></i> from service</label>
+                                    </div>
+                                {{/if}}
+
                                 <div class="checkbox-item">
                                     <label class="checkbox-awesome"><i class="fa fa-circle-o"></i> url</label>
                                     <input type="text" autocomplete="off" placeholder="insert a url" disabled/>
@@ -449,7 +427,7 @@
 <template name="formDoc">
     <form class="awesome-form form-editor">
         <div class="form-body">
-            <div class="form-group">
+            <div class="form-group title-document-input">
                 <div class="row">
                     <div class="col-xs-12 form-field">
                         <label>Title</label>
@@ -463,15 +441,9 @@
                         <p class="section-form">Languages</p>
                         <div>
                             <ul>
-                                <li class="lang">coffee</li>
-                                <li class="lang">css</li>
-                                <li class="lang">html</li>
-                                <li class="lang">javascript</li>
-                                <li class="lang">json</li>
-                                <li class="lang">lua</li>
-                                <li class="lang">php</li>
-                                <li class="lang">xml</li>
-                                <li class="lang">xquery</li>
+                                {{#each modes}}
+                                    <li id='{{module}}' class="lang">{{name}}</li>
+                                {{/each}}
                             </ul>
                         </div>
                     </div>
@@ -483,20 +455,9 @@
                         <p class="section-form">Themes</p>
                         <div>
                             <ul>
-                                <li class="theme">ambiance</li>
-                                <li class="theme">chaos</li>
-                                <li class="theme">chrome</li>
-                                <li class="theme">clouds</li>
-                                <li class="theme">clouds_midnight</li>
-                                <li class="theme">cobalt</li>
-                                <li class="theme">dawn</li>
-                                <li class="theme">eclipse</li>
-                                <li class="theme">github</li>
-                                <li class="theme">monokai</li>
-                                <li class="theme">tomorrow</li>
-                                <li class="theme">terminal</li>
-                                <li class="theme">twilight</li>
-                                <li class="theme">xcode</li>
+                                {{#each themes}}
+                                    <li id='{{module}}' class="theme">{{name}}</li>
+                                {{/each}}
                             </ul>
                         </div>
                     </div>
@@ -671,6 +632,7 @@
 
 <template name="inputEmailsBox">
     <div class="input-email-box">
+        <p class="info">We recommend that you have at least one registered email.</p>
         <div class="list-emails">
             {{#each emails}}
                 <div class="email"><p>{{address}} <span class="remove-email"><i class="fa fa-trash"></i></span></p></div>

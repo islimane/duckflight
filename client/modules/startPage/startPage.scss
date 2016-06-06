@@ -1,3 +1,5 @@
+@import '../../mixins';
+
 .welcome-banner{
   position: relative;
   .banner-description{
@@ -9,23 +11,21 @@
   }
   .main-title{
     position: absolute;
-    height: 300px;
-    width: 100%;
+    @include size(100%,300px);
     top: 0;
     z-index: 1;
-    display: flex;
-    align-content: center;
-    align-items: center;
-    justify-content: center;
+    @include flexbox;
+    @include align-items(center);
+    @include align-content(center);
+    @include justify-content(center);
     margin-bottom: -40px;
     img{
       background: white;
       padding: 3px;
-      border-radius: 50%;
-      opacity: 0.8;
-      height: 56px;
-      width: 56px;
-      box-shadow: 0px 5px 10px rgba(0,0,0,.5);
+      @include border-radius(50%);
+      @include opacity(0.8);
+      @include size(56px);
+      @include box-shadow(0px 5px 10px rgba(0,0,0,.5));
       display: block;
     }
     h3{
@@ -46,7 +46,7 @@
   .head {
     span{
       background: #3D986E;
-      border-radius: 20px;
+      @include border-radius(20px);
       padding: 5px 15px;
       color: #FAF8F8;
       font-weight: 100;
@@ -62,16 +62,21 @@
     }
     .body{
       .task{
+        background: #F5F4F4;
         padding-left: 30px;
-        &:hover{
-          background: #F5F4F4;
+        @include border-radius(10px);
+        margin-bottom: 10px;
+        a{
+          font-size: 14px;
+          padding-top: 10px;
+          color: #DD4242;
+          &:hover{text-decoration:underline;}
         }
         .title{
-          margin: 5px auto 0px;
-          a{
-            font-size: 14px;
-            color: #DD4242;
-          }
+          cursor: pointer;
+          margin: 0px;
+          line-height: 36px;
+
           button{
             border: none;
             background: transparent;
@@ -83,17 +88,25 @@
           padding: 10px 15px;
           font-size: 14px;
           .task-item{
+            margin-bottom: 10px;
             &:hover{
               background: #E3E1E1;
               cursor: pointer;
             }
-            border-radius: 5px;
+            @include border-radius(5px);
             padding: 10px;
             p{margin-bottom: 5px;}
             .description{
               padding-left: 15px;
               margin: 0;
             }
+          }
+        }
+        &.done{
+          .done-icon{
+            color: #3C7A63;
+            font-size: 18px;
+            vertical-align: middle;
           }
         }
       }
@@ -105,7 +118,7 @@
   padding: 15px 30px;
   h4 span{
     background: #7CBCF7;
-    border-radius: 20px;
+    @include border-radius(20px);
     padding: 5px 15px;
     color: #FAF8F8;
     font-weight: 100;
@@ -117,7 +130,7 @@
     margin-top: 25px;
     padding: 35px 15px;
     background: #E8E7E7;
-    border-radius: 20px;
+    @include border-radius(20px);
     font-size: 14px;
     color: #7F7F7F;
     i{font-size: 45px;}
@@ -131,7 +144,7 @@
       button{
         border: none;
         background: #AEAFAE;
-        border-radius: 10px;
+        @include border-radius(10px);
         padding: 2px 7px;
         font-size: 14px;
         &:focus{

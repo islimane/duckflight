@@ -1,0 +1,161 @@
+@import '../../mixins';
+
+.feature-detail-wrapper{
+  margin: 40px 30px;
+  color: rgba(255,255,255,0.7);
+  .feature-detail{
+    .feature-header{
+      padding: 20px;
+      h3{
+        font-weight: lighter !important;
+        font-size: 30px;
+        margin-bottom: 20px;
+      }
+      img{
+        @include size(100%,auto);
+      };
+      i{
+        @include size(70px);
+        @include border-radius(50%);
+        background: #DDDEDF;
+        line-height: 70px;
+        font-size: 32px;
+      };
+
+      p{
+        font-size: 18px;
+        margin-top: 20px;
+      }
+
+      &.records{
+        @include gradient(#FD3D3D, #FF7A7A, vertical);
+        i{color: #FD3D3D;}
+      };
+      &.contacts{
+        @include gradient(#3A3C55, #6A70E6, vertical);
+        i{color: #3A3C55;}
+      }
+      &.full-responsive{
+        @include gradient(#161414, #6B584E,vertical);
+        i{color: #161414;}
+      }
+      &.replies{
+        @include gradient(#5A3A7D, #82333F,vertical);
+        i{color: #5A3A7D;}
+      }
+      &.conversations{
+        @include gradient( #344D39, #53B268,vertical);
+        i{color: #344D39;}
+      };
+      &.emails{
+        @include gradient(#A96A5A, #F17E37,vertical);
+        i{color: #A96A5A;}
+      };
+      &.lessons{
+        @include gradient(#333857, #3956FD,vertical);
+        i{color: #333857;}
+      }
+      &.channels{
+        @include gradient(#3D1D48, #664073,vertical);
+        i{color: #3D1D48;}
+      }
+      &.tutorials{
+        @include gradient(#0B335B, #256CB3,vertical);
+        i{color: #0B335B;}
+      }
+      &.profile{
+        @include gradient( #903B3B, #603737,vertical);
+        i{color: #903B3B;}
+      }
+    }
+  }
+}
+
+
+.image-full-screen{
+  position: fixed;
+  padding: 20px;
+  @include size(100%);
+  background: rgba(0,0,0,0.8);
+  display: none;
+  &.active{
+    display: block;
+  }
+  z-index: 2000;
+  #close-gallery{
+    font-size: 25px;
+    cursor: pointer;
+    color: white;
+  }
+  .flex-wrapper{
+    height: 100%;
+    @include flexbox;
+    @include flex-direction(column);
+    @include align-items(center);
+    @include justify-content(center);
+    @include flex-wrap(nowrap);
+    .description{
+      color: rgba(255,255,255,0.6);
+      font-size: 15px;
+      padding: 20px 0px;
+      margin-bottom: 10px;
+    }
+    .gallery-full-wrapper{
+      @include flexbox;
+      @include flex-direction(column);
+      @include align-items(center);
+      @include justify-content(center);
+      padding: 5% 5% 5%;
+      align-items: center;
+      img{
+        max-width: 90%;
+      }
+    }
+    button{
+      font-size: 30px;
+      color: white;
+      border: none;
+      background: transparent;
+      &:focus{
+        outline: 0px;
+      }
+    }
+  }
+}
+.gallery-wrapper{
+  @include gradient(#3D3E5C,#2D2F49,vertical);
+  padding: 20px;
+  p{
+    font-size: 18px;
+  }
+}
+.gallery{
+  @include flexbox;
+  @include flex-wrap(wrap);
+  @include flex-flow(row wrap);
+  @include justify-content(center);
+  img{
+    @include flex(auto);
+    width: 200px;
+    margin: .5vw;
+    max-height: 200px;
+    object-fit: contain;
+    @include box-shadow(3px 3px 2px rgba(0,0,0,0.3));
+    cursor: pointer;
+    background: rgba(0,0,0,1);
+    @include filter(brightness,50%);
+    padding: 10px;
+    &:hover{
+      @include filter(brightness,100%);
+    }
+  }
+}
+
+@include mquery(400px){
+  .gallery div { margin: 0; }
+  .gallery { padding: 0; }
+  .feature-detail-wrapper{
+    margin: 0px;
+  }
+}
+

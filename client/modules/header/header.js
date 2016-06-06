@@ -1,6 +1,3 @@
-Template.header.helpers({
-});
-
 Template.header.events({
     'click .show-sidebar': function(e){
         $('#sidebar-wrapper').removeClass('unactive');

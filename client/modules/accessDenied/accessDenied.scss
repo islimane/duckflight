@@ -1,6 +1,7 @@
+@import '../../mixins';
 .denied-wrapper{
   height: 100%;
-  display: flex;
+  @include flexbox;
   background-image: url('/deniedBG.jpg');
   background-size: cover;
   align-items: center;
@@ -19,9 +20,7 @@
     }
     img{
       margin: 20px;
-      background: #FBF8F8;
-      border-radius: 50%;
-      padding: 6px;
+      height: 70px;
     }
     p{
       font-size: 1.2em;

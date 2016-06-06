@@ -33,4 +33,4 @@ Template.profileEdit.destroyed = function(){
 
 Template.profileEdit.rendered = function(){
     console.log('hey');
-}
+};

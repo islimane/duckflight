@@ -19,10 +19,10 @@ AudioRecorder = function(){
 
         window.params = params;
 
-        navigator.getUserMedia  = navigator.getUserMedia ||
-            navigator.webkitGetUserMedia ||
-            navigator.mozGetUserMedia ||
-            navigator.msGetUserMedia;
+        navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+    };
+    this.isSupported = function(){
+        return navigator.getUserMedia;
     };
     this.startRecording = function(callback){
 
@@ -35,7 +35,7 @@ AudioRecorder = function(){
                 function(stream){
                     audioStream = stream;
                     recorder = window.RecordRTC(stream,{
-                        type: 'audio',
+                        type: 'audio/webm',
                         bufferSize: typeof params.bufferSize == 'undefined' ? 16384 : params.bufferSize,
                         sampleRate: typeof params.sampleRate == 'undefined' ? 44100 : params.sampleRate,
                         leftChannel: params.leftChannel || false,

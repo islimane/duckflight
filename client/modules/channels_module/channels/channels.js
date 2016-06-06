@@ -2,11 +2,9 @@ Template.channels.helpers({
 	channels: function(){
 		switch(Session.get('filter-active')) {
 			case 'recent-filter':
-				return Channels.find({}, {sort: {createdAt: -1}});
+				return Channels.find({}, {sort: {createdAt: -1},limit: Session.get('limit')});
 			case 'popular-filter':
-				return Channels.find({}, {sort: {votes_count: -1}});
-			case 'search-filter':
-				return [];
+				return Channels.find({},{sort:{votes_count: -1},limit: Session.get('limit')});
 		}
 	},
 	listMode: function(){
@@ -17,6 +15,9 @@ Template.channels.helpers({
 	},
 	contextSearch: function(){
 		return {context: 'channels'};
+	},
+	has: function(){
+		return Channels.find({}).count();
 	}
 });
 
@@ -36,18 +37,27 @@ Template.channels.events({
 		$('.filter').removeClass('active');
 		$(elem).addClass('active');
 		Session.set('filter-active',$(elem)[0].id);
+		Session.set('limit',LOAD_INITIAL);
 	},
 	'click .button-circle': function(){
 		Router.go('channelSubmit');
+	},
+	'click #load-more-button': function(){
+		Session.set('limit',Session.get('limit') + MORE_LIMIT);
 	}
-})
+});
 
 Template.channels.rendered = function(){
 	Session.set('horizontalMode',true);
 	$('.button-circle').tooltip({placement: 'bottom', title: 'create a new Channel'});
 };
 
+Template.channels.destroyed = function(){
+	Session.set('limit',null);
+};
+
 Template.channels.created = function(){
+	Session.set('limit',LOAD_INITIAL);
 	Session.set('filter-active', 'recent-filter');
 };
 
@@ -68,7 +78,7 @@ Template.channelItemHorizontal.events({
 		Router.go('channel',{_id: this._id}); //voy a la pagina principal del record.
 	},
 	'click .card-author': function(){
-		Router.go('profile',{_id: this.author});
+		Router.go('profile',{_id: this.author},{query: 'initialSection=channelsTabContent'});
 	}
 });
 
@@ -96,7 +106,7 @@ Template.channelItemVertical.events({
 		Router.go('channel',{_id: this._id}); //voy a la pagina principal del record.
 	},
 	'click .card-author': function(){
-		Router.go('profile',{_id: this.author});
+		Router.go('profile',{_id: this.author},{query: 'initialSection=channelsTabContent'});
 	}
 });
 

@@ -34,7 +34,6 @@ EditorPlayerManager = function(){
         editor.setTheme("ace/theme/monokai");
         editor.getSession().setMode("ace/mode/javascript");
         editor.setShowPrintMargin(false);
-        editor.$blockScrolling = Infinity;
         editor.setValue('');
         $('.ace_gutter').css('z-index','0');
     }
@@ -107,6 +106,16 @@ EditorPlayerManager = function(){
                         editor.setValue(docActual.value);
                         editor.getSession().setMode(docActual.mode);
                         editor.setTheme(docActual.theme);
+                        break;
+                    case 'scroll':
+                        switch(e.arg.type){
+                            case 'top':
+                                editor.getSession().setScrollTop(e.arg.value);
+                                break;
+                            case 'left':
+                                editor.getSession().setScrollLeft(e.arg.value);
+                                break;
+                        }
                         break;
                 }
             }else{

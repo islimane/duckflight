@@ -1,3 +1,5 @@
+@import '../../mixins';
+
 $main-background-color: #E3E1E1;
 $grey-color: #CAC9C9;
 $blue-color: #5398EB;
@@ -32,9 +34,7 @@ $verdana-thin: 100;
   font-family: $verdana;
   font-weight: $verdana-light;
   padding: 20px 30px;
-  -webkit-box-shadow: $shadow;
-  -moz-box-shadow: $shadow;
-  box-shadow: $shadow;
+  @include box-shadow($shadow);
 
   section .title-section{
     font-size: 20px;
@@ -46,7 +46,7 @@ $verdana-thin: 100;
       font-size: 12px;
       padding: 5px 10px;
       background: #D2D2D2;
-      border-radius: 10px;
+      @include border-radius(10px);
       cursor: pointer;
       &:hover{
         background: #E6E4E4;
@@ -61,13 +61,12 @@ $verdana-thin: 100;
     color: white;
     font-size: 16px;
     margin-top: 20px;
-    transition: .2s padding ease-out;
+    @include transition(padding, .2s, ease-out);
     &:hover{
       background: #69D9A7;
       padding: 10px 80px;
-      transition: .2s padding ease-out;
-      border-top-left-radius: 5px;
-      border-top-right-radius: 5px;
+      @include transition(padding,.2s, ease-out);
+      @include border-radius(5px 5px 0px 0px);
     }
     &:focus{
       outline: 0px;
@@ -83,21 +82,21 @@ $verdana-thin: 100;
       padding: 0px 10px;
     }
     label{
-      opacity: .8;
+      @include opacity(.8);
       top: 20px;
       position: absolute;
       font-size: 15px;
       color: $main-color;
       cursor: text;
       font-weight: $verdana-thin;
-      transition: .2s ease-out;
+      @include transition(all,.2s, ease-out);
 
       &.active{
-        opacity: 1;
+        @include opacity(1);
         font-size: 12px;
         color: #F06C6C;
-        transform: translateY(-25px);
-        transition: .2s ease-out;
+        @include transform(translateY(-25px));
+        @include transition(all,.2s, ease-out);
 
       }
     }
@@ -107,10 +106,10 @@ $verdana-thin: 100;
       border: none;
       background: transparent;
       border-bottom: 1pt solid $main-color;
-      border-radius: 0px;
+      @include border-radius(0px);
       padding: 5px 0px;
       color: $main-color;
-      opacity: .8;
+      @include opacity(.8);
 
       &.active{
         opacity: 1;
@@ -119,9 +118,9 @@ $verdana-thin: 100;
       &:focus{  outline: 0px;  }
 
       &.form-control{
-        border-radius: 0px;
-        box-shadow: none;
-        transition: none;
+        @include border-radius(0px);
+        @include box-shadow(none);
+        @include transition(none);
       }
 
     }
@@ -135,7 +134,7 @@ $verdana-thin: 100;
         display: inline-block;
         padding: 5px 15px;
         background: #8B8B8B;
-        border-radius: 15px;
+        @include border-radius(15px);
         font-size: 12px;
         cursor: pointer;
         &:hover{
@@ -160,9 +159,7 @@ $verdana-thin: 100;
     position: relative;
     background: transparent;
     padding: 10px 0px 40px;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
+    @include box-shadow(none);
     height: 100%;
     .form-body{
       overflow-y: scroll;
@@ -182,7 +179,7 @@ $verdana-thin: 100;
       button{
         border: none;
         margin-top: -5px;
-        border-radius: 10px;
+        @include border-radius(10px);
         background: #4C4C4C;
         margin-top: 0px;
         padding: 5px 10px;
@@ -219,17 +216,16 @@ $verdana-thin: 100;
       .list-sections{
         padding: 5px 0px;
         .section-item-edit{
-          display: flex;
+          @include flexbox;
           width: 100%;
           .title-wrapper{
             padding: 0px 10px;
-            flex: 1;
+            @include flex(1);
             color: #7F7E7E;
           }
           .actions-wrapper{
             padding: 5px 10px;
             background: transparent;
-            padding-right: 10px;
             button{
               margin: 0px 2px;
               background: #E4E2E2;
@@ -304,23 +300,19 @@ $verdana-thin: 100;
   .avatar{
     margin: 0px 5px;
     &.avatar-img{
-      width: 100px;
-      height: 100px;
+      @include size(100px);
     }
     &.avatar-img-medium{
-      width: 80px;
-      height: 80px;
+      @include size(80px);
     }
     &.avatar-img-circle{
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
+      @include size(60px);
+      @include border-radius(50%);
     }
   }
 
   .banner-img{
-    height: 170px;
-    width: 100%;
+    @include size(100%,170px);
     object-fit: cover;
   }
 
@@ -331,7 +323,7 @@ $verdana-thin: 100;
       font-size: 12px;
       padding: 5px 10px;
       background: #D2D2D2;;
-      border-radius: 10px;
+      @include border-radius(10px);
       cursor: pointer;
       &:hover {
         background: #E6E4E4;
@@ -388,15 +380,13 @@ $verdana-thin: 100;
           position: relative;
           display: inline-block;
           img{
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            @include border-radius(50%);
+            @include size(50px,50px);
           }
           button{
             border: none;
-            border-radius: 50%;
-            height: 50px;
-            width: 50px;
+            @include border-radius(50%);
+            @include size(50px);
             font-size: 15px;
             font-weigth: 100;
             &:focus{  outline: 0px; }
@@ -424,7 +414,7 @@ $verdana-thin: 100;
             left: 15px;
             background: rgba(7, 0, 4, 0.8);
             color: white;
-            border-radius: 5px;
+            @include border-radius(5px);
             padding: 0px 10px;
             font-weight: 100;
           }
@@ -466,15 +456,13 @@ $verdana-thin: 100;
       position: relative;
       display: inline-block;
       img{
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
+        @include border-radius(50%);
+        @include size(50px);
       }
       button{
         border: none;
-        border-radius: 50%;
-        height: 50px;
-        width: 50px;
+        @include border-radius(50%);
+        @include size(50px);
         font-size: 15px;
         font-weigth: 100;
         &:focus{  outline: 0px; }
@@ -502,7 +490,7 @@ $verdana-thin: 100;
         left: 15px;
         background: rgba(7, 0, 4, 0.8);
         color: white;
-        border-radius: 5px;
+        @include border-radius(5px);
         padding: 0px 10px;
         font-weight: 100;
       }
@@ -545,7 +533,7 @@ $verdana-thin: 100;
         width: 100%;
         height: 100%;
         background: rgba(0,0,0,0.5);
-        border-radius: 50%;
+        @include border-radius(50%);
         font-size: 28px;
         color: #B5FFC3;
         i{
@@ -564,7 +552,7 @@ $verdana-thin: 100;
 
 
 .input-message-box{
-  display: flex;
+  @include flexbox;
   position: relative;
   .popover-panel{
     position: absolute;
@@ -572,8 +560,7 @@ $verdana-thin: 100;
     min-width: 50%;
     display: flex;
     .body{
-      height: 100%;
-      width: 100%;
+      @include size(100%);
       position: relative;
       padding: 10px;
       .arrow{
@@ -589,7 +576,7 @@ $verdana-thin: 100;
     }
     z-index: 100;
     background: rgba(7, 0, 4, 0.8);
-    border-radius: 10px;
+    @include border-radius(10px);
   };
 
   #emoticons-panel{
@@ -630,10 +617,10 @@ $verdana-thin: 100;
       }
       #link-input{
         color: #ADACAC;
-        display: flex;
+        @include flexbox;
         width: 100%;
         input{
-          flex:1;
+          @include flex(1);
           background: transparent;
           border: none;
           border-bottom: 1px solid $main-color;
@@ -645,7 +632,7 @@ $verdana-thin: 100;
           color: #41F884;
           padding: 0px 10px;
           margin-left: 10px;
-          border-radius: 5px;
+          @include border-radius(5px);
           background: #494A49;
           &:focus{outline: 0px;}
           &:hover{
@@ -657,20 +644,19 @@ $verdana-thin: 100;
   }
 
   .author-avatar{
-    width: 50px;
-    height: 50px;
-    border-radius: 10px;
+    @include border-radius(10px);
+    @include size(50px);
   }
   .input-box-wrapper{
-    flex: 1;
+    @include flex(1);
     word-break: break-all;
     position: relative;
     border: 1px solid #EBEAEA;
     background: #EAEAEA;
     padding: 10px 15px 10px 10px;
-    border-radius: 20px;
+    @include border-radius(20px);
     margin-left: 15px;
-    display: flex;
+    @include flexbox;
     .arrow{
       position: absolute;
       top: 15px;
@@ -695,9 +681,9 @@ $verdana-thin: 100;
       }
     }
     #message-input{
-      flex:1;
+      @include flex(1);
       padding: 5px;
-      border-radius: 10px;
+      @include border-radius(10px);
       border: 1px dashed #BAB9B9;
       background: #FFFFFF;
       color: #6F6E6E;
@@ -727,7 +713,7 @@ $verdana-thin: 100;
         font-size: 14px;
         padding: 5px 10px;
         background: #DFE1E1;
-        border-radius: 15px;
+        @include border-radius(15px);
         cursor: pointer;
         &.choosen{
           background: #5DC684;
@@ -736,25 +722,22 @@ $verdana-thin: 100;
       .tag-choosen{
         font-size: 12px;
         background: #959595;
-        border-radius: 5px;
+        @include border-radius(5px);
         padding: 5px 10px;
         i.fa-times{cursor:pointer;}
       }
 
     }
   }
-  .tags-choosen{
-
-  }
   .tags-input{
     #tags-input-box{
-      display: flex;
+      @include flexbox;
       button{
         &:focus{outline: 0px;}
         border: none;
         margin: 0px 2px;
         background: #D0CFCF;
-        border-radius: 20px;
+        @include border-radius(20px);
         width: 35px;
         &#add-tag:hover{
           background: #5DC684;
@@ -762,17 +745,17 @@ $verdana-thin: 100;
         }
       }
       .input-box{
-        flex: 1;
-        display: inline-flex;
+        @include flex(1);
+        @include inline-flexbox;
         padding: 5px 10px;
         border: 1px solid #ABABAB;
-        border-radius: 20px;
+        @include border-radius(20px);
         margin-right: 5px;
         button{
           margin: 0px;
           background: #D0CFCF;
           padding: 0px 8px;
-          border-radius: 10px;
+          @include border-radius(10px);
           &:hover{background: #B6B7B7;}
         }
         span{margin: 0px 5px;}
@@ -789,17 +772,21 @@ $verdana-thin: 100;
 }
 
 .input-email-box{
+  .info {
+    font-size: 12px;
+    color: grey;
+  }
   .remove-email{
     cursor: pointer;
   }
   .input-email-wrapper{
     padding: 10px 0px;
-    display: flex;
+    @include flexbox;
     input{
       background: transparent;
       border: none;
-      box-shadow: none;
-      border-radius: 0px;
+      @include box-shadow(none);
+      @include border-radius(0px);
       padding-left: 5px;
       border-bottom: 1px solid grey;
       &:focus{ outline: 0px;}
@@ -807,7 +794,7 @@ $verdana-thin: 100;
     button{
       margin-left: 5px;
       border: none;
-      border-radius: 5px;
+      @include border-radius(5px);
       height: 35px;
       padding: 0px 15px;
       &:focus{outline: 0px;}

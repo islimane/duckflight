@@ -17,7 +17,7 @@ Template.conversationEdit.events({
                 obj.bg_img = objectUpdate.banner;
                 console.log(obj);
             }else{
-                obj = _(currentObject).find(function(m){return m._id == u_member._id;});
+                obj = _(currentObject.members).find(function(m){return m._id == u_member._id;});
                 if(!obj) obj = {_id: u_member._id, startDate: new Date(), bg_img: '/conversationBGDefault.jpg'}
             }
             members.push(obj);
@@ -50,12 +50,23 @@ Template.conversationEdit.events({
         };
 
         var messages = [];
+        var notifications = [];
         if(subjectChanged()){
             messages.push({
                 type: 'info',
                 createdAt: new Date(),
                 message: 'Subject has been changed to ' + objectUpdate.subject + '!',
                 conversation_id: conversation_id
+            });
+            notifications.push({
+                type: 'conversation',
+                action: 'changedSubject',
+                createdAt: new Date(),
+                urlParameters: {template: 'conversation', _id: conversation_id},
+                contextTitle: currentObject.subject,
+                context: {title: objectUpdate.subject},
+                from: Meteor.userId(),
+                to: _(objectUpdate.members).chain().filter(function(m){return m._id !== Meteor.userId()}).pluck('_id')
             });
         };
         if(leaderChanged()){
@@ -64,6 +75,15 @@ Template.conversationEdit.events({
                 createdAt: new Date(),
                 message: Meteor.users.findOne(objectUpdate.leader).username + ' is the new leader!',
                 conversation_id: conversation_id
+            });
+            notifications.push({
+                type: 'conversation',
+                action: 'newLeader',
+                createdAt: new Date(),
+                urlParameters: {template: 'conversation', _id: conversation_id},
+                contextTitle: objectUpdate.subject,
+                from: Meteor.userId(),
+                to: objectUpdate.leader
             });
         };
         if(membersChanged()){
@@ -88,6 +108,14 @@ Template.conversationEdit.events({
                     message: userNamesExp.join(', ') + ((userNamesExp.length > 1)? ' have' : ' has') + ' been expelled!',
                     conversation_id: conversation_id
                 });
+                notifications.push({
+                    type: 'conversation',
+                    action: 'removed',
+                    createdAt: new Date(),
+                    urlParameters: {template: 'conversation', _id: conversation_id},
+                    contextTitle: objectUpdate.subject,
+                    to: membersExp
+                });
             }
             if(userNamesAdd.length){
                 messages.push({
@@ -95,6 +123,15 @@ Template.conversationEdit.events({
                     createdAt: new Date(),
                     message: userNamesAdd.join(', ') + ((userNamesAdd.length > 1)? ' have' : ' has') + ' been Added!',
                     conversation_id: conversation_id
+                });
+                notifications.push({
+                    type: 'conversation',
+                    action: 'added',
+                    createdAt: new Date(),
+                    urlParameters: {template: 'conversation', _id: conversation_id},
+                    contextTitle: objectUpdate.subject,
+                    to: membersAdd,
+                    from: Meteor.userId()
                 });
             }
         };
@@ -107,6 +144,11 @@ Template.conversationEdit.events({
                     Meteor.call('insertMessage', msg, function(err) {
                         if (err) console.log('insertMessage ERROR: ' + err.reason);
                     });
+                });
+                _(notifications).each(function(notif){
+                   NotificationsCreator.createNotification(notif,function(err){
+                       if (err) console.log('create Notification ERROR');
+                   });
                 });
                 Router.go('conversation',{_id: conversation_id});
             }

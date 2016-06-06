@@ -14,8 +14,19 @@ ServiceConfiguration.configurations.remove({
 
 ServiceConfiguration.configurations.insert({
     service: 'google',
-    clientId: '313319360046-1mm2i40e6ud93n4r7otu98tlsp7g9cp3.apps.googleusercontent.com',
-    secret: 'gjIWwpkyPcTbeCpUWaK4SEGT'
+    clientId: '369962061996-5l48ln1bonadiqgco7371spntgarruvq.apps.googleusercontent.com',
+    secret: 'MKS3tm4T4aswTtbftAGMqK0S',
+    redirect_uri: 'http://localhost:3000/_oauth/google?close'
+});
+
+ServiceConfiguration.configurations.remove({
+    service: 'github'
+});
+
+ServiceConfiguration.configurations.insert({
+    service: 'github',
+    clientId: '08826f0c7dce0c9a43b7',
+    secret: '9d64576e4d40817ef5f5a3d4c7647365f6b9c73a'
 });
 
 Meteor.methods({

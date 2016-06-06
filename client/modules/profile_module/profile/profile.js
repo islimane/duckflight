@@ -33,6 +33,10 @@ Template.profile.helpers({
     description: function(){
         return Meteor.users.findOne(Session.get('currentProfileId')).description;
     },
+    IHaveEmailsVerified: function(){
+        var emails = Meteor.users.findOne(Meteor.userId()).emails;
+        return _(emails).some(function(e){return e.verified;});
+    },
     hasEmails: function(){
         return Meteor.users.findOne(Session.get('currentProfileId')).emails;
     },
@@ -52,7 +56,6 @@ Template.profile.helpers({
     },
     tabNamesArray: function(){
         var tabs = [{template: 'channelsTabContent', name: 'channels', icon: 'fa-desktop', initialActive: true},
-                {template: 'teamsTabContent',    name: 'teams', icon: 'fa-users'},
                 {template: 'lessonsTabContent',  name: 'lessons', icon: 'fa-graduation-cap'},
                 {template: 'recordsTabContent',  name: 'records', icon: 'fa-film'},
                 {template: 'conversationsTabContent', name: 'conversations', icon: 'fa-comments', ownerOnly: true, isOwner: Session.get('currentProfileId') === Meteor.userId()},
@@ -66,7 +69,7 @@ Template.profile.events({
         Router.go('profileEdit',{_id: Session.get('currentProfileId')})
     },
     'click .profile-img': function(){
-        Router.go('profile',{_id: Session.get('currentProfileId')});
+        Router.go('profile',{_id: Session.get('currentProfileId')},{query: 'initialSection=channelsTabContent'});
     },
     'click #open-manager': function(){
         Router.go('profileContentManager',{_id: Session.get('currentProfileId')});
@@ -82,6 +85,12 @@ Template.profile.events({
     },
     'click #view-facebook': function(){
         window.open(Meteor.users.findOne(Session.get('currentProfileId')).services.facebook.link);
+    },
+    'click #view-google': function(){
+        window.open('https://plus.google.com/' + Meteor.users.findOne(Session.get('currentProfileId')).services.google.id);
+    },
+    'click #view-github': function(){
+        window.open('https://github.com/' + Meteor.users.findOne(Session.get('currentProfileId')).username);
     },
     'click #add-contact': function(){
         var processInitiated = function(){
@@ -108,6 +117,9 @@ Template.profile.events({
     },
     'click #send-message': function(){
         Router.go('conversationSubmit',{},{query: 'userToSend=' + Session.get('currentProfileId')});
+    },
+    'click #send-email': function(){
+        Router.go('sendEmail',{},{query: 'userToSend=' + Session.get('currentProfileId')});
     },
     'click .filter': function(e){
         var elem = e.currentTarget;
@@ -190,26 +202,33 @@ Template.navbarBanner.rendered = function(){
                 Session.set('currentSection',tab.template);
             }
     }
+    var self = this;
+    self.autorun(function(){
+        if (Session.get('currentSection')){
+            Session.set('limit',LOAD_INITIAL);
+        }
+    })
 };
 
 Template.navbarBanner.destroyed = function(){
     Session.set('currentSection', null);
+    Session.set('limit',null);
 };
 
 Template.channelsTabContent.helpers({
-    hasItems: function() {
-        return Channels.find({}).count();
-    },
     listMode: function(){
         return Session.get('horizontalMode');
     },
     channels: function(){
         switch(Session.get('currentFilter')){
             case 'recents':
-                return Channels.find({author: this.user_id},{sort: {createdAt: -1}});
+                return Channels.find({author: this.user_id},{sort: {createdAt: -1},limit: Session.get('limit')});
                 break;
             case 'populars':
-                return Channels.find({author: this.user_id},{sort: {votes_count: -1}});
+                return Channels.find({author: this.user_id},{sort: {votes_count: -1},limit: Session.get('limit')});
+                break;
+            case 'subscribed':
+                return Channels.find({author: {$ne: this.user_id}},{sort: {createdAt: -1},limit: Session.get('limit')});
                 break;
         }
     },
@@ -218,6 +237,20 @@ Template.channelsTabContent.helpers({
     },
     allowCreate: function() {
         return Session.get('currentProfileId') == Meteor.userId();
+    },
+    notResults: function(){
+        switch(Session.get('currentFilter')){
+            case 'recents':
+                return Channels.find({author: this.user_id},{sort: {createdAt: -1},limit: Session.get('limit')}).count() == 0;
+                break;
+            case 'populars':
+                return Channels.find({author: this.user_id},{sort: {votes_count: -1},limit: Session.get('limit')}).count() == 0;
+                break;
+            case 'subscribed':
+                console.log(Channels.find({author: {$ne: this.user_id}},{sort: {createdAt: -1},limit: Session.get('limit')}).count() == 0);
+                return Channels.find({author: {$ne: this.user_id}},{sort: {createdAt: -1},limit: Session.get('limit')}).count() == 0;
+                break;
+        }
     }
 });
 
@@ -233,32 +266,47 @@ Template.channelsTabContent.events({
             case 'popular-filter':
                 Session.set('currentFilter','populars');
                 break;
-            case 'search-filter':
-                Session.set('currentFilter','search-filter');
+            case 'subscribed-filter':
+                Session.set('currentFilter','subscribed');
                 break;
         }
+        Session.set('limit',LOAD_INITIAL);
+    },
+    'click #load-more-button': function(){
+        Session.set('limit',Session.get('limit') + MORE_LIMIT);
     }
 });
+
+Template.channelsTabContent.created = function(){
+    Session.set('limit',LOAD_INITIAL);
+};
 
 Template.channelsTabContent.rendered = function(){
     $('#recent-filter').click();
 };
 
+Template.channelsTabContent.destroyed = function(){
+    Session.set('limit',null);
+    Session.set('currentFilter',null);
+};
+
 
 Template.recordsTabContent.helpers({
-    hasItems: function() {
-        return Records.find({}).count();
-    },
     listMode: function(){
         return Session.get('horizontalMode');
     },
     records: function(){
         switch(Session.get('currentFilter')){
             case 'recents':
-                return Records.find({},{sort: {createdAt: -1}});
+                return Records.find({},{sort: {createdAt: -1},limit: Session.get('limit')});
                 break;
             case 'populars':
-                return Records.find({},{sort: {votes: -1}});
+                return Records.find({},{sort: {votes_count: -1},limit: Session.get('limit')});
+                break;
+            case 'latests':
+                var histEntries = HistoryRecords.find({user_id: this.user_id},{sort: {times: 1}}).fetch();
+                var latestsIds = _(histEntries).pluck('record_id');
+                return Records.find({_id: {$in: latestsIds}},{limit: Session.get('limit')});
                 break;
         }
     },
@@ -269,7 +317,24 @@ Template.recordsTabContent.helpers({
         return Session.get('currentFilter') == 'search-filter';
     },
     allowCreate: function() {
-        return Session.get('currentProfileId') == Meteor.userId();
+        return (Router.current().route.getName() === 'profile')? Session.get('currentProfileId') == Meteor.userId() : true;
+    },
+    isProfileOwner: function(){
+        return Router.current().route.getName() === 'profile' && Session.get('currentProfileId') == Meteor.userId();
+    },
+    notResults: function(){
+        switch(Session.get('currentFilter')){
+            case 'recents':
+                return Records.find({},{sort: {createdAt: -1},limit: Session.get('limit')}).count() == 0;
+                break;
+            case 'populars':
+                return Records.find({},{sort: {votes_count: -1},limit: Session.get('limit')}) === 0;
+                break;
+            case 'latests':
+                return HistoryRecords.find({user_id: this.user_id},{sort: {times: 1}}).count() == 0;
+                break;
+
+        }
     }
 });
 
@@ -285,59 +350,24 @@ Template.recordsTabContent.events({
             case 'popular-filter':
                 Session.set('currentFilter','populars');
                 break;
-            case 'search-filter':
-                Session.set('currentFilter','search-filter');
+            case 'latests-filter':
+                Session.set('currentFilter','latests');
         }
+        Session.set('limit',LOAD_INITIAL);
+    },
+    'click #load-more-button': function(){
+        Session.set('limit',Session.get('limit') + MORE_LIMIT);
     }
 });
-
+Template.recordsTabContent.created = function(){
+    Session.set('limit',LOAD_INITIAL);
+};
 Template.recordsTabContent.rendered = function(){
     $('#recent-filter').click();
 };
-
-Template.teamsTabContent.helpers({
-    listMode: function(){
-        return Session.get('horizontalMode');
-    },
-    teams: function(){
-        switch(Session.get('currentFilter')){
-            case 'recents':
-                return Teams.find({author: this.user_id},{sort: {createdAt: -1}});
-                break;
-            case 'populars':
-                return Teams.find({author: this.user_id},{sort: {votes: -1}});
-                break;
-        }
-    },
-    searching: function(){
-        return Session.get('currentFilter') == 'search-filter';
-    },
-    allowCreate: function() {
-        return Session.get('currentProfileId') == Meteor.userId();
-    }
-});
-
-Template.teamsTabContent.events({
-    'click .image-hover i, click .card-title': function(){
-        Router.go('team',{_id: this._id}); //voy a la pagina principal del record.
-    },
-    'click .filter': function(e){
-        switch(e.currentTarget.id){
-            case 'recent-filter':
-                Session.set('currentFilter','recents');
-                break;
-            case 'popular-filter':
-                Session.set('currentFilter','populars');
-                break;
-            case 'search-filter':
-                Session.set('currentFilter','search-filter');
-                break;
-        }
-    }
-});
-
-Template.teamsTabContent.rendered = function(){
-    $('#recent-filter').click();
+Template.recordsTabContent.destroyed = function(){
+    Session.set('currentFilter',null);
+    Session.set('limit',null);
 };
 
 Template.lessonsTabContent.helpers({
@@ -347,10 +377,13 @@ Template.lessonsTabContent.helpers({
     lessons: function(){
         switch(Session.get('currentFilter')){
             case 'recents':
-                return Lessons.find({author: this.user_id},{sort: {createdAt: -1}});
+                return Lessons.find({author: this.user_id},{sort: {createdAt: -1},limit: Session.get('limit')});
                 break;
             case 'populars':
-                return Lessons.find({author: this.user_id},{sort: {votes: -1}});
+                return Lessons.find({author: this.user_id},{sort: {votes_count: -1},limit: Session.get('limit')});
+                break;
+            case 'subscribed':
+                return Lessons.find({author: {$ne: this.user_id}}, {sort: {createdAt: -1}, limit: Session.get('limit')});
                 break;
         }
     },
@@ -359,6 +392,19 @@ Template.lessonsTabContent.helpers({
     },
     allowCreate: function() {
         return Session.get('currentProfileId') == Meteor.userId();
+    },
+    notResults: function(){
+        switch(Session.get('currentFilter')){
+            case 'recents':
+                return Lessons.find({author: this.user_id},{sort: {createdAt: -1},limit: Session.get('limit')}).count() == 0;
+                break;
+            case 'populars':
+                return Lessons.find({author: this.user_id},{sort: {votes_count: -1},limit: Session.get('limit')}).count() == 0;
+                break;
+            case 'subscribed':
+                return Lessons.find({author: {$ne: this.user_id}}, {sort: {createdAt: -1}, limit: Session.get('limit')}).count() == 0;
+                break;
+        }
     }
 });
 
@@ -374,35 +420,63 @@ Template.lessonsTabContent.events({
             case 'popular-filter':
                 Session.set('currentFilter','populars');
                 break;
-            case 'search-filter':
-                Session.set('currentFilter','search-filter');
+            case 'subscribed-filter':
+                Session.set('currentFilter','subscribed');
                 break;
         }
+        Session.set('limit',LOAD_INITIAL);
+    },
+    'click #load-more-button': function(){
+        Session.set('limit',Session.get('limit') + MORE_LIMIT);
     }
 });
+
+Template.lessonsTabContent.created = function(){
+    Session.set('limit',LOAD_INITIAL);
+};
 
 Template.lessonsTabContent.rendered = function(){
     $('#recent-filter').click();
 };
 
+Template.lessonsTabContent.destroyed = function(){
+    Session.set('limit',null);
+    Session.set('currentFilter',null);
+};
+
 Template.conversationsTabContent.helpers({
    conversations: function(){
-       return Conversations.find({},{sort: {last_modified: -1}});
+       return Conversations.find({},{sort: {last_modified: -1}, limit: Session.get('limit')});
    },
    conversationsCount: function(){
        return Conversations.find({}).count();
    }
 });
 
+Template.conversationsTabContent.events({
+    'click #load-more-button': function(){
+        Session.set('limit',Session.get('limit') + MORE_LIMIT);
+    }
+});
+
+Template.conversationsTabContent.created = function(){
+    Session.set('limit',LOAD_INITIAL)
+};
+Template.conversationsTabContent.destroyed = function(){
+    Session.set('limit',null);
+};
+
 Template.conversationItem.helpers({
     dateFrom: function(date){
         return smartDate(date);
     },
     status: function(){
-        var me = _(this.members).filter(function(member){
-            return member._id == Session.get('currentProfileId');
-        });
-        return me.status;
+        var alerts = ConversationAlerts.findOne({conversation_id: this._id});
+        return (alerts && alerts.alerts_count)? 'pending' : 'viewed';
+    },
+    alertsCount: function(){
+        var alerts = ConversationAlerts.findOne({conversation_id: this._id});
+        return (alerts)? alerts.alerts_count : 0;
     },
     shortField: function(field,max){
         return ellipsis (field,max);
@@ -426,7 +500,7 @@ Template.conversationItem.events({
     },
     'click img, click .author': function(){
         var authorId = Messages.findOne({conversation_id: this._id}).author;
-        Router.go('profile',{_id: authorId});
+        Router.go('profile',{_id: authorId},{query: 'initialSection=channelsTabContent'});
     }
 });
 
@@ -436,6 +510,12 @@ Template.contactsTabContent.helpers({
     },
     isOwner: function(){
         return Session.get('currentProfileId') === Meteor.userId();
+    },
+    notResults: function(){
+        return !Relations.find().count();
+    },
+    contacts_count: function(){
+        return Relations.find().count();
     }
 });
 
@@ -457,14 +537,28 @@ Template.contactsTabContent.events({
 
 Template.contactsTabContent.rendered = function(){
     $('#contacts-filter').click();
+};
 
+Template.contactsTabContent.destroyed = function(){
+    Session.set('currentFilter',null);
 };
 
 Template.contactsList.helpers({
     contacts: function(){
-        return Relations.find({},{sort: {createAt: -1}});
+        return Relations.find({},{sort: {createAt: -1},limit: Session.get('limit')});
     }
 });
+Template.contactsList.events({
+    'click #load-more-button': function(){
+        Session.set('limit',Session.get('limit') + MORE_LIMIT);
+    }
+});
+Template.contactsList.created = function(){
+    Session.set('limit',LOAD_INITIAL);
+};
+Template.contactsList.destroyed = function(){
+    Session.set('limit',null);
+};
 
 Template.contactItem.helpers({
     dateFrom: function(date){
@@ -492,9 +586,9 @@ Template.contactItem.helpers({
         var contactId = _(this.users).filter(function(item){return item !== Session.get('currentProfileId')});
         return Meteor.users.findOne(contactId[0]).description;
     },
-    emails: function(){
+    emailsVerified: function(){
         var contactId = _(this.users).filter(function(item){return item !== Session.get('currentProfileId')});
-        return Meteor.users.findOne(contactId[0]).emails;
+        return _(Meteor.users.findOne(contactId[0]).emails).some(function(e){return e.verified;});
     }
 });
 
@@ -503,7 +597,7 @@ Template.contactItem.events({
         var contactId = _(this.users).filter(function(item){return item !== Session.get('currentProfileId')});
         Session.set('currentProfileId',contactId[0]);
         Session.set('currentSection','channelsTabContent');
-        Router.go('profile',{_id: contactId[0]});
+        Router.go('profile',{_id: contactId[0]},{query: 'initialSection=channelsTabContent'});
     },
     'click .create-conversation-contact': function(){
         var user_id = _(this.users).find(function(u_id){ return u_id !== Meteor.userId()});
@@ -577,15 +671,35 @@ Template.requestItem.helpers({
 
 Template.requestItem.events({
     'click .action-button': function(e){
+        var notifications = [];
         if (this.status == 'pending'){
+            var paramsNotification = {
+                from: this.requested.id,
+                to: [this.applicant.id],
+                createdAt: new Date(),
+                urlParameters: {template: 'profile', _id: this.applicant.id},
+                type: 'contact'
+            };
             switch(e.currentTarget.id){
                 case 'accept':
                     Meteor.call('acceptRequest',this);
+                    paramsNotification.action = 'acceptedRequest';
+                    var notificationToRequested = {
+                        from: this.applicant.id,
+                        to: [this.requested.id],
+                        urlParameters: {template: 'profile', _id: this.requested.id},
+                        createdAt: new Date(),
+                        type: 'contact',
+                        action: 'added'
+                    };
+                    notifications.push(notificationToRequested);
                     break;
                 case 'refuse':
                     Meteor.call('refuseRequest',this);
+                    paramsNotification.action = 'refusedRequest';
                     break;
             }
+            notifications.push(paramsNotification);
         }else{
             switch(e.currentTarget.id){
                 case 'ok':
@@ -593,15 +707,29 @@ Template.requestItem.events({
                     break;
                 case 'resend':
                     Meteor.call('resendRequest',this);
+                    var paramsNotification = {
+                        to: [this.requested.id],
+                        from: this.applicant.id,
+                        urlParameters: {template: 'profile', _id: this.requested.id},
+                        createdAt: new Date(),
+                        type: 'contact',
+                        action: 'receivedRequest'
+                    };
                     break;
             }
+            notifications.push(paramsNotification);
         }
+        notifications.forEach(function(notification){
+            NotificationsCreator.createNotification(notification,function(err){
+                if (err) console.log('ERROR create notification');
+            });
+        });
     },
     'click .avatar, click .username': function(){
        if (this.applicant.id === Session.get('currentProfileId')){
-           Router.go('profile',{_id: this.requested.id});
+           Router.go('profile',{_id: this.requested.id},{query: 'initialSection=channelsTabContent'});
        }else{
-           Router.go('profile',{_id: this.applicant.id});
+           Router.go('profile',{_id: this.applicant.id},{query: 'initialSection=channelsTabContent'});
        }
     }
 });
@@ -620,9 +748,7 @@ Template.autoCompleteContacts.helpers({
     },
     results: function(){
         if (Session.get('searchValue')){
-            return Meteor.users.find({$where: function(){
-                console.log(this.username);
-                return this.username.toLowerCase().match(new RegExp(Session.get('searchValue').toLowerCase()))}});
+            return Meteor.users.find({_id: {$in: Session.get('results')}});
         }else{
             return [];
         }
@@ -650,27 +776,42 @@ Template.autoCompleteContacts.events({
         $('#auto-complete-input').val('');
     }
 });
-
+Template.autoCompleteContacts.created = function(){
+    Session.set('results',[]);
+};
+Template.autoCompleteContacts.destroyed = function(){
+    Session.set('results',null);
+};
 Template.autoCompleteContacts.rendered = function(){
     Session.set('searching',false);
     Session.set('activeSearch',false);
     Session.set('hasResults',false);
     Session.set('searchValue',null);
 
+    var subscription = null;
     var self = this;
     var resultsDecisor = function(){
         Session.set('hasResults',Meteor.users.find({$where: function(){
-                console.log(this.username.toLowerCase().match(new RegExp(Session.get('searchValue').toLowerCase())));
                 return this.username.toLowerCase().match(new RegExp(Session.get('searchValue').toLowerCase()));
             }}).count() > 0);
         Session.set('searching',false);
+        var results_objects = Meteor.users.find({$where: function(){
+            return this.username.toLowerCase().match(new RegExp(Session.get('searchValue').toLowerCase()));
+        }}).fetch();
+        var currentResults = [];
+        _(results_objects).each(function(res){
+            currentResults.push(res._id)
+        });
+        Session.set('results',currentResults);
     };
     self.autorun(function(){
 
         if (Session.get('searchValue')){
             if(self.data.feedDynamic != 'false'){
-                console.log(Session.get('searchValue').toLowerCase());
-                Meteor.subscribe('usersBySearch',Session.get('searchValue').toLowerCase(), resultsDecisor);
+                if (subscription){
+                    subscription.stop();
+                }
+                subscription = Meteor.subscribe('usersBySearch',Session.get('searchValue').toLowerCase(), resultsDecisor);
             }else{
                 resultsDecisor();
             }
@@ -702,14 +843,26 @@ Template.contactResult.events({
             message: "Hey, I'm using DuckFlight! add me to your contacts!",
             status: 'pending'
         };
+
+        var paramsNotification = {
+            to: [request.requested.id],
+            from: request.applicant.id,
+            type: 'contact',
+            createdAt: new Date(),
+            urlParameters: {template: 'profile', _id: request.requested.id},
+            action: 'receivedRequest'
+        };
+
         Meteor.call('insertRequest',request,function(err,res){
             if(err) console.log('error');
             if(res){
-
-            }
+                NotificationsCreator.createNotification(paramsNotification,function(err){
+                    if(err) console.log('ERROR create notification');
+                });
+            };
         });
     }
-})
+});
 
 
 

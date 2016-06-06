@@ -1,8 +1,11 @@
 Template.signInForm.helpers({
 	isLogin: function(){
 		return Session.get('isLogin');
+	},
+	errorService: function(){
+		return Session.get('errorServiceMsg');
 	}
-})
+});
 
 Template.signInForm.events({
 	"click #signUp": function(){
@@ -12,14 +15,22 @@ Template.signInForm.events({
 	'click .facebook-button': function(){
 		Meteor.loginWithFacebook({}, function(err){
 			if (err) {
-				throw new Meteor.Error("Facebook login failed");
+				Session.set('errorServiceMsg',err.reason);
 			}
 		});
 	},
 	'click .google-button': function(){
 		Meteor.loginWithGoogle({}, function(err){
 			if (err) {
-				throw new Meteor.Error("Google login failed");
+				Session.set('errorServiceMsg',err.reason);
+			}
+		});
+	},
+
+	'click .github-button': function(){
+		Meteor.loginWithGithub({requestPermissions: ['user']},function(err){
+			if (err){
+				Session.set('errorServiceMsg',err.reason);
 			}
 		});
 	},
@@ -51,3 +62,11 @@ Template.signInForm.events({
 		});
 	}
 });
+
+Template.signInForm.rendered = function(){
+	Session.set('errorServiceMsg', null);
+};
+
+Template.signInForm.destroyed = function(){
+	Session.set('errorServiceMsg',null);
+};

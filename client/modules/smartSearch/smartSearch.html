@@ -57,6 +57,11 @@
                     {{#each results}}
                         {{> Template.dynamic template=resultTemplate}}
                     {{/each}}
+                    <div class="row text-center">
+                        <div class="col-xs-12">
+                            <button id='load-more-button' type="button">Load more</button>
+                        </div>
+                    </div>
                 {{else}}
                     <p>No results</p>
                 {{/if}}

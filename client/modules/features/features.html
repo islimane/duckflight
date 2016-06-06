@@ -1,0 +1,70 @@
+<template name="features">
+    <div class="container-fluid secondary-header features-header">
+        <div class="row text-center">
+            <div class="col-xs-12">
+                <h1>Feautures</h1>
+                <h4>KNOW THE POTENTIAL OF DUCKFLIGHT, ENJOY USING & HAPPY CODE!</h4>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row text-center">
+            <div class="col-xs-12">
+                {{> featureDetail featureData=sectionData}}
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="featureDetail">
+    <div class="feature-detail-wrapper">
+        <div class="feature-detail row">
+            {{#with featureData}}
+                <div class="feature-header {{class}} col-xs-12">
+                    <p><i class="fa {{icon}}"></i></p>
+                    <h3 class="title">{{name}}</h3>
+                    <div class="col-xs-12 col-md-6 col-md-offset-3">
+                        <img src="{{mainImage}}">
+                    </div>
+                    <div class="col-xs-12">
+                        <p>{{mainDescription}}</p>
+                    </div>
+                </div>
+                {{>gallery feed=images}}
+            {{/with}}
+        </div>
+    </div>
+</template>
+
+<template name="gallery">
+    <div class="gallery-wrapper col-xs-12">
+        <p>Gallery</p>
+        <div class="gallery">
+            {{#each feed}}
+                <img src="{{link}}">
+            {{/each}}
+        </div>
+    </div>
+</template>
+
+<template name="galleryFullScreen">
+    <div class="image-full-screen">
+        <i id='close-gallery' class="fa fa-times-circle-o pull-right"></i>
+        <div class="flex-wrapper">
+            {{#with imageFeature}}
+                <div class="gallery-full-wrapper">
+                    <img src="{{link}}" alt>
+                    <div class="description">
+                        <p>{{description}}</p>
+                    </div>
+                    <div class="actions">
+                        {{#if isPossiblePrev}}<button id="prev"><i class="fa fa-arrow-circle-o-left"></i></button>{{/if}}
+                        {{#if isPossibleNext}}<button id="next"><i class="fa fa-arrow-circle-o-right"></i></button>{{/if}}
+                    </div>
+                </div>
+            {{/with}}
+
+
+        </div>
+    </div>
+</template>

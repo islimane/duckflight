@@ -1,7 +1,9 @@
+@import '../../mixins';
+
 .verifications-page{
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include flexbox;
+  @include align-items(center);
+  @include justify-content(center);
   .verifications-wrapper{
     padding-top: 85px;
     padding-bottom: 60px;
@@ -13,9 +15,8 @@
         background: rgba(0,0,0,0.5);
         color: #EFEEEE;
         margin-bottom: 5px;
-        height: 50px;
-        width: 50px;
-        border-radius: 50%;
+        @include size(50px);
+        @include border-radius(50%);
         font-size: 25px;
         padding: 12px;
       }
@@ -24,15 +25,13 @@
         font-size: 40px;
         background: transparent;
         padding: 0px;
-        height: auto;
-        width: auto;
+        @include size(auto);
       }
       img{
         padding: 5px;
         background: white;
-        border-radius: 50%;
-        height: 60px;
-        width: 60px;
+        @include border-radius(50%);
+        @include size(60px);
       }
       h3{
         color: #5D5D5D;
@@ -47,13 +46,13 @@
         background: #6E6C6C;
         color: #464545;
         border: none;
-        border-radius: 5px;
+        @include border-radius(5px);
         padding: 5px 30px;
         font-size: 18px;
       }
     }
     .verifications-form{
-      box-shadow: 0px 2px 10px rgba(0,0,0,0.5);
+      @include box-shadow(0px 2px 10px rgba(0,0,0,0.5));
       margin-top: 25px;
       max-width: 570px;
       background: rgb(248, 246, 246);
@@ -70,7 +69,7 @@
         background: #DCE1DD;
         padding: 5px 20px;
         border: none;
-        border-radius: 5px;
+        @include border-radius(5px);
         color: #5CCE68;
         font-size: 16px;
         &:hover{background: #ECF0EC;}
@@ -85,10 +84,9 @@
           margin: 0px;
         }
         .avatar{
-          border-radius: 50%;
+          @include border-radius(50%);
           border: 3px solid white;
-          height: 100px;
-          width: 100px;
+          @include size(100px);
           padding: 5px;
           margin-bottom: 10px;
           background: #431F1F;
@@ -101,11 +99,10 @@
         p{margin: 0px;}
       }
       .emails-wrapper{
-        padding: 20px;
+        padding: 20px 20px 40px;
         color: #6F6E6E;
         font-size: 16px;
         position: relative;
-        padding-bottom: 40px;
 
         .email-list{
           padding-left: 0px;
@@ -119,9 +116,8 @@
             padding: 10px;
             .status{
               color: white;
-              height: 30px;
-              width: 30px;
-              border-radius: 50%;
+              @include size(30px);
+              @include border-radius(50%);
               padding: 5px;
               background: #3FF780;
             }
@@ -147,9 +143,9 @@
           padding: 20px;
         }
         .form-group-flex{
-          display: flex;
+          @include flexbox;
           border: 1px solid #D5D4D4;
-          border-radius: 30px;
+          @include border-radius(30px);
           padding: 5px 10px;
           margin-bottom: 15px;
           label{
@@ -159,7 +155,7 @@
           }
           input{
             margin: 0px 5px;
-            flex: 1;
+            @include flex(1);
             background: transparent;
             border: none;
             &:focus{
@@ -167,7 +163,7 @@
             }
           }
           button{
-            border-radius: 30px;
+            @include border-radius(30px);
             background: #989898;
             &:hover{background: #B7B7B7;}
             color: #E6E6E6;
@@ -192,7 +188,7 @@
       background: #EFEFEF;
       color: #868686;
       border: none;
-      border-radius: 5px;
+      @include border-radius(5px);
       padding: 5px 20px;
       margin-top: 30px;
       &:hover{background: #F5F5F5;}

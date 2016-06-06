@@ -22,7 +22,7 @@ Template.sendEmail.events({
         Router.go('verificationEmail');
     },
     'click #done-button': function(){
-        Router.go('profile',{_id: Meteor.userId()});
+        Router.go('profile',{_id: Meteor.userId()},{query: 'initialSection=channelsTabContent'});
     },
     'click #try-again-button': function(){
         Session.set('sending',true);
@@ -85,7 +85,8 @@ Template.emailWritter.events({
         if (usersTo.length){
             var addresses = [];
             _(usersTo).each(function(u){
-                addresses.push(u.emails[0].address);
+                var emailVerified = _(u.emails).find(function(e){return e.verified;});
+                if (emailVerified) addresses.push(emailVerified.address);
             });
             console.log(addresses);
             var bodyHTML = $('#editor-mail').froalaEditor('html.get',true);

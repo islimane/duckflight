@@ -1,3 +1,5 @@
+@import '../../../mixins';
+
 .player-wrapper{
   .container-fluid{padding: 0px};
   .row{margin: 0px;}
@@ -6,7 +8,7 @@
   font-weight: 100;
   padding: 0;
   margin: 0px 15px;
-  box-shadow: 0px 2px 10px grey;
+  @include box-shadow(0px 2px 10px grey);
   .header-player{
     color: #F0EFEF;
     padding: 0px;
@@ -40,7 +42,7 @@
             padding: 2px 5px;
             margin: 5px 0px;
             background: #AEAEAE;
-            border-radius: 5px;
+            @include border-radius(5px);
             font-size: 12px;
           }
         }
@@ -49,15 +51,14 @@
       .browse-button{
         background: rgba(0,0,0,0.3);
         padding: 5px 10px;
-        border-radius: 10px;
+        @include border-radius(10px);
         cursor: pointer;
         &:hover{
           background: rgba(0,0,0,0.5);
         }
       }
       .doc-actual-info{
-        border-top-right-radius: 20px;
-        border-top-left-radius:5px;
+        @include border-radius(5px 20px 0px 0px);
         height: 40px;
         font-size: 15px;
         position: absolute;
@@ -67,7 +68,7 @@
         span{
           font-size: 12px;
           padding: 2px 10px;
-          border-radius: 10px;
+          @include border-radius(10px);
           background: #C9C8C8;
           color: #666565;
         }
@@ -77,12 +78,19 @@
         bottom: 5px;
         right: 10px;
         button{
-          height: 40px;
-          width: 40px;
-          border-radius: 50%;
+          @include size(40px);
+          @include border-radius(50%);
           background: rgba(0,0,0,0.5);
           border: none;
           &:focus{outline: 0px;}
+        }
+        #like_button{
+          &:hover{
+            color: white;
+          }
+          &.active{
+            color: #F76363;
+          }
         }
         #show-play-list{
           &.active{
@@ -112,9 +120,8 @@
     color: #232223;
     padding: 20px 5px;
     img{
-      height: 50px;
-      width: 50px;
-      border-radius: 50%;
+      @include size(50px);
+      @include border-radius(50%);
       cursor: pointer;
     }
     .username{
@@ -142,7 +149,7 @@
     button{
       border: none;
       background: #373636;
-      border-radius: 30px;
+      @include border-radius(30px);
       padding: 2px 3px 2px 10px;
       font-size: 14px;
       i{
@@ -152,7 +159,7 @@
         color: #F77575;
       }
       &:disabled{
-        opacity: 0.5;
+        @include opacity(0.5);
         cursor: not-allowed;
       }
       &:focus{outline: 0px;}
@@ -165,20 +172,20 @@
   height: 400px;
   position: relative;
   #editor{
-    width: 100%;
-    height: 100%;
+    @include size(100%);
     margin-left: 0px;
     z-index: 0;
+    font-size: 1.2rem !important;
+    overflow: scroll;
   }
   .loading-process-layer{
     position: absolute;
     top: 0;
-    width: 100%;
-    height: 100%;
+    @include size(100%);
     z-index: 11;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @include flexbox;
+    @include justify-content(center);
+    @include align-items(center);
     background: #474646;
     font-size: 31px;
     color: #979797;
@@ -193,13 +200,12 @@
   .auto-play-loader-wrapper{
     position: absolute;
     top: 0;
-    width: 100%;
-    height: 100%;
+    @include size(100%);
     z-index: 9;
     background: rgba(0,0,0,0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include flexbox;
+    @include justify-content(center);
+    @include align-items(center);
     .auto-play-loader{
       padding: 20px;
       p{font-size: 30px;}
@@ -224,17 +230,15 @@
   .play-list-wrapper{
     position: absolute;
     top: 0;
-    width: 100%;
-    height: 0px;
+    @include size(100%,0px);
     visibility: hidden;
     z-index: 10;
-    opacity: 0;
-    transition: all 0.3s ease;
+    @include opacity(0);
+    @include transition(all, 0.3s, ease);
     .wrapper{
       padding: 70px 15px 50px;
-      height: 100%;
+      @include size(100%);
       position: relative;
-      width: 100%;
       .pl-header{
         display: none;
         border-bottom: 1px solid #555555;
@@ -242,8 +246,7 @@
         top: 0;
         position: absolute;
         padding: 10px;
-        height: 70px;
-        width: 100%;
+        @include size(100%,70px);
         left: 0;
         p{
           padding: 0px 5px;
@@ -276,19 +279,18 @@
         .record-item-play-list{
           padding: 5px 10px;
           border-bottom: 1px solid #414141;
-          display: flex;
+          @include flexbox;
           width: 100%;
           cursor: pointer;
           p{
             color: #A9A9A9;
             font-size: 14px;
             span{color:#FC4D4D; }
-            flex: 1;
+            @include flex(1);
             margin: auto;
           };
           img{
-            height: 60px;
-            widht: 100px;
+            @include size(100px, 60px);
             vertical-align: middle;
             margin-right: 20px;
           }
@@ -311,8 +313,7 @@
         background: rgba(0,0,0,0.1);
         position: absolute;
         padding: 13px;
-        height: 50px;
-        width: 100%;
+        @include size(100%,50px);
         bottom: 0;
         left: 0;
         color: #929191;
@@ -330,9 +331,9 @@
     &.active{
       visibility: visible;
       height: 100%;
-      opacity: 1;
+      @include opacity(1);
       background: #2A2A2A;
-      transition: all 0.3s ease;
+      @include transition(all, 0.3s, ease);
       .pl-header, .pl-footer, .play-list{
         display: block;
       }
@@ -341,8 +342,7 @@
   .touch-display-layer{
     position: absolute;
     top: 0;
-    width: 100%;
-    height: 100%;
+    @include size(100%);
     .touch{
       cursor: pointer;
       height: 100%;
@@ -354,23 +354,22 @@
       }
       .cover{
         height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        @include flexbox;
+        @include align-items(center);
+        @include justify-content(center);
         button{
           border: none;
           background: rgba(15, 13, 13, 0.6);
-          border-radius: 50%;
+          @include border-radius(50%);
           font-size: 20px;
-          display: none;
-          height: 70px;
-          width: 70px;
+          visibility: hidden;
+          @include size(70px);
           z-index: 100;
           color: rgba(226, 228, 228, 0.7);
           &:hover, &:focus{ outline: 0;}
           &.active{
-            display: block;
-            animation: twinkle 0.5s ease;
+            visibility: visible;
+            @include animation(0s,0.5s,twinkle,ease);
           }
         }
       }
@@ -380,14 +379,15 @@
         width: 100%;
         .player-actions{
           &.active{
-            opacity: 1;
+            @include opacity(1);
           }
           position: relative;
           padding: 10px;
           background: rgba(32, 32, 30, 0.5);
-          opacity: 0;
-          transition: opacity 0.5s ease;
-          display: flex;
+          @include opacity(0);
+          @include transition(opacity, 0.5s, ease);
+          @include flexbox;
+
           /**TRACKS STYLES**/
           input{
             margin: 0px 5px;
@@ -399,124 +399,43 @@
             -webkit-appearance: none;
             width: 100%;
             margin: 2.6px 0;
+            &:focus{
+              outline: none;
+            }
           }
-          input[type=range]:focus {
-            outline: none;
-          }
-          input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 5.8px;
-            cursor: pointer;
-            box-shadow: 1px 1px 1px rgba(0, 0, 0, 0), 0px 0px 1px rgba(13, 13, 13, 0);
-            background: rgba(193, 0, 0, 0.25);
-            border-radius: 3.2px;
-            border: 0px solid rgba(0, 1, 1, 0);
-          }
-          input[type=range]::-webkit-slider-thumb {
-            box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-            border: 0px solid rgba(218, 0, 0, 0.19);
-            height: 11px;
-            width: 11px;
-            border-radius: 19px;
-            background: rgba(255, 109, 111, 0.98);
-            cursor: pointer;
-            -webkit-appearance: none;
-            margin-top: -2.6px;
-          }
-          input[type=range]::-moz-range-track {
-            width: 100%;
-            height: 5.8px;
-            cursor: pointer;
-            box-shadow: 1px 1px 1px rgba(0, 0, 0, 0), 0px 0px 1px rgba(13, 13, 13, 0);
-            background: rgba(193, 0, 0, 0.25);
-            border-radius: 3.2px;
-            border: 0px solid rgba(0, 1, 1, 0);
-          }
-          input[type=range]::-moz-range-thumb {
-            box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-            border: 0px solid rgba(218, 0, 0, 0.19);
-            height: 11px;
-            width: 11px;
-            border-radius: 19px;
-            background: rgba(255, 109, 111, 0.98);
-            cursor: pointer;
-          }
-          input[type=range]::-ms-track {
-            width: 100%;
-            height: 5.8px;
-            cursor: pointer;
-            background: transparent;
-            border-color: transparent;
-            color: transparent;
-          }
-          input[type=range]::-ms-fill-lower {
-            background: rgba(152, 0, 0, 0.25);
-            border: 0px solid rgba(0, 1, 1, 0);
-            border-radius: 6.4px;
-            box-shadow: 1px 1px 1px rgba(0, 0, 0, 0), 0px 0px 1px rgba(13, 13, 13, 0);
-          }
-          input[type=range]::-ms-fill-upper {
-            background: rgba(193, 0, 0, 0.25);
-            border: 0px solid rgba(0, 1, 1, 0);
-            border-radius: 6.4px;
-            box-shadow: 1px 1px 1px rgba(0, 0, 0, 0), 0px 0px 1px rgba(13, 13, 13, 0);
-          }
-          input[type=range]::-ms-thumb {
-            box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-            border: 0px solid rgba(218, 0, 0, 0.19);
-            height: 11px;
-            width: 11px;
-            border-radius: 19px;
-            background: rgba(255, 109, 111, 0.98);
-            cursor: pointer;
-            height: 5.8px;
-          }
-          input[type=range]:focus::-ms-fill-lower {
-            background: rgba(193, 0, 0, 0.25);
-          }
-          input[type=range]:focus::-ms-fill-upper {
-            background: rgba(234, 0, 0, 0.25);
-          }
-          //**END TRACK STYLES**//
 
           #progress{
-            flex: 1;
-            &::-webkit-slider-thumb{background: transparent;}
-            &::-webkit-slider-runnable-track {
-              background: rgba(17, 17, 17, 0.7);
-            }
+            @include flex(1);
+            @include thumb(transparent);
+            @include runnable-track(rgba(17, 17, 17, 0.7));
           }
           #timer{
             font-size: 12px;
             margin-top: 2px;
           }
           #seeker{
-            flex: 1;
+            @include flex(1);
             top: 12px;
             z-index: 2;
-            opacity: 0;
+            @include opacity(0);
             left: 35px;
             width: 72.5%;
             position: absolute;
-            &::-webkit-slider-runnable-track {
-              height: 10px
-            }
+            @include runnable-track($height: 10px);
           }
           #played-bar{
             position: absolute;
             background: #F25252;
-            width: 0;
+            @include size(0,5.5px);
             top: 17px;
-            height: 5.5px;
             z-index: 1;
             left: 30px;
-            border-radius: 10px;
+            @include border-radius(10px);
           }
           #volume{
             width: 10%;
-            &::-webkit-slider-runnable-track {
-              background: rgba(17, 17, 17, 0.7);
-            }
+            @include runnable-track(rgba(17, 17, 17, 0.7));
+            @include thumb;
           }
           .vol{
             width: 15px;
@@ -532,8 +451,8 @@
       }
       &:hover{
         .player-actions{
-          opacity: 1;
-          transition: opacity 0.5s ease;
+          @include opacity(1);
+          @include transition(opacity, 0.5s, ease);
         }
       }
     }
@@ -553,9 +472,9 @@
 .onoffswitch-label {
   display: block; overflow: hidden; cursor: pointer;
   height: 21px; padding: 0; line-height: 12px;
-  border: 0px solid #FFFFFF; border-radius: 20px;
+  border: 0px solid #FFFFFF; @include border-radius(20px);
   background-color: #9E9E9E;
-  transition: all 0.3s ease-out;
+  @include transition(all, 0.3s, ease-out);
 }
 .onoffswitch-label:before {
   content: "";
@@ -567,9 +486,9 @@
   top: 0px;
   bottom: 5px;
   right: 17px;
-  border-radius: 27px;
-  transition: all 0.3s ease-out;
-  box-shadow: 3px 2px 3px rgba(0, 0, 0, 0.3);
+  @include border-radius(27px);
+  @include transition(all, 0.3s, ease-out);
+  @include box-shadow(3px 2px 3px rgba(0, 0, 0, 0.3));
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label {
   background-color: #43F78B;
@@ -582,7 +501,7 @@
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label:before {
   right: 0px;
-  box-shadow: -3px 2px 3px rgba(0, 0, 0, 0.3);
+  @include box-shadow(-3px 2px 3px rgba(0, 0, 0, 0.3));
   background-color: #FFFFFF;
 }
 
@@ -596,16 +515,15 @@
       position: relative;
       background: #FE6B6B;
       padding: 5px 10px;
-      border-radius: 15px;
+      @include border-radius(15px);
       margin-right: 8px;
       color: #764949;
       i{
-        height: 20px;
-        width: 20px;
+        @include size(20px);
         background: white;
         text-align: center;
         padding-top: 2px;
-        border-radius: 50%;
+        @include border-radius(50%);
       }
       div{
         position: absolute;
@@ -617,7 +535,7 @@
       }
     }
     .line{
-      flex: 1;
+      @include flex(1);
       height: 2px;
       background: #CBCBCB;
       margin-top: 15px;
@@ -625,34 +543,31 @@
   }
 }
 
-@keyframes twinkle{
-  50%  {opacity: 1;}
-  100% {opacity: 0;
-        transform: scale(2,2)
-        }
-}
-
-
-
-@media (max-width: 990px){
-  .player-wrapper {
-    margin-top: 55px;
-    transition: all 0.5s ease;
+@include keyframes(twinkle){
+  50%  {@include opacity(1);}
+  100% {
+    @include opacity(0);
+    @include transform(scale(2,2));
   }
 }
 
-@media(max-width: 600px){
+@include mquery(990px){
+  .player-wrapper {
+    margin-top: 55px;
+    @include transition(all, 0.5s, ease);
+  }
+}
+@include mquery(600px){
   .player-wrapper{
     .box-options button{
       content: '';
     }
   }
 }
-
-@media (max-width: 450px){
-  .player-wrapper{
-    .creator-box{
-      .username, .date, .info{
+@include mquery(450px) {
+  .player-wrapper {
+    .creator-box {
+      .username, .date, .info {
         display: block;
       }
     }

@@ -1,3 +1,5 @@
+@import '../../../mixins';
+
 .list{
     padding: 20px 30px;
 }
@@ -5,7 +7,7 @@
     margin: 0px 15px 20px;
     background: #F0EDED;
     padding: 20px 0px 15px;
-    border-radius: 10px;
+    @include border-radius(10px);
     color: #512727;
     font-size: 18px;
     border: 3px dashed #6B3232;
@@ -31,10 +33,9 @@
 .userItem{
     padding: 10px;
     .avatar{
-        height: 50px;
-        width: 50px;
+        @include size(50px);
+        @include border-radius(50%);
         cursor: pointer;
-        border-radius: 50%;
     }
     .username{
         cursor: pointer;
@@ -46,23 +47,21 @@
 .sectionItem-vertical{
     background: #494949;
     margin: 0px 0px 20px;
-    border-radius: 5px;
+    @include border-radius(5px);
     padding-bottom: 0px;
     .section-header{
         color: #848484;
         position: relative;
         padding: 10px 10px 0px;
-        border-bottom-right-radius: 5px;
-        border-bottom-left-radius: 5px;
+        @include border-radius(0px 0px 5px 5px);
         p{margin: auto;}
         .header-indicators{
             padding: 15px 15px 30px;
             .option {
                 border: none;
                 background: #302F2F;
-                border-radius: 50%;
-                width: 30px;
-                height: 30px;
+                @include border-radius(50%);
+                @include size(30px);
                 padding: 1px;
                 color: #B8B6B6;
                 margin-top: -10px;
@@ -80,15 +79,15 @@
             margin-right: 5px;
         }
         .header-icon{
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            @include flexbox;
+            @include align-items(center);
+            @include justify-content(center);
             width: 100%;
             margin-left: -10px;
             position: absolute;
             .lesson-icon{
                 padding: 10px 15px 8px;
-                border-radius: 50%;
+                @include border-radius(50%);
                 font-size: 20px;
                 border: 2px solid #F25252;
                 color: #F25252;
@@ -115,7 +114,7 @@
             }
             margin-left: 5px;
             font-size: 14px;
-            border-radius: 10px;
+            @include border-radius(10px);
             line-height: 25px;
             cursor: pointer;
             color: #D0CECE;
@@ -133,16 +132,15 @@
             &.tab-button-left{
                 margin-right: -2px;
                 border-right: 1px solid #2C2C2C;
-                border-top-left-radius: 20px;
+                @include border-radius(20px 0px 0px 0px);
             }
             &.tab-button-right{
                 margin-left: -2px;
                 border-left: 1px solid #2C2C2C;
-                border-top-right-radius: 20px;
+                @include border-radius(0px 20px 0px 0px);
             }
             &.tab-button-alone{
-                border-top-right-radius: 20px;
-                border-top-left-radius: 20px;
+                @include border-radius(20px 20px 0px 0px);
                 padding: 2px 70px;
             }
             &:focus, {outline: 0px;}
@@ -167,10 +165,9 @@
             font-size: 20px;
             padding: 10px;
             img{
-                height: 45px;
-                width: 45px;
-                border-radius: 50%;
-                opacity: 0.4;
+                @include size(45px);
+                @include border-radius(50%);
+                @include opacity(0.4);
             }
         }
     }
@@ -178,9 +175,9 @@
         padding-bottom: 10px;
         border-bottom: 1px solid #302F2F;
         .section-header{
-            border-radius: 0px;
+            @include border-radius(0px);
             .index{
-                border-bottom-left-radius: 0px;
+                @include border-radius(auto auto auto 0px);
             }
         }
     }
@@ -193,7 +190,7 @@
     cursor: pointer;
     font-size: 14px;
     background: rgba(0,0,0,0.2);
-    transition: all 0.5s ease;
+    @include transition(all, 0.5s, ease);
 
     .title{
         font-size: 15px;
@@ -205,19 +202,19 @@
     }
     &:hover{
         background: rgba(0,0,0,0);
-        transition: all 0.5s ease;
+        @include transition(all, 0.5s, ease);
 
     }
 }
 
 .trackItem-config{
     background: rgba(0,0,0,0.2);
-    display: flex;
+    @include flexbox;
     width: 100%;
     padding: 10px;
-    transition: all 0.5s ease;
+    @include transition(all, 0.5s, ease);
     .title-wrapper{
-        flex: 1;
+        @include flex(1);
         font-size: 15px;
         color: #FD6961;
         padding: 0px 5px;
@@ -227,14 +224,13 @@
     }
     .config-actions{
         padding: 0px 5px;
-        display: flex;
-        align-items: center;
+        @include flexbox;
+        @include align-items(center);
         button{
             border: none;
-            height: 30px;
-            width: 30px;
+            @include size(30px);
+            @include border-radius(50%);
             margin: 5px;
-            border-radius: 50%;
             background: #464646;
             &:hover{color: #FD6961;}
             &:focus{outline: 0px;}
@@ -242,7 +238,7 @@
     }
     &:hover{
         background: rgba(0,0,0,0);
-        transition: all 0.5s ease;
+        @include transition(all, 0.5s, ease);
 
     }
 }
@@ -266,9 +262,8 @@
             background: #F25252;
             color: white;
             font-size: 14px;
-            height: 33px;
-            width: 33px;
-            border-radius: 50%;
+            @include size(33px);
+            @include border-radius(50%);
             &:focus{outline: 0px;}
         }
     }
@@ -278,7 +273,7 @@
         img{height: 80px;
             margin-right: 20px;}
         .description {
-            flex: 1;
+            @include flex(1);
             max-height: 90px;
             overflow-y: scroll;
         }

@@ -18,10 +18,10 @@ Template.player.helpers({
         return Session.get('audioVolume') === 'normal';
     },
     autoPlay: function(){
-        return (!this.isReply) ? Sections.findOne({_id: this.section_id}).auto_play : false;
+        return (!this.isReply) ? Meteor.user().auto_play : false;
     },
     autoRepeat: function(){
-        return (!this.isReply)? Sections.findOne({_id: this.section_id}).auto_repeat: false;
+        return (!this.isReply)? Meteor.user().auto_repeat: false;
     },
     isEnded: function(){
         return Session.get('ended');
@@ -95,15 +95,14 @@ Template.player.events({
         var RecordsPLArray = Records.find({section_id: this.section_id,isReply: false},{sort: {order: 1}}).fetch();
         var currentIdx = parseInt(_(RecordsPLArray).find(function(elem){return elem._id == Session.get('currentRecordId');}).order);
         var index = 0;
-        var section = Sections.findOne();
         switch($(e.currentTarget)[0].id){
             case 'bw':
                 console.log('bw');
-                index = (section.auto_repeat && this.order == 0)? RecordsPLArray.length -1 : currentIdx -1;
+                index = (Meteor.user().auto_repeat && this.order == 0)? RecordsPLArray.length -1 : currentIdx -1;
                 break;
             case 'fw':
                 console.log('fw');
-                index = (section.auto_repeat && this.order == RecordsPLArray.length -1) ? 0 : currentIdx + 1;
+                index = (Meteor.user().auto_repeat && this.order == RecordsPLArray.length -1) ? 0 : currentIdx + 1;
                 break;
             case 'fast-fw':
                 console.log('ffw');
@@ -118,10 +117,10 @@ Template.player.events({
     },
     'click #auto-play-set input': function(e){
         console.log($(e.currentTarget).is(':checked'));
-        Meteor.call('updateSectionPlayOption',this.section_id,'auto-play',$(e.currentTarget).is(':checked'));
+        Meteor.call('updateSectionPlayOption',Meteor.userId(),'auto-play',$(e.currentTarget).is(':checked'));
     },
     'click #auto-repeat-set input': function(e){
-        Meteor.call('updateSectionPlayOption',this.section_id,'auto-repeat',$(e.currentTarget).is(':checked'));
+        Meteor.call('updateSectionPlayOption',Meteor.userId(),'auto-repeat',$(e.currentTarget).is(':checked'));
     }
 });
 Template.player.created = function(){
@@ -135,51 +134,59 @@ Template.player.rendered = function(){
     var record = Records.findOne(this.data.recordId);
     var trackId = this.data.trackId;
 
-    //SoundCloud initialization
-    SC.initialize({
-        client_id: '9f2574ebd5266f995dca197f71cba11b',
-        redirect_uri: 'http://localhost:3000/redirect.html',
-        oauth_token: '1-172665-142059135-cd9567b1cb50c'
+    //SoundCloud initialization.
+    Meteor.call('getClientSC',function(err,res){
+        if(res){
+            console.log(res);
+            SC.initialize({
+                client_id: res.client_id,
+                redirect_uri: res.redirect_uri,
+                oauth_token: res.access_token,
+                scope: 'non-expiring'
+            });
+            //SoundCloud connect process.
+            SC.connect().then(function(){
+                SC.stream('/tracks/' + trackId).then(function(s){
+                    console.log(s);
+                    //params to recordPlayer
+                    var $elements = {
+                        playButton: $('#play'),
+                        pauseButton: $('#pause'),
+                        progress: $('#progress'),
+                        seeker: $('#seeker'),
+                        playedProgress: $('#played-bar'),
+                        timer: $('#timer'),
+                        touchScreenWrapper: $('.touch'),
+                        playerActionsWrapper: $('.player-actions')
+                    };
+
+                    //params to editorPlayer
+                    var editorParams = {
+                        id: 'editor',
+                        startDocs: Documents.find({start: true},{params: {doc: 1}}).fetch(),
+                        finishDocs: Documents.find({start: false},{params: {doc: 1}}).fetch(),
+                        RC: record.RC
+                    };
+
+                    $elements.stream = s;
+                    $elements.duration = s.options.duration;
+
+                    editorPlayerManager.initialize(editorParams);
+                    recordPlayer.initialize($elements,editorPlayerManager);
+                    recordPlayer.play();
+
+                }).catch(function(error){
+                    Session.set('loading',false);
+                    console.log(error);
+                });
+            });
+        }
     });
 
-    //SoundCloud connect process.
-    SC.connect().then(function(){
-        SC.stream('/tracks/' + trackId).then(function(s){
-            console.log(s);
-            //params to recordPlayer
-            var $elements = {
-                playButton: $('#play'),
-                pauseButton: $('#pause'),
-                progress: $('#progress'),
-                seeker: $('#seeker'),
-                playedProgress: $('#played-bar'),
-                timer: $('#timer'),
-                touchScreenWrapper: $('.touch'),
-                playerActionsWrapper: $('.player-actions')
-            };
 
-            //params to editorPlayer
-            var editorParams = {
-                id: 'editor',
-                startDocs: Documents.find({start: true},{params: {doc: 1}}).fetch(),
-                finishDocs: Documents.find({start: false},{params: {doc: 1}}).fetch(),
-                RC: record.RC
-            };
 
-            $elements.stream = s;
-            $elements.duration = s.options.duration;
 
-            Session.set('errorLoad',false);
-            Session.set('loading',false);
 
-            editorPlayerManager.initialize(editorParams);
-            recordPlayer.initialize($elements,editorPlayerManager);
-            recordPlayer.play();
-        }).catch(function(error){
-            Session.set('loading',false);
-            console.log(error);
-        });
-    });
 
 
 };

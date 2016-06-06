@@ -51,6 +51,12 @@ Template.sidebar.events({
 			$('#sidebar-wrapper').addClass('unactive');
 			$('#close-sidebar').removeClass('active');
 		}
+	},
+	'click #tutorials-link': function(){
+		window.open(Router.url('tutorials'));
+	},
+	'click #features-link': function(){
+		window.open(Router.url('features'));
 	}
 
 });
@@ -93,9 +99,9 @@ Template.sidebar.rendered = function(){
 };
 
 Template.menuTab.helpers({
-	channels: function(){return Channels.find({author: Meteor.userId()},{sort: {createdAt: -1},$limit: 3})},
-	teams:  function(){return Teams.find({author: Meteor.userId()},{sort: {createdAt: -1},$limit: 3})},
-	lessons:  function(){return Lessons.find({author: Meteor.userId()},{sort: {createdAt: -1},$limit: 3})},
+	channels: function(){return Channels.find({author: Meteor.userId()},{sort: {createdAt: -1},limit: 3})},
+	teams:  function(){return Teams.find({author: Meteor.userId()},{sort: {createdAt: -1},limit: 3})},
+	lessons:  function(){return Lessons.find({author: Meteor.userId()},{sort: {createdAt: -1},limit: 3})},
 	userId: function(){
 		return Meteor.userId();
 	}
@@ -143,30 +149,50 @@ Template.notificationItem.helpers({
 	},
 	title: function(max){
 		switch(this.type){
+			case 'contact':
+				return 'Contact request';
+				break;
+			default:
+				return ellipsis(this.contextTitle,max);
+				break;
+		}
+	},
+	typeClass: function(){
+		switch(this.type){
 			case 'channel':
-				console.log('he entrado');
-				return ellipsis(Channels.findOne(this.parentContext_id).title,max);
+				return 'fa-desktop';
 				break;
 			case 'lesson':
-				return ellipsis(Lessons.findOne(this.parentContext_id).title,max);
+				return 'fa-graduation-cap';
 				break;
 			case 'record':
-				return ellipsis(Records.findOne(this.parentContext_id).title,max);
+				return 'fa-film';
 				break;
 			case 'conversation':
-				return ellipsis(Conversations.findOne(this.parentContext_id).title,max);
+				return 'fa-comments';
+				break;
+			case 'profile':
+				return 'fa-user';
 				break;
 		}
 	}
 });
 
 Template.notificationItem.events ({
-	'click .notification-item': function(){
-		Router.go(this.type,{_id: this.parentContext_id});
-		Notifications.remove(this._id);
+	'click button':function(e){
+		e.stopPropagation();
+		Meteor.call('notificationRemove',this._id,Meteor.userId());
 	},
-	'click button':function(){
-		Notifications.remove(this._id);
+	'click .notification-item': function(){
+		switch(this.type){
+			case 'contact':
+				Router.go(this.urlParameters.template,{_id: this.urlParameters._id},{query: 'initialSection=contacTabContent'});
+				break;
+			default:
+				Router.go(this.urlParameters.template,{_id: this.urlParameters._id});
+				break;
+		}
+		Meteor.call('notificationRemove',this._id,Meteor.userId());
 	}
 });
 

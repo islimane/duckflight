@@ -1,25 +1,89 @@
 //RECORDS
-Meteor.publish('records',function(){
-	return Records.find({},{params: {RC: 0}});
+Meteor.publishComposite('records',function(){
+	var sub = {
+		collection: 'records',
+		find: function(){
+			return Records.find({},{params: {RC:0}});
+		},
+		children: [
+			{
+				find: function(record){
+					return Meteor.users.find(record.author,{params: {username: 1}})
+				}
+			},
+			{
+				find: function(record){
+					return Channels.find(record.channel_id,{params: {_id: 1}});
+				}
+			},
+			{
+				find: function(record){
+					return Channels.find(record.lesson_id,{params: {_id: 1}});
+				}
+			},
+			{
+				find: function(record){
+					return Records.find(record.parent_id,{params: {_id: 1}});
+				}
+			}
+		]
+
+	};
+	return sub;
 });
-Meteor.publishComposite('record',function(record_id){
+
+Meteor.publish('recordShort',function(record_id){
+	return Records.find(record_id,{fields: {title: 1,author: 1}});
+});
+Meteor.publishComposite('recordComposite',function(record_id,user_id){
 	var sub = {
 		collection: 'records',
 		find: function(){
 			return Records.find({_id: record_id});
 		},
 		children: [
-			{find: function(){return Documents.find({record: record_id});}},
-			{find: function(record){return Meteor.users.find({_id: record.author});}},
-			{find: function(record){return Channels.find(record.channel_id)}},
-			{find: function(record){return Lessons.find(record.lesson_id)}},
-			{find: function(record){return Sections.find(record.section_id)}},
+			{//documents
+				find: function(){return Documents.find({record: record_id});}
+			},
+			{//author
+				find: function(record){return Meteor.users.find({_id: record.author});}
+			},
+			{//channel
+				collection: 'channels',
+				find: function(record){return Channels.find(record.channel_id)},
+				children: [
+					{
+						find: function(channel){
+							return UsersEnrolled.find({context_id: channel._id});
+						}
+					}
+				]
+			},
+			{//lesson
+				collection: 'lessons',
+				find: function(record){return Lessons.find(record.lesson_id)},
+				children: [
+					{
+						find: function(lesson){
+							return UsersEnrolled.find({context_id: lesson._id});
+						}
+					}
+				]
+			},
+			{//sections
+				find: function(record){return Sections.find(record.section_id)}
+			},
 			{//recordsSameSection
 				find: function(record){
 					if (record.lesson_id){
 						return Records.find({lesson_id: record.lesson_id,section_id: record.section_id},
 										{params:{RC: 0, createdAt: 0, description: 0, tags: 0},sort: {order: 1}});
 					}
+				}
+			},
+			{//votes
+				find: function(record){
+					return Votes.find({record_id: record._id,user_id: user_id});
 				}
 			},
 			{//commentsByRecord
@@ -79,14 +143,43 @@ Meteor.publish('recordsByUserRanking',function(user_id){
 });
 
 
-
 //CHANNELS
-Meteor.publish('channels',function(){
-	return Channels.find({});
+Meteor.publishComposite('channels',function(){
+
+	var sub = {
+		collection: 'channels',
+		find: function(){
+			return Channels.find({});
+		},
+		children: [{
+			find: function(channel){
+				return Meteor.users.find(channel.author,{params: {username: 1}});
+			}
+		}]
+	};
+
+	return sub;
 });
 
 Meteor.publish('channel',function(channel_id){
-	return Channels.find({_id: channel_id});;
+	return Channels.find({_id: channel_id});
+});
+
+Meteor.publishComposite('channelShort',function(channel_id){
+	var sub = {
+		collection: 'channels',
+		find: function(){
+			return Channels.find(channel_id,{fields: {title: 1,author: 1}});
+		},
+		children: [
+			{
+				find: function(channel){
+					return UsersEnrolled.find({context_id: channel._id},{fields: {user_id: 1}});
+				}
+			}
+		]
+	}
+	return sub;
 });
 
 Meteor.publishComposite ('channelComposite',function(channel_id, user_id){
@@ -148,18 +241,18 @@ Meteor.publishComposite ('channelComposite',function(channel_id, user_id){
 
 
 Meteor.publish('sidebarChannels',function(user_id){
-	return Channels.find({author: user_id},{params: {title: 1},$limit: 3});
+	return Channels.find({author: user_id},{params: {title: 1},limit: 3});
 });
 Meteor.publish('channelsByUser',function(user_id){
 	return Channels.find({author: user_id});
 });
 
 Meteor.publish('channelsRanking',function(){
-	return Channels.find({},{params: {tags: 0, banner: 0, bannerDefault: 0, tagsAllow: 0},limit:5,sort: {votes_count: -1}});
+	return Channels.find({},{params: {tags: 0, banner: 0, bannerDefault: 0, tagsAllow: 0},limit: 5 ,sort: {votes_count: -1}});
 });
 
 Meteor.publish('channelsByUserRanking',function(user_id){
-	return Channels.find({author: user_id, $orderby: {votes: -1}});
+	return Channels.find({author: user_id},{sort: {votes: -1}});
 });
 
 
@@ -216,12 +309,40 @@ Meteor.publish('teamsByUserRanking',function(user_id){
 
 
 //LESSONS
-Meteor.publish('lessons',function(){
-	return Lessons.find({});
+Meteor.publishComposite('lessons',function(){
+	var sub = {
+		collection: 'lessons',
+		find: function(){
+			return Lessons.find();
+		},
+		children: [{
+			find: function(lesson){
+				return Meteor.users.find(lesson.author,{params: {username: 1}});
+			}
+		}]
+	};
+	return sub;
 });
 
 Meteor.publish('lesson',function(lesson_id){
 	return Lessons.find({_id: lesson_id});
+});
+
+Meteor.publishComposite('lessonShort',function(lesson_id){
+	var sub = {
+		collection: 'lessons',
+		find: function(){
+			return Lessons.find(lesson_id,{fields: {title: 1,author: 1}});
+		},
+		children: [
+			{
+				find: function(lesson){
+					return UsersEnrolled.find({context_id: lesson._id},{fields: {user_id: 1}});
+				}
+			}
+		]
+	}
+	return sub;
 });
 
 Meteor.publishComposite('lessonComposite',function(lesson_id,user_id){
@@ -272,8 +393,8 @@ Meteor.publishComposite('lessonComposite',function(lesson_id,user_id){
 				]
 			},
 			{//votesLesson
-				find: function(channel){
-					return Votes.find({channel_id: channel._id, user_id: user_id});
+				find: function(lesson){
+					return Votes.find({lesson_id: lesson._id, user_id: user_id});
 				}
 			}
 		]
@@ -293,12 +414,67 @@ Meteor.publish('lessonsByUser',function(user_id){
 	return Lessons.find({author: user_id});
 });
 
+Meteor.publishComposite('userSubscriptions',function(user_id){
+	var sub = {
+		collection: 'usersEnrolled',
+		find: function(){
+			return UsersEnrolled.find({user_id: user_id});
+		},
+		children: [
+			{
+				collection: 'channels',
+				find: function(subscription){
+					return Channels.find(subscription.context_id);
+				},
+				children:[{
+					find: function(channel){
+						return Meteor.users.find(channel.author, {params: {username: 1}});
+					}
+				}]
+			},
+			{
+				collection: 'lessons',
+				find: function(subscription){
+					return Lessons.find(subscription.context_id);
+				},
+				children:[{
+					find: function(lesson){
+						return Meteor.users.find(lesson.author, {params: {username: 1}});
+					}
+				}]
+			}
+		]
+	};
+	return sub;
+});
+
+Meteor.publishComposite('historyRecords',function(user_id){
+	var sub = {
+		collection: 'historyRecords',
+		find: function(){
+			return HistoryRecords.find({user_id: user_id});
+		},
+		children: [{
+			collection: 'records',
+			find: function(historyEntry){
+				return Records.find(historyEntry.record_id,{params: {RC: 0}});
+			},
+			children: [{
+				find: function(record){
+					return Meteor.users.find(record.author,{params: {username: 1}});
+				}
+			}]
+		}]
+	};
+	return sub;
+});
+
 Meteor.publish('lessonsRanking',function(){
 	return Lessons.find({}, {limit: 5}, {sort: {votes_count: -1}});
 });
 
 Meteor.publish('lessonsByUserRanking',function(user_id){
-	return Lessons.find({author: user_id, $orderby: {votes: -1}});
+	return Lessons.find({author: user_id},{sort: {votes: -1}});
 });
 
 
@@ -314,7 +490,7 @@ Meteor.publishComposite ('conversationsByUser',function(user_id){
 		children: [{
 			collection: 'messages',
 			find: function(conversation){
-				return Messages.find({conversation_id: conversation._id});
+				return Messages.find({conversation_id: conversation._id,type: {$exists: false}, createdAt: {$gte: conversation.last_modified}});
 			},
 			children: [{
 				find: function(message){
@@ -413,19 +589,8 @@ Meteor.publishComposite('userNotifications',function(user_id){
 			},
 			{
 				find: function(notification){
-					switch(notification.type){
-						case 'channel':
-							return Channels.find(notification.parentContext_id,{fields: {title: 1}});
-							break;
-						case 'lesson':
-							return Lessons.find(notification.parentContext_id,{fields: {title: 1}});
-							break;
-						case 'record':
-							return Records.find(notification.parentContext_id,{fields: {title: 1}});
-							break;
-						case 'conversation':
-							return Conversations.find(notification.parentContext_id,{fields: {title: 1}});
-							break;
+					if (notification.type == 'conversation'){
+						return Conversations.find(notification.parentContext_id,{fields: {title: 1}});
 					}
 				}
 			}
@@ -488,8 +653,8 @@ Meteor.publishComposite('contactsByUserWithEmail',function(user_id){
 		children: [{
 			find: function(relation){
 				var contactId = _(relation.users).find(function(id){return id !== user_id;});
-				//return Meteor.users.find({_id: contactId, emails:  {$exists: true, $elemMatch: {verified: true}}},{fields: {username: 1, avatar: 1, emails: 1}});
-				return Meteor.users.find({_id: contactId, emails:  {$exists: true}},{fields: {username: 1, avatar: 1,emails: 1}});
+				return Meteor.users.find({_id: contactId, emails:  {$exists: true, $elemMatch: {verified: true}}},{fields: {username: 1, avatar: 1, emails: 1}});
+				//return Meteor.users.find({_id: contactId, emails:  {$exists: true}},{fields: {username: 1, avatar: 1,emails: 1}});
 			}
 		}]
 	};
@@ -634,3 +799,4 @@ Meteor.publish('recommendations',function(contextsIds,tagsNames,limit){
 	var cursorRecords =  Records.find({_id: {$nin: contextsIds}, tags: {$elemMatch: {name: {$in: tagsNames}}},fields: {RC:0}},{limit: limit, sort: {votes: -1}});
 	return [cursorChannels,cursorLessons,cursorRecords];
 });
+

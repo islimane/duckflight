@@ -46,6 +46,7 @@ SearchParamsManager = function(){
                         .$elemMatch
                         .name
                         .$in = _(currentSearch.query.tags.$elemMatch.name.$in).uniq();
+                    console.log(currentSearch);
                     break;
                 case 'category':
                     currentSearch.category = p.value;

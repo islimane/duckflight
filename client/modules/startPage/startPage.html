@@ -52,54 +52,45 @@
             </div>
         </div>
         <div class="row body">
-            <div class="col-xs-12 task">
-
-                <p class="title"><i class="fa fa-user"></i> Update your profile. <a href="/">tutorial</a>
-                    <button type="button" data-toggle="collapse" data-target="#task1Collapse"><i class="fa fa-angle-down"></i></button>
-                </p>
-
-                <div class="collapse task-body" id="task1Collapse">
-                    <div class="row">
-                        <div class="col-xs-12 task-item">
-                            <p><i class="fa fa-picture-o"></i> Avatar and banner picture</p>
-                            <p class="description">Make your profile attractive adding an avatar and a banner image.</p>
-                        </div>
-                        <div class="col-xs-12 task-item">
-                            <p><i class="fa fa-meh-o"></i> About you</p>
-                            <p class="description">Add a description about yourself so that other users know you.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xs-12 task">
-                <p class="title"><i class="fa fa-plus-square"></i> Create your own content.<a href="/">tutorial</a>
-                    <button type="button" data-toggle="collapse" data-target="#task2Collapse"><i class="fa fa-angle-down"></i></button>
-                </p>
-                <div class="collapse task-body" id="task2Collapse">
-                    <div class="row">
-                        <div class="col-xs-12 task-item">
-                            <p><i class="fa fa-film"></i> records</p>
-                            <p class="description">Please, create your first record.</p>
-                        </div>
-                        <div class="col-xs-12 task-item">
-                            <p><i class="fa fa-desktop"></i> channels</p>
-                            <p class="description">Channels in DuckFlight are open to everyone. They're the place to share ideas about a specific
-                                subject. Please create a channel about the subject that you prefers and share your ideas and learn
-                                with others users.
-                            </p>
-                        </div>
-                        <div class="col-xs-12 task-item">
-                            <p><i class="fa fa-book"></i> lessons</p>
-                            <p class="description">Lessons in DuckFlight have a closed content. Only author can add, modify and delete
-                            contents. A lesson is the place to share your knowledges about a specific subject and where others can learn from you.
-                            Create your first lesson.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {{#each tasks}}
+                {{> taskItem}}
+            {{/each}}
         </div>
 
+    </div>
+</template>
+
+<template name="taskItem">
+    <div class="col-xs-12 task {{done}}">
+
+        <p class="title" data-toggle="collapse" data-target="#{{id}}">
+
+            <i class="fa {{icon}}"></i> {{title}}
+            {{#if done}}
+                <span class="pull-right done-icon"><i class="fa fa-check-circle"></i></span>
+            {{/if}}
+        </p>
+
+        <div class="collapse task-body" id="{{id}}">
+            <div class="row">
+                {{#each subtasks}}
+                    {{> subtaskItem}}
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="subtaskItem">
+    <div class="col-xs-12 task-item {{done}}">
+        <p>
+            {{#if done}}
+                <i class="fa fa-check-circle done-icon"></i>
+            {{/if}}
+            <i class="fa {{icon}}"></i> {{title}}
+        </p>
+        <p class="description">{{description}}</p>
+        <p class="text-right"><a href="{{linkTutorial}}"><i class="fa fa-book"></i> view tutorial</a></p>
     </div>
 </template>
 
@@ -133,7 +124,7 @@
 </template>
 
 <template name="listItemsDynamicFeed">
-    <div class="list-content owl-carousel">
+    <div id="{{id}}" class="list-content owl-carousel">
         {{#if isType 'channel'}}
             {{#each feed}}
                 {{> channelItemVertical}}

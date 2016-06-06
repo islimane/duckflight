@@ -42,13 +42,13 @@ Template.lesson.events({
         Meteor.call('voteLesson',this._id,Meteor.userId(),($like.hasClass('active'))? 1 : -1);
 
         var paramsNotification = {
-            to: this.author,
+            to: [this.author],
             from: Meteor.userId(),
             createdAt: new Date(),
-            parentContext_id: this._id,
+            contextTitle: this.title,
             type: 'lesson',
             action: ($like.hasClass('active'))? 'likeLesson' : 'removeLikeLesson',
-            urlParameters: this._id
+            urlParameters: {template: 'lesson', _id: this._id}
         };
 
         NotificationsCreator.createNotification(paramsNotification,function(err){
@@ -57,7 +57,7 @@ Template.lesson.events({
     },
     'click .creator-box .avatar, click .creator-box .author': function(){
         Session.set('currentProfileId',this.author);
-        Router.go('profile',{_id: this.author});
+        Router.go('profile',{_id: this.author},{query: 'initialSection=channelsTabContent'});
     },
     'click .enrol-button': function(e){
         Meteor.call('insertUserEnrolledLesson',this._id,Meteor.userId(),function(err,res){
@@ -65,13 +65,13 @@ Template.lesson.events({
             if(res) console.log(res);
         });
         var paramsNotification = {
-            to: this.author,
+            to: [this.author],
             from: Meteor.userId(),
             createdAt: new Date(),
-            parentContext_id: this._id,
+            contextTitle: this.title,
             type: 'lesson',
             action: 'subscription',
-            urlParameters: this._id
+            urlParameters: {template: 'lesson', _id: this._id}
         };
         NotificationsCreator.createNotification(paramsNotification,function(err){
             if(err) console.log('subscriptionLesson Notification ERROR: ' + err.reason);
@@ -83,13 +83,13 @@ Template.lesson.events({
             if(res) console.log(res);
         });
         var paramsNotification = {
-            to: this.author,
+            to: [this.author],
             from: Meteor.userId(),
             createdAt: new Date(),
-            parentContext_id: this._id,
+            contextTitle: this.title,
             type: 'lesson',
             action: 'cancelSubscription',
-            urlParameters: this._id
+            urlParameters: {template: 'lesson', _id: this._id}
         };
         NotificationsCreator.createNotification(paramsNotification,function(err){
             if(err) console.log('cancelSubscriptionLesson Notification ERROR: ' + err.reason);
@@ -125,6 +125,22 @@ Template.lesson.events({
             if(err) console.log('insertSection ERROR: ' + err.reason);
             if(res) console.log(res);
         });
+        var paramsNotification = {
+            createdAt: new Date(),
+            contextTitle: this.title,
+            type: 'lesson',
+            new: {title: sectionTitle},
+            action: 'newSection',
+            urlParameters: {template: 'lesson', _id: this._id}
+        };
+        paramsNotification.to = [];
+        _(UsersEnrolled.find({context_id: this._id}).fetch()).each(function(obj){
+            if (obj.user_id != Meteor.userId()) paramsNotification.to.push(obj.user_id);
+        });
+        NotificationsCreator.createNotification(paramsNotification,function(err,result){
+            if(err) console.log('createNotification ERROR: ' + err.reason);
+            if(result) console.log('created new Notification');
+        });
     },
     'submit #form-comment': function(e){
         e.preventDefault();
@@ -145,13 +161,13 @@ Template.lesson.events({
         }
         if(this.author != Meteor.userId()){
             var paramsNotification = {
-                to: this.author,
+                to: [this.author],
                 from: Meteor.userId(),
                 createdAt: new Date(),
-                parentContext_id: this._id,
+                contextTitle: this.title,
                 type: 'lesson',
                 action: 'newCommentLesson',
-                urlParameters: this._id
+                urlParameters: {template: 'lesson', _id: this._id}
             };
 
             NotificationsCreator.createNotification(paramsNotification,function(err,result){
@@ -231,7 +247,7 @@ Template.userItem.events({
     'click .userItem .avatar, click .userItem .username': function(){
         Session.set('currentProfileId',this.user_id);
         Session.set('currentSection','channelsTabContent');
-        Router.go('profile',{_id: this.user_id});
+        Router.go('profile',{_id: this.user_id},{query: 'initialSection=channelsTabContent'});
     }
 });
 
@@ -264,6 +280,22 @@ Template.sectionItem.helpers({
 
 Template.sectionItem.events({
     'click .delete-section': function(){
+        var paramsNotification = {
+            createdAt: new Date(),
+            contextTitle: Lessons.findOne(this.lesson_id).title,
+            type: 'lesson',
+            new: {title: this.title},
+            action: 'removeSection',
+            urlParameters: this.lesson_id
+        };
+        paramsNotification.to = [];
+        _(UsersEnrolled.find({context_id: this.lesson_id}).fetch()).each(function(obj){
+            if (obj.user_id != Meteor.userId()) paramsNotification.to.push(obj.user_id);
+        });
+        NotificationsCreator.createNotification(paramsNotification,function(err,result){
+            if(err) console.log('createNotification ERROR: ' + err.reason);
+            if(result) console.log('created new Notification');
+        });
         Meteor.call('removeSection',this._id,function(err){
             if(err) throw new Meteor.Error('500','ERROR removeSection: ' + err.reason);
         });

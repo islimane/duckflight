@@ -52,6 +52,9 @@ Template.record.helpers({
 	},
 	hasTags: function(){
 		return this.tags.length;
+	},
+	voted: function(){
+		return (Votes.findOne({user_id: Meteor.userId()}))? 'active' : '';
 	}
 });
 
@@ -67,6 +70,40 @@ Template.record.events({
 			$('.play-list-wrapper').addClass('active');
 		};
 	},
+	'click .creator-box img, click .creator-box .username': function(){
+		Router.go('profile',{_id: this.author},{query: 'initialSection=channelsTabContent'});
+	},
+	'click #like_button': function(e){
+		var $like = $(e.currentTarget);
+		($like.hasClass('active')) ? $like.removeClass('active') : $like.addClass('active');
+		Meteor.call('voteRecord',this._id,Meteor.userId(),($like.hasClass('active'))? 1 : -1);
+		if (this.author != Meteor.userId()){
+			var paramsNotification = {
+				to: [this.author],
+				from: Meteor.userId(),
+				createdAt: new Date(),
+				type: 'record',
+				action: ($like.hasClass('active'))? 'like': 'removeLike',
+				urlParameters: {template: 'record', _id: this._id},
+				contextTitle: this.title
+			};
+			if (this.channel_id){
+				paramsNotification.type = 'channel';
+				paramsNotification.action = ($like.hasClass('active'))? 'likeRecord': 'removeLikeRecord';
+				paramsNotification.contextTitle = Channels.findOne(this.channel_id).title;
+				paramsNotification.context = {title: this.title};
+			}
+			if (this.lesson_id){
+				paramsNotification.type = 'lesson';
+				paramsNotification.action = ($like.hasClass('active'))? 'likeRecord': 'removeLikeRecord';
+				paramsNotification.contextTitle = Lessons.findOne(this.lesson_id).title;
+				paramsNotification.context = {title: this.title};
+			}
+			NotificationsCreator.createNotification(paramsNotification,function(err){
+				if(err) console.log('ERROR: create notification');
+			});
+		}
+	},
 	'submit form': function(e){
 		e.preventDefault();
 		var text = $(e.currentTarget).find('textarea').val();
@@ -81,6 +118,33 @@ Template.record.events({
 			};
 			Meteor.call('insertComment',comment);
 			Meteor.call('incrementRecordComment',this._id);
+			if (this.author != Meteor.userId()){
+				var paramsNotification = {
+					to: [this.author],
+					from: Meteor.userId(),
+					createdAt: new Date(),
+					type: 'record',
+					action: 'newComment',
+					urlParameters: {template: 'record', _id: this._id},
+					contextTitle: this.title
+				};
+				if (this.channel_id){
+					paramsNotification.type = 'channel';
+					paramsNotification.action = 'newCommentRecord';
+					paramsNotification.contextTitle = Channels.findOne(this.channel_id).title;
+					paramsNotification.context = {title: this.title};
+				}
+				if (this.lesson_id){
+					paramsNotification.type = 'lesson';
+					paramsNotification.action = 'newCommentRecord';
+					paramsNotification.contextTitle = Lessons.findOne(this.lesson_id).title;
+					paramsNotification.context = {title: this.title};
+				}
+				NotificationsCreator.createNotification(paramsNotification,function(err){
+					if(err) console.log('ERROR: create notification');
+				});
+			}
+
 			$(e.currentTarget).find('textarea').val('');
 		}
 	}
@@ -98,6 +162,12 @@ Template.record.rendered = function(){
 	$('#comments_counter').tooltip({placement: 'bottom',title: 'comments'});
 	$('#votes_counter').tooltip({placement: 'bottom',title: 'votes'});
 	$('#replies_counter').tooltip({placement: 'right',title: 'replies'});
+	Session.set('contextType','record');
+	if (this.data.lesson_id)Session.set('contextType','innerRecordLesson');
+	if (this.data.channel_id)Session.set('contextType','innerRecordChannel');
+	Meteor.call('insertHistoryRecord',this.data._id,Meteor.userId(),function(err){
+		if(err) throw new Meteor.Error(500,'Error while count times visited a record!');
+	});
 };
 
 

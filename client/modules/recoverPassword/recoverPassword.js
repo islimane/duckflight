@@ -22,7 +22,7 @@ Template.recoverPassword.events({
        Router.go('verificationEmail');
     },
     'click #back': function(){
-        Router.go((Meteor.userId()) ? 'profile' : 'mainPage',{_id: Meteor.userId()});
+        Router.go((Meteor.userId()) ? 'profile' : 'mainPage',{_id: Meteor.userId()},{query: 'initialSection=channelsTabContent'});
     },
     'click #resend-button': function(){
         var email = Session.get('currentEmailVerifying');

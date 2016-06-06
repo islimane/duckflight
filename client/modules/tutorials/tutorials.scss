@@ -1,0 +1,96 @@
+@import '../../mixins';
+
+.secondary-header{
+  @include transition(all, 0.5s, ease);
+  padding: 20px;
+  h1{
+    font-size: 40px;
+    font-weight: lighter;
+    margin-bottom: 20px;
+  }
+  h4{
+    font-size: 18px;
+    font-weight: lighter;
+  }
+  &.tutorials-header{
+    color: #E4E3E3;
+    h4{
+      color: #CCCCCC;
+    }
+    background: #3F46AE;
+  }
+  &.features-header{
+    color: #694218;
+    h4{
+      color: #4D3318;
+    }
+    background: #FF9046;
+  }
+}
+
+.tutorials-content{
+  padding-bottom: 50px;
+  .section-header{
+    color: #373737;
+    font-size: 27px;
+    font-weight: lighter;
+    margin: 20px 0px;
+    padding: 10px 15px;
+    border-bottom: 1px solid #C5C4C4;
+  }
+  .subsection-wrapper{
+    margin: 40px 50px;
+    background: white;
+    .subsection-title{
+      font-size: 22px;
+      color: #BEBCFF;
+      background: #545FFE;
+      padding: 10px 15px;
+      font-weight: lighter;
+    }
+    .subsection-content{
+      padding: 15px 15px 10px;
+      background: #F1F0F0;
+      font-size: 15px;
+      color: #585859;
+    }
+    .video-wrapper{
+      padding: 10px 15px 20px;
+      @include flexbox;
+      @include align-items(center);
+      @include justify-content(center);
+      width: 100%;
+      iframe{
+        @include flex(1);
+        max-width: 560px;
+        max-height: 315px;
+      }
+    }
+  }
+}
+
+@include mquery(500px){
+  .tutorials-content{
+    .subsection-wrapper{
+      margin: 40px 10px;
+      .subsection-title{
+        font-size: 18px;
+      }
+      .subsection-content{
+        font-size: 13px;
+      }
+      .video-wrapper{
+        iframe{
+          max-height: 180px;
+        }
+      }
+    }
+  }
+}
+
+@include mquery(990px){
+  .secondary-header{
+    padding-top: 50px;
+    @include transition(all, 0.5s, ease);
+  }
+}

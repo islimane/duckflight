@@ -1,0 +1,48 @@
+<template name="tutorials">
+    <div class="container-fluid secondary-header tutorials-header">
+        <div class="row text-center">
+            <div class="col-xs-12">
+                <h1>Tutorials</h1>
+                <h4>LEARN HOW TO EXPLOTE THE POTENTIAL OF DUCKFLIGHT</h4>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid tutorials-content">
+        <div class="row">
+            <div class="col-xs-12">
+                {{>Template.dynamic template=sectionTemplate data=sectionData}}
+                {{>subsectionTutorial}}
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="channelsTutorials">
+    <h3 class="section-header"><i class="fa fa-desktop"></i> Channels</h3>
+</template>
+
+<template name="lessonsTutorials">
+    <h3 class="section-header"><i class="fa fa-graduation-cap"></i> Lessons</h3>
+</template>
+
+<template name="recordsTutorials">
+    <h3 class="section-header"><i class="fa fa-film"></i> Records</h3>
+</template>
+
+<template name="subsectionTutorial">
+    <div class="subsection-wrapper text-center">
+        {{#with currentSubsection}}
+            <p class="subsection-title">{{title}}</p>
+            <div class="video-wrapper">
+                <iframe width="560" height="315" type="text/html"
+                        src="https://www.youtube.com/embed/{{video_id}}?controls=0&autoplay=1&showinfo=0&loop=1&playlist={{video_id}}&modestbranding=1"
+                        frameborder="0" allowfullscreen></iframe>
+            </div>
+
+            <div class="subsection-content">
+                {{{content}}}
+            </div>
+
+        {{/with}}
+    </div>
+</template>
