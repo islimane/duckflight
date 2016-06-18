@@ -801,3 +801,13 @@ $verdana-thin: 100;
     }
   }
 }
+
+@include mquery(400px){
+  #avatar-section{
+    img{
+      &.avatar-img{@include size(80px !important);};
+      &.avatar-img-medium{@include size(65px !important);}
+      &.avatar-img-circle{@include size(50px !important);}
+    }
+  }
+}

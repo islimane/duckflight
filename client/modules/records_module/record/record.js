@@ -10,7 +10,7 @@ Template.record.helpers({
 	},
 	tabNamesArray: function(){
 		return [{template: 'commentsTabContent', name: 'comments', icon: 'fa-comments', initialActive: true},
-			{template: 'repliesTabContent',    name: 'replies', icon: 'fa-reply'},
+			{template: 'repliesTabContent',    name: 'replies', icon: 'fa-code-fork'},
 			{template: 'relatedTabContent', name: 'related', icon: 'fa-tags'}];
 	},
 	sectionActive: function(){
