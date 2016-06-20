@@ -32,6 +32,7 @@ Template.verificationEmail.events({
         Router.go('mainPage');
     },
     'click #resend-button': function(){
+        console.log('holaaaa');
         var email = Session.get('currentEmailVerifying');
         Session.set('errorSent',false);
         var user = Meteor.user() || Session.get('userIdentified');

@@ -85,8 +85,9 @@ Template.emailWritter.events({
         if (usersTo.length){
             var addresses = [];
             _(usersTo).each(function(u){
-                var emailVerified = _(u.emails).find(function(e){return e.verified;});
-                if (emailVerified) addresses.push(emailVerified.address);
+                var emailTo = _(u.emails).find(function(e){return e.primary;});
+                if (!emailTo) emailTo =_(u.emails).find(function(e){return e.verified;});
+                if (emailTo) addresses.push(emailTo.address);
             });
             console.log(addresses);
             var bodyHTML = $('#editor-mail').froalaEditor('html.get',true);

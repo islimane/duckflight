@@ -25,6 +25,7 @@ var initializateTags = function(){
     });
 };
 
+
 Meteor.startup(function(){
     if(!Tags.find().count()){
         initializateTags();

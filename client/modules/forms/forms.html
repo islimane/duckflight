@@ -247,7 +247,7 @@
                 <p class="title-section">Emails <span class="edit-button"><i class="fa fa-pencil"></i> edit</span></p>
                 <div class="edited-block">
                     <p class="info-icons"><i class="fa fa-exclamation-circle"></i> indicates that email has not been verified.<br>
-                        <i class="fa fa-check-circle"></i> indicates that email has been verified</p>
+                        <i class="fa fa-check-circle"></i> indicates that email has been verified <br></p>
                     {{#each emails}}
                         <div class="email-item">
                             <p class="{{verified}}">
@@ -257,6 +257,9 @@
                                     <i class="fa fa-exclamation-circle"></i>
                                 {{/if}}
                                 {{address}}
+                                {{#if primary}}
+                                    <span class="primary">Chosen as primary</span>
+                                {{/if}}
                             </p>
 
                         </div>
@@ -632,10 +635,22 @@
 
 <template name="inputEmailsBox">
     <div class="input-email-box">
-        <p class="info">We recommend that you have at least one registered email.</p>
+        <p class="info">
+            We recommend that you have at least one registered email.<br>
+            Choose any email as primary. That will be your default email to receive mails throught DuckFlight.
+        </p>
         <div class="list-emails">
             {{#each emails}}
-                <div class="email"><p>{{address}} <span class="remove-email"><i class="fa fa-trash"></i></span></p></div>
+                <div class="email"><p>{{address}}
+                    {{#if primary}}
+                        <span class="primary">chosen as primary</span>
+                    {{else}}
+                        {{#if verified}}
+                            <button class="choose-button">choose as primary</button>
+                        {{/if}}
+                    {{/if}}
+                     <span class="remove-email"><i class="fa fa-trash"></i></span>
+                </p></div>
             {{/each}}
         </div>
         <form id="email-form">

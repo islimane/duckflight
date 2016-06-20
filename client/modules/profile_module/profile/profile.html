@@ -22,9 +22,9 @@
                                                 <span class="visitator-action" id="send-message"><i class="fa fa-comments"></i>+</span>
                                                 {{#if IHaveEmailsVerified}}
                                                     {{#if hasEmails}}
-                                                        {{#unless hasNotVerifiedEmails}}
+                                                        {{#if hasEMailsVerified}}
                                                             <span class="visitator-action" id="send-email"><i class="fa fa-envelope"></i></span>
-                                                        {{/unless}}
+                                                        {{/if}}
                                                     {{/if}}
                                                 {{/if}}
                                             {{else}}
@@ -61,7 +61,8 @@
                                         {{#if hasEmails}}
                                             {{#if hasNotVerifiedEmails}}
                                                 <button id='verify-emails-button' type="button"><i class="fa fa-envelope-o"></i> verify your emails</button>
-                                            {{else}}
+                                            {{/if}}
+                                            {{#if hasEmailsVerified}}
                                                 <button id='send-email-button' type="button"><i class="fa fa-paper-plane-o"></i> Send a email</button>
                                             {{/if}}
                                         {{/if}}

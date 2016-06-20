@@ -292,6 +292,10 @@ $verdana-thin: 100;
           }
 
         }
+        span{
+          font-size: 10px;
+          color: #4E9AFD;
+        }
       };
 
 
@@ -778,6 +782,19 @@ $verdana-thin: 100;
   }
   .remove-email{
     cursor: pointer;
+  }
+  .choose-button{
+    border: none;
+    @include border-radius(10px);
+    background: #74B0FF;
+    color: white;
+    padding: 0px 10px;
+    font-size: 12px;
+    &:focus{outline: 0px;}
+  }
+  span.primary{
+    font-size: 12px;
+    color: #74B0FF;
   }
   .input-email-wrapper{
     padding: 10px 0px;

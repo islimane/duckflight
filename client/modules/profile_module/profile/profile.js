@@ -44,6 +44,10 @@ Template.profile.helpers({
         var emails = Meteor.users.findOne(Session.get('currentProfileId')).emails;
         return _(emails).any(function(e){return !e.verified;});
     },
+    hasEmailsVerified: function(){
+        var emails = Meteor.users.findOne(Session.get('currentProfileId')).emails;
+        return _(emails).any(function(e){return e.verified;});
+    },
     services: function(){
         var services = Meteor.users.findOne(Session.get('currentProfileId')).services;
         if (_(services).isObject()) services = [services];
@@ -824,7 +828,7 @@ Template.autoCompleteContacts.rendered = function(){
 
 Template.contactResult.helpers({
     inContacts: function(){
-        return Relations.find({users: this._id}).count();
+        return Relations.find({users: this._id}).count() || (Router.current().route.getName() == 'profile' && Session.get('currentProfileId') == this._id);
     },
     sent: function(){
         return Requests.find({'applicant.id': Session.get('currentProfileId'), 'requested.id': this._id}).count();

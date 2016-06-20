@@ -354,12 +354,14 @@ Template.formProfileEdit.events({
         Session.set('userObject',obj);
         $('#leader-section .discard').click();
     },
-
     'click #members-section .save': function(){
         var obj = Session.get('userObject');
         obj.members = Session.get('memberList');
         Session.set('userObject',obj);
         $('#members-section .discard').click();
+    },
+    'click #emails-section .edit-button': function(){
+        Session.set('emailsList',Session.get('userObject').emails);
     },
     'click #emails-section .save': function(){
         var obj = Session.get('userObject');
@@ -682,14 +684,14 @@ Template.tagsInput.events({
         $(template.find('[name=tags]')).val('');
         Session.set('searchValue',null);
     },
-    'click #add-tag': function(){
+    'click #add-tag': function(e,template){
         var nameTag = Session.get('searchValue');
         var tagsChoosen = Session.get('tagsChoosen');
         if (!_(tagsChoosen).any(function(tag){return tag.name == nameTag})) {
             tagsChoosen.push({name: nameTag});
             Session.set('tagsChoosen', tagsChoosen);
         }
-        $('input').val('');
+        $(template.find('[name=tags]')).val('');
         Session.set('searchValue',null);
     }
 });
@@ -717,7 +719,7 @@ Template.tagsInput.destroyed = function(){
     Session.set('searching',null);
     Session.set('founded',null);
     Session.set('searchValue',null);
-    Session.set('tagsChosen',null);
+    Session.set('tagsChoosen',null);
 };
 
 /**
@@ -772,6 +774,22 @@ Template.inputEmailsBox.events({
             return e.address != address;
         });
         Session.set('emailsList',emails);
+    },
+    'click .choose-button': function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var emails = Session.get('emailsList');
+        var address = this.address;
+        var emailsUpdated = [];
+        _(emails).each(function(e){
+            if (e.primary){
+                e.primary = false;
+            }else if (e.address == address){
+                e.primary = true;
+            }
+            emailsUpdated.push(e);
+        });
+        Session.set('emailsList',emailsUpdated);
     },
     'submit #email-form': function(e){
         e.preventDefault();
