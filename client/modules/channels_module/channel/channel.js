@@ -3,7 +3,7 @@ Template.channel.helpers({
         return Meteor.userId() === this.author;
     },
     tabNamesArray: function(){
-        return [{template: 'recordsTabContent',  name: 'records', icon: 'fa-film', initialActive: true},
+        return [{template: 'recordsTabContent',  name: 'recordings', icon: 'fa-film', initialActive: true},
                 {template: 'commentsTabContent', name: 'comments', icon: 'fa-comments'},
                 {template: 'usersTabContent', name: 'users', icon: 'fa fa-users'}];
     },

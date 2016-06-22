@@ -3,27 +3,12 @@ Meteor.publishComposite('records',function(){
 	var sub = {
 		collection: 'records',
 		find: function(){
-			return Records.find({},{params: {RC:0}});
+			return Records.find({},{fields: {RC:0, tags: 0, track: 0}});
 		},
 		children: [
 			{
 				find: function(record){
-					return Meteor.users.find(record.author,{params: {username: 1}})
-				}
-			},
-			{
-				find: function(record){
-					return Channels.find(record.channel_id,{params: {_id: 1}});
-				}
-			},
-			{
-				find: function(record){
-					return Channels.find(record.lesson_id,{params: {_id: 1}});
-				}
-			},
-			{
-				find: function(record){
-					return Records.find(record.parent_id,{params: {_id: 1}});
+					return Meteor.users.find(record.author,{fields: {username: 1}})
 				}
 			}
 		]
@@ -130,7 +115,7 @@ Meteor.publishComposite('recordComposite',function(record_id,user_id){
 });
 
 Meteor.publish('recordsRanking',function(){
-	return Records.find({},{params: {RC: 0}, limit: 5, sort: {votes_count: -1, createdAt: -1}});
+	return Records.find({},{fields: {RC: 0, tags: 0, track: 0}, limit: 5, sort: {votes_count: -1, createdAt: -1}});
 });
 
 
@@ -241,14 +226,14 @@ Meteor.publishComposite ('channelComposite',function(channel_id, user_id){
 
 
 Meteor.publish('sidebarChannels',function(user_id){
-	return Channels.find({author: user_id},{params: {title: 1},limit: 3});
+	return Channels.find({author: user_id},{fields: {title: 1, author:1},limit: 3});
 });
 Meteor.publish('channelsByUser',function(user_id){
 	return Channels.find({author: user_id});
 });
 
 Meteor.publish('channelsRanking',function(){
-	return Channels.find({},{params: {tags: 0, banner: 0, bannerDefault: 0, tagsAllow: 0},limit: 5 ,sort: {votes_count: -1}});
+	return Channels.find({},{fields: {tags: 0, banner: 0, bannerDefault: 0, tagsAllow: 0},limit: 5 ,sort: {votes_count: -1}});
 });
 
 Meteor.publish('channelsByUserRanking',function(user_id){
@@ -407,7 +392,7 @@ Meteor.publish('sectionsByLesson',function(lesson_id){
 });
 
 Meteor.publish('sidebarLessons',function(user_id){
-	return Lessons.find({author: user_id},{params: {title: 1},$limit: 3}); //title only
+	return Lessons.find({author: user_id},{fields: {title: 1, author: 1},$limit: 3}); //title only
 });
 
 Meteor.publish('lessonsByUser',function(user_id){

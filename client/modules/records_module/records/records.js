@@ -48,7 +48,7 @@ Template.records.events({
 
 Template.records.rendered = function(){
 	Session.set('horizontalMode',true);
-	$('.button-circle').tooltip({placement: 'bottom', title: 'create a new Record'});
+	$('.button-circle').tooltip({placement: 'bottom', title: 'create a new Recording'});
 };
 
 Template.records.created = function(){

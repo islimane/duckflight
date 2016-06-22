@@ -61,7 +61,7 @@ Template.profile.helpers({
     tabNamesArray: function(){
         var tabs = [{template: 'channelsTabContent', name: 'channels', icon: 'fa-desktop', initialActive: true},
                 {template: 'lessonsTabContent',  name: 'lessons', icon: 'fa-graduation-cap'},
-                {template: 'recordsTabContent',  name: 'records', icon: 'fa-film'},
+                {template: 'recordsTabContent',  name: 'recordings', icon: 'fa-film'},
                 {template: 'conversationsTabContent', name: 'conversations', icon: 'fa-comments', ownerOnly: true, isOwner: Session.get('currentProfileId') === Meteor.userId()},
                 {template: 'contactsTabContent', name: 'contacts', icon: 'fa-user'}];
         return tabs;

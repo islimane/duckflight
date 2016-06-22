@@ -135,7 +135,9 @@ Template.uploadPanel.helpers({
 });
 
 Template.uploadPanel.events({
-    'click button': function(){}
+    'click button': function(){
+        Router.go('record',{_id: Session.get('uploadedRecordId')});
+    }
 });
 
 Template.uploadPanel.created = function(){
@@ -144,6 +146,7 @@ Template.uploadPanel.created = function(){
 
 Template.uploadPanel.destroyed = function(){
     Session.set('uploaded',null);
+    Session.get('uploadedRecordId',null);
 };
 //DOCUMENTOS
 
@@ -568,7 +571,7 @@ Template.recordSubmit.events = {
                                });
                            }
                            console.log('voy a guardar los documentos');
-
+                           Session.set('uploadedRecordId',res._id);
                            Session.set('uploaded',true);
                        }
                    });

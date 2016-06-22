@@ -8,7 +8,7 @@ Template.profileContentManager.helpers({
     tabNamesArray: function(){
         var tabs = [{template: 'channelsManage', name: 'channels', icon: 'fa-desktop', initialActive: true},
             {template: 'lessonsManage',  name: 'lessons', icon: 'fa-graduation-cap'},
-            {template: 'recordsManage',  name: 'records', icon: 'fa-film'},
+            {template: 'recordsManage',  name: 'recordings', icon: 'fa-film'},
             {template: 'contactsManage', name: 'contacts', icon: 'fa-user'}];
         return tabs;
     },

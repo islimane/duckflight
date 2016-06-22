@@ -61,19 +61,19 @@ Template.exploreSection.helpers({
 
         var sections =  [{icon: 'fa-desktop',title: 'Channels',listObject: {feed: Channels.find({_id: {$nin: contextsIds}, tags: {$elemMatch: {name: {$in: tagsNames}}}},{limit: 5, sort: {votes: -1}}), type: 'channel',id: 'recommemdedChannels'}},
             {icon: 'fa-graduation-cap',title: 'Lessons',listObject: {feed: Lessons.find({_id: {$nin: contextsIds}, tags: {$elemMatch: {name: {$in: tagsNames}}}},{limit: 5, sort: {votes: -1}}),type: 'lesson',id: 'recommemdedLessons'}},
-            {icon: 'fa-film',title: 'Records',listObject: {feed: Records.find({_id: {$nin: contextsIds}, tags: {$elemMatch: {name: {$in: tagsNames}}}},{limit: 5, sort: {votes: -1}}),type: 'record',id: 'recommemdedRecords'}}];
+            {icon: 'fa-film',title: 'Recordings',listObject: {feed: Records.find({_id: {$nin: contextsIds}, tags: {$elemMatch: {name: {$in: tagsNames}}}},{limit: 5, sort: {votes: -1}}),type: 'record',id: 'recommemdedRecords'}}];
         return sections;
     },
     mostPopularSections: function(){
         var sections =  [{icon: 'fa-desktop',title: 'Channels',listObject: {feed: Channels.find({}, {limit: 5, sort: {votes_count: -1}}), type: 'channel', id: 'popularChannels'}},
             {icon: 'fa-graduation-cap',title: 'Lessons',listObject: {feed: Lessons.find({}, {limit: 5, sort: { votes_count: -1}}),type: 'lesson',id: 'popularLessons'}},
-            {icon: 'fa-film',title: 'Records',listObject: {feed: Records.find({}, {limit: 5, sort: {votes_count: -1}}),type: 'record',id: 'popularRecords'}}];
+            {icon: 'fa-film',title: 'Recordings',listObject: {feed: Records.find({}, {limit: 5, sort: {votes_count: -1}}),type: 'record',id: 'popularRecords'}}];
         return sections;
     }
 });
 Template.exploreSection.events({
     'click section p button': function(){
-        Router.go(this.title.toLowerCase());
+        Router.go(this.listObject.type + 's');
     }
 });
 
@@ -184,10 +184,10 @@ Template.firstTimeTasks.helpers({
                 },
                 subtasks: [
                     {
-                        title: 'records',
+                        title: 'recordings',
                         icon: 'fa-film',
                         linkAction: {name: 'recordSubmit'},
-                        description: 'Please, create your first record.',
+                        description: 'Please, create your first recording.',
                         linkTutorial: '/tutorials?section=records-section&subsection=1',
                         completed: function(){
                             return Records.find({author: Meteor.userId()}).count();

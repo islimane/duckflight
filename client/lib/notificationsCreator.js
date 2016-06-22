@@ -17,7 +17,7 @@ var notificationsCreator = function(){
         var message;
         switch(params.action){
             case 'newComment':
-                message = 'has written a comment to your record';
+                message = 'has written a comment to your recording';
                 break;
             case 'replyComment':
                 message = 'has written a reply for your comment';
@@ -25,10 +25,10 @@ var notificationsCreator = function(){
                 message = 'likes your record';
                 break;
             case 'removeLike':
-                message = 'now does not like your record';
+                message = 'now does not like your recording';
                 break;
             case 'reply':
-                message = 'has created a reply for your record';
+                message = 'has created a reply for your recording';
                 break;
         }
         return message;
@@ -44,16 +44,16 @@ var notificationsCreator = function(){
                 message = 'has written a reply for your comment';
                 break;
             case 'likeRecord':
-                message = 'likes your record <span>' + params.context.title + '</span>';
+                message = 'likes your recording <span>' + params.context.title + '</span>';
                 break;
             case 'removeLikeRecord':
-                message = 'now does not like your record <span>' + params.context.title + '</span>';
+                message = 'now does not like your recording <span>' + params.context.title + '</span>';
                 break;
             case 'newCommentRecord':
-                message = 'has written a comment for your record <span>' + params.context.title + '</span>'
+                message = 'has written a comment for your recording <span>' + params.context.title + '</span>'
                 break;
             case 'replyCommentRecord':
-                message = 'has writen a reply for your comment at the record <span>' + params.context.title + '</span';
+                message = 'has writen a reply for your comment at the recording <span>' + params.context.title + '</span';
                 break;
             case 'likeChannel':
                 message = 'likes your channel';
@@ -68,10 +68,10 @@ var notificationsCreator = function(){
                 message = 'has canceled subscription to your channel';
                 break;
             case 'newRecord':
-                message = 'has created a new record <span>' + params.new.title + '</span>';
+                message = 'has created a new recording <span>' + params.new.title + '</span>';
                 break;
             case 'reply':
-                message = 'has created a reply <span>' + params.new.title + '</span> for your record <span>' + params.context.title+ '</span>';
+                message = 'has created a reply <span>' + params.new.title + '</span> for your recording <span>' + params.context.title+ '</span>';
                 break;
         }
         return message;
@@ -87,10 +87,10 @@ var notificationsCreator = function(){
                 message = 'has written a reply for your comment';
                 break;
             case 'newCommentRecord': //to record's creator.
-                message = 'has written a comment for your record <span>' + params.context.title + '</span>';
+                message = 'has written a comment for your recording <span>' + params.context.title + '</span>';
                 break;
             case 'replyCommentRecord': //to comment's creator.
-                message = 'has writen a reply for your comment at the record <span>' + params.context.title + '</span';
+                message = 'has writen a reply for your comment at the recording <span>' + params.context.title + '</span';
                 break;
             case 'likeLesson': //to lesson's creator.
                 message = 'likes your lesson';
@@ -99,10 +99,10 @@ var notificationsCreator = function(){
                 message = 'now does not like your lesson';
                 break;
             case 'likeRecord': //to record's creator.
-                message = 'likes your record <span>' + params.context.title + '</span>';
+                message = 'likes your recording <span>' + params.context.title + '</span>';
                 break;
             case 'removeLikeRecord': //to record's creator
-                message = 'now does not like your record <span>' + params.context.title + '</span>';
+                message = 'now does not like your recording <span>' + params.context.title + '</span>';
                 break;
             case 'subscription': //to lesson's creator.
                 message = 'has been enrolled to your lesson';
@@ -117,10 +117,10 @@ var notificationsCreator = function(){
                 message = 'has been removed a section: <span>' + params.new.title + '</span>';
                 break;
             case 'newRecord': //to enrolled users.
-                message = 'has been created a new record <span>' + params.new.title + '</span>';
+                message = 'has been created a new recording <span>' + params.new.title + '</span>';
                 break;
             case 'reply':
-                message = 'has created a reply <span>' + params.new.title + '</span> for your record <span>' + params.context.title+ '</span>';
+                message = 'has created a reply <span>' + params.new.title + '</span> for your recording <span>' + params.context.title+ '</span>';
                 break;
         }
         return message;
