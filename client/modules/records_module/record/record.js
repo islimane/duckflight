@@ -162,6 +162,7 @@ Template.record.rendered = function(){
 	$('#comments_counter').tooltip({placement: 'bottom',title: 'comments'});
 	$('#votes_counter').tooltip({placement: 'bottom',title: 'votes'});
 	$('#replies_counter').tooltip({placement: 'right',title: 'replies'});
+	$('#like-button').tooltip({placement: 'top',text: 'vote'});
 	Session.set('contextType','record');
 	if (this.data.lesson_id)Session.set('contextType','innerRecordLesson');
 	if (this.data.channel_id)Session.set('contextType','innerRecordChannel');

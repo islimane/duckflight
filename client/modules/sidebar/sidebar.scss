@@ -213,6 +213,13 @@
         outline: 0px;
       }
     }
+    .rem-ikon{
+      cursor: pointer;
+      color: #CACACB;
+      &:hover,{
+        color: white;
+      }
+    }
 
     .counter{
       vertical-align: text-top;

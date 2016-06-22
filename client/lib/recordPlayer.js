@@ -11,7 +11,8 @@ RecordPlayer = function(){
         intervalAudio,
         duration,
         editorManager,
-        ended;
+        ended,
+        RCP;
 //FUNCTIONS
     function getCurrentTime(){
         var d = new Date($audio.currentTime());
@@ -53,8 +54,9 @@ RecordPlayer = function(){
         $audio.volume = 0.4;
         duration = $elements.duration;
         editorManager = editorPlayer;
-        var RCP = this;
+        RCP = this;
         $audio.on('finish',function(){
+            this.seek(0);
             RCP.ended();
         });
         $audio.on('created',function(){
@@ -109,17 +111,19 @@ RecordPlayer = function(){
     this.seek = function(){
         $audio.seek(($seeker.val() * duration)/100);
         updatePlayer();
-        editorManager.seek($audio.currentTime());
+        if (!Session.get('playing')){
+            editorManager.seek($audio.currentTime());
+        }
     };
 
     this.ended = function(){
-        $touchScreenWrapper.removeClass('active');
+        changeStatePlayer();
         $playerActionsWrapper.addClass('active');
         $playedProgress.width(0);
         $progress.val(0);
+        $seeker.val(0);
         window.clearInterval(intervalAudio);
         editorManager.seek(0);
-        this.seek();
         intervalAudio = null;
         Session.set('playing',false);
         Session.set('ended',true);

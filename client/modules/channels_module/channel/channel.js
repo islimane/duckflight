@@ -140,6 +140,8 @@ Template.channel.rendered = function(){
     $('.comments-count').tooltip({placement: 'bottom', title: 'comments'});
     $('.votes-count').tooltip({placement: 'top', title: 'votes'});
     $('.subscriptions-count').tooltip({placement: 'bottom', title: 'subscriptions'});
+    $('.vote-button').tooltip({placement: 'bottom',text: 'vote'});
+    $('#edit-channel').tooltip({placement: 'bottom',text: 'edit'});
     Session.set('contextType','channel');
     Session.set('horizontalMode',true);
 }

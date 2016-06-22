@@ -184,6 +184,8 @@ Template.lesson.rendered = function(){
     $('#comments-count').tooltip({placement: 'bottom', title: 'comments'});
     $('#votes-count').tooltip({placement: 'bottom', title: 'votes'});
     $('#users-count').tooltip({placement: 'right', title: 'users'});
+    $('.vote-button').tooltip({placement: 'top',text: 'vote'});
+    $('#edit-button').tooltip({placement: 'bottom',text: 'edit'});
     Session.set('contextType','lesson');
 };
 

@@ -30,8 +30,8 @@ Template.player.helpers({
         if (!this.isReply) {
             var section = Sections.findOne({_id: this.section_id});
             var records_section = Records.find({section_id: section._id});
-            return section.auto_repeat && this.order <= records_section.count() -1 ||
-                   !section.auto_repeat && this.order < records_section.count() -1;
+            return Meteor.user().auto_repeat && this.order <= records_section.count() -1 ||
+                   !Meteor.user().auto_repeat && this.order < records_section.count() -1;
         }
     },
     recordsPlayList: function(){
@@ -223,10 +223,8 @@ Template.countDown.events({
     },
     'click #next': function(){
         var RecordsPLArray = Records.find({section_id: this.objectCountDown.record.section_id,isReply: false},{sort: {order: 1}}).fetch();
-        console.log(RecordsPLArray);
-        var section = Sections.findOne();
-        var currentIdx = parseInt(this.objectCountDown.record.order)
-        var index = (section.auto_repeat &&  currentIdx == RecordsPLArray.length -1) ? 0 : currentIdx + 1;
+        var currentIdx = parseInt(this.objectCountDown.record.order);
+        var index = (Meteor.user().auto_repeat &&  currentIdx == RecordsPLArray.length -1) ? 0 : currentIdx + 1;
         if(index <= RecordsPLArray.length -1 || index >= 0){
             var record_id = _(RecordsPLArray).find(function(elem){return elem.order == index;})._id;
             Router.go('record',{_id: record_id});

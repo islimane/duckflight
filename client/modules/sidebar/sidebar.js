@@ -125,6 +125,16 @@ Template.notificationsTab.helpers({
 });
 
 Template.notificationsTab.events({
+	'click .rem-ikon': function(e){
+		var type = $(e.currentTarget)[0].id.split('-')[1];
+		var notifications = Notifications.find({type: type}).fetch();
+		var notificationsIds = _(notifications).pluck('_id');
+		_(notificationsIds).each(function(id){
+			Meteor.call('notificationRemove',id,Meteor.userId(),function(err){
+				if (err) throw new Meteor.Error('ERROR: error removing notifications');
+			});
+		});
+	},
 	'click .notifications-section-title a': function(e){
 		if($(e.currentTarget) !== $('a[aria-expanded="true"]'))
 			$('' + $('a[aria-expanded="true"]').attr('href')).collapse('hide');
@@ -171,7 +181,7 @@ Template.notificationItem.helpers({
 			case 'conversation':
 				return 'fa-comments';
 				break;
-			case 'profile':
+			case 'contact':
 				return 'fa-user';
 				break;
 		}
@@ -186,7 +196,7 @@ Template.notificationItem.events ({
 	'click .notification-item': function(){
 		switch(this.type){
 			case 'contact':
-				Router.go(this.urlParameters.template,{_id: this.urlParameters._id},{query: 'initialSection=contacTabContent'});
+				Router.go(this.urlParameters.template,{_id: this.urlParameters._id},{query: 'initialSection=contacsTabContent'});
 				break;
 			default:
 				Router.go(this.urlParameters.template,{_id: this.urlParameters._id});
