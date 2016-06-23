@@ -81,7 +81,7 @@ SearchParamsManager = function(){
             paramsOmited.query = _(params.query).omit('$exists');
 
             switch (params.category){
-                case 'records':
+                case 'recordings':
                     results.records = Records.find(params.query,params.options).fetch();
                     break;
                 case 'channels':

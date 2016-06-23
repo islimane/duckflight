@@ -99,7 +99,7 @@ Template.sidebar.rendered = function(){
 };
 
 Template.menuTab.helpers({
-	channels: function(){return Channels.find({author: Meteor.userId()},{sort: {createdAt: -1},limit: 3})},
+	channels: function(){return Channels.find({author: Meteor.userId()},{sort: {createdAt: -1},limit:3})},
 	teams:  function(){return Teams.find({author: Meteor.userId()},{sort: {createdAt: -1},limit: 3})},
 	lessons:  function(){return Lessons.find({author: Meteor.userId()},{sort: {createdAt: -1},limit: 3})},
 	userId: function(){

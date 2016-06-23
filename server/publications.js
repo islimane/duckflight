@@ -226,7 +226,7 @@ Meteor.publishComposite ('channelComposite',function(channel_id, user_id){
 
 
 Meteor.publish('sidebarChannels',function(user_id){
-	return Channels.find({author: user_id},{fields: {title: 1, author:1},limit: 3});
+	return Channels.find({author: user_id},{params: {title: 1},limit: 3});
 });
 Meteor.publish('channelsByUser',function(user_id){
 	return Channels.find({author: user_id});
@@ -392,7 +392,7 @@ Meteor.publish('sectionsByLesson',function(lesson_id){
 });
 
 Meteor.publish('sidebarLessons',function(user_id){
-	return Lessons.find({author: user_id},{fields: {title: 1, author: 1},$limit: 3}); //title only
+	return Lessons.find({author: user_id},{params: {title: 1},$limit: 3}); //title only
 });
 
 Meteor.publish('lessonsByUser',function(user_id){

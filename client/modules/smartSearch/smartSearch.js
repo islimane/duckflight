@@ -342,7 +342,7 @@ Template.categoryAutocompleteTab.events({
 });
 Template.categoryAutocompleteTab.created = function(){
     this.data.categories = [
-        {name: 'records'},
+        {name: 'recordings'},
         {name: 'channels'},
         {name: 'lessons'},
         {name: 'all'}

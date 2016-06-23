@@ -16,7 +16,7 @@ Template.records.helpers({
 		return Session.get('filter-active') == 'search-filter';
 	},
 	contextSearch: function(){
-		return {context: 'channels'};
+		return {context: 'recordings'};
 	},
 	has: function(){
 		return Records.find({}).count();

@@ -111,9 +111,8 @@ RecordPlayer = function(){
     this.seek = function(){
         $audio.seek(($seeker.val() * duration)/100);
         updatePlayer();
-        if (!Session.get('playing')){
-            editorManager.seek($audio.currentTime());
-        }
+        editorManager.seek($audio.currentTime());
+
     };
 
     this.ended = function(){
