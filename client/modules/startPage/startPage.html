@@ -6,6 +6,10 @@
                     <div class="page-banner-content welcome-banner">
                         <div class="row text-center">
                             <div class="col-xs-12">
+                                {{> helpModule faqsEntries=helpEntries}}
+                                {{#if requiresAttention}}
+                                    {{> helpInfo}}
+                                {{/if}}
                                 {{> navbarBanner tabs=tabNamesArray widthType='medium'}}
                             </div>
                         </div>
@@ -152,5 +156,37 @@
                 </div>
             </div>
         </div>
+    </div>
+</template>
+
+<template name="helpInfo">
+    <div class="help-section fade-in">
+        <img src="DFSingle.png">
+        <h4>Requires your attention!</h4>
+        {{#unless hasEmails}}
+        <div class="help-item">
+            <div class="help-icon-header text-center">
+                <i class="fa fa-envelope"></i>
+            </div>
+            <div class="help-msg text-left">
+                <p>It seems you have no mails in your <a href="{{pathFor 'profile' _id=currentUser._id query='initialSection=channelsTabContent'}}">account</a>.
+                    Please <a href="{{pathFor 'profileEdit' _id=currentUser._id}}">edit your profile</a> and add one.
+                </p>
+            </div>
+        </div>
+        {{/unless}}
+        {{#unless hasVerifiedEmails}}
+            <div class="help-item">
+                <div class="help-icon-header">
+                    <i class="fa fa-check"></i>
+                </div>
+                <div class="help-msg text-left">
+                    <p>It seems you have no any verified email in your <a href="{{pathFor 'profile' _id=currentUser._id query='initialSection=channelsTabContent'}}">account</a>.
+                        Please <a href="{{pathFor 'verificationEmail'}}">verify your emails</a>.
+                        If you have no any verified email can not send emails or retrieve your password.
+                    </p>
+                </div>
+            </div>
+        {{/unless}}
     </div>
 </template>

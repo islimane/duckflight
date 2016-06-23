@@ -30,6 +30,15 @@ Template.lesson.helpers({
     },
     voted: function(){
         return (Votes.findOne({user_id: Meteor.userId()}))? 'active' : '';
+    },
+    helpEntries: function(){
+        return [
+            {text: 'How can I edit my lesson?', url: 'tutorials?section=lessons-section&subsection=5'},
+            {text: 'How can I subscribe at this lesson?', url: 'tutorials?section=lessons-section&subsection=8'},
+            {text: 'How can I create sections for this lesson?', url: 'tutorials?section=lessons-section&subsection=2'},
+            {text: 'How can I create a recording for this lesson?', url: 'tutorials?section=lessons-section&subsection=3'},
+            {text: 'How can I write a comment for this lesson?', url: 'tutorials?section=lessons-section&subsection=7'}
+        ];
     }
 });
 

@@ -27,6 +27,14 @@ Template.channel.helpers({
     },
     hasTags: function(){
         return (this.tags)? this.tags.length : false;
+    },
+    helpEntries: function(){
+        return [
+            {text: 'How can I edit my channel?', url: 'tutorials?section=channels-section&subsection=2'},
+            {text: 'How can I subscribe at this channel?', url: 'tutorials?section=channels-section&subsection=4'},
+            {text: 'How can I create a recording for this channel?', url: 'tutorials?section=channels-section&subsection=1'},
+            {text: 'How can I write a comment for this channel?', url: 'tutorials?section=channels-section&subsection=3'}
+        ];
     }
 });
 

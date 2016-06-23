@@ -1,73 +1,80 @@
 <template name="record">
     <div class="content-wrapper type-2">
-        <div class="player-wrapper">
-            <div class="container-fluid">
-                <div class="row header-player">
-                    <div class="col-xs-12 text-center title">
-                        <i class="fa fa-film"></i> {{title}}
-                    </div>
-
-                    <div class="col-xs-12 description">
-                        <span><i class="fa fa-info-circle"></i> description</span>
-                        <p>{{description}}</p>
-                        {{#if hasTags}}
-                            <div class="col-xs-12">
-                                <div class="banner-tags">
-                                    <p><i class="fa fa-tags"></i> Tags</p>
-                                    <ul>
-                                        {{#each tags}}
-                                            <li class="tag"><i class="fa fa-tag"></i> {{name}}</li>
-                                        {{/each}}
-                                    </ul>
-                                </div>
-                            </div>
-                        {{/if}}
-                        <div class="doc-actual-info">
-                            {{#if docActual}}
-                                {{#with docActual}}
-                                    <p>#{{title}} <span class="mode">{{mode}}</span></p>
-                                {{/with}}
-                            {{else}}
-                                <p><i class="fa fa-exclamation-triangle"></i> No document</p>
-                            {{/if}}
-                        </div>
-                        <div class="like-action">
-                            {{#if isALessonRecord}}
-                                <button id="show-play-list"><i class="fa fa-list"></i></button>
-                            {{/if}}
-                            <button id="like_button" class="like-button {{voted}}"><i class="fa fa-heart-o"></i></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    {{>player playerObjectData}}
-
-                    <div class="col-xs-12 creator-box text-center">
-                        <img src="{{authorAvatar}}">
-                        <span class="username">{{username}}</span>
-                        <span class="date"><i class="fa fa-clock-o"></i> {{dateFrom createdAt}}</span>
-                        <div class="info">
-                            <span id="docs_counter"><i class="fa fa-file"></i> {{docs_count}}</span>
-                            <span id="comments_counter"><i class="fa fa-comments"> {{comments_count}}</i></span>
-                            <span id="votes_counter"><i class="fa fa-heart"></i> {{votes_count}}</span>
-                            <span id="replies_counter"><i class="fa fa-reply"></i> {{replies_count}}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row text-center">
-                    <div class="col-xs-12">
-                        {{> navbarBanner tabs=tabNamesArray widthType='medium'}}
-                    </div>
-                </div>
+        {{#unless isEnrolled}}
+            {{> enrollHelp}}
+        {{else}}
+            <div class="page-banner type-2">
+                {{> helpModule faqsEntries=helpEntries}}
             </div>
-        </div>
-        <div class="content-tab-wrapper type-2">
-            <div class="content">
+            <div class="player-wrapper">
                 <div class="container-fluid">
-                    {{> Template.dynamic template=sectionActive}}
+                    <div class="row header-player">
+                        <div class="col-xs-12 text-center title">
+                            <i class="fa fa-film"></i> {{title}}
+                        </div>
+
+                        <div class="col-xs-12 description">
+                            <span><i class="fa fa-info-circle"></i> description</span>
+                            <p>{{description}}</p>
+                            {{#if hasTags}}
+                                <div class="col-xs-12">
+                                    <div class="banner-tags">
+                                        <p><i class="fa fa-tags"></i> Tags</p>
+                                        <ul>
+                                            {{#each tags}}
+                                                <li class="tag"><i class="fa fa-tag"></i> {{name}}</li>
+                                            {{/each}}
+                                        </ul>
+                                    </div>
+                                </div>
+                            {{/if}}
+                            <div class="doc-actual-info">
+                                {{#if docActual}}
+                                    {{#with docActual}}
+                                        <p>#{{title}} <span class="mode">{{mode}}</span></p>
+                                    {{/with}}
+                                {{else}}
+                                    <p><i class="fa fa-exclamation-triangle"></i> No document</p>
+                                {{/if}}
+                            </div>
+                            <div class="like-action">
+                                {{#if isALessonRecord}}
+                                    <button id="show-play-list"><i class="fa fa-list"></i></button>
+                                {{/if}}
+                                <button id="like_button" class="like-button {{voted}}"><i class="fa fa-heart-o"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        {{>player playerObjectData}}
+
+                        <div class="col-xs-12 creator-box text-center">
+                            <img src="{{authorAvatar}}">
+                            <span class="username">{{username}}</span>
+                            <span class="date"><i class="fa fa-clock-o"></i> {{dateFrom createdAt}}</span>
+                            <div class="info">
+                                <span id="docs_counter"><i class="fa fa-file"></i> {{docs_count}}</span>
+                                <span id="comments_counter"><i class="fa fa-comments"> {{comments_count}}</i></span>
+                                <span id="votes_counter"><i class="fa fa-heart"></i> {{votes_count}}</span>
+                                <span id="replies_counter"><i class="fa fa-reply"></i> {{replies_count}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-xs-12">
+                            {{> navbarBanner tabs=tabNamesArray widthType='medium'}}
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="content-tab-wrapper type-2">
+                <div class="content">
+                    <div class="container-fluid">
+                        {{> Template.dynamic template=sectionActive}}
+                    </div>
+                </div>
+            </div>
+        {{/unless}}
     </div>
 </template>
 
@@ -137,4 +144,14 @@
     <p>soy un reply</p>
 </template>
 
+<template name="enrollHelp">
+    <div id="enroll-help">
+        <div class="text-center">
+            <img src="/DFSingle.png">
+            <h3>You are not subscribed to the lesson to which this record belongs.</h3>
+            <h4>Please subscribe it to watch the recordings!</h4>
+            <button><i class="fa fa-plus"></i> Subscribe</button>
+        </div>
+    </div>
+</template>
 

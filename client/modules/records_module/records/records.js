@@ -16,7 +16,7 @@ Template.records.helpers({
 		return Session.get('filter-active') == 'search-filter';
 	},
 	contextSearch: function(){
-		return {context: 'recordings'};
+		return {context: 'records'};
 	},
 	has: function(){
 		return Records.find({}).count();
@@ -39,7 +39,7 @@ Template.records.events({
 		$('.filter').removeClass('active');
 		$(elem).addClass('active');
 		Session.set('filter-active',$(elem)[0].id);
-		Session.set('limit',2);
+		Session.set('limit',LOAD_INITIAL);
 	},
 	'click #load-more-button': function(){
 		Session.set('limit',Session.get('limit') + MORE_LIMIT);

@@ -25,6 +25,7 @@
             {{#if uploading}}
                 {{>uploadPanel}}
             {{else}}
+                {{> helpModule faqsEntries=helpEntries}}
                 <div class="editor-recorder">
                     <div class="container-fluid">
                         <div class="row header-editor text-center">
@@ -239,6 +240,22 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</template>
+
+<template name="helpModule">
+    <div id="help-module">
+        <div class="help-header text-right">
+            <span>Are you lost? click here! <i class="fa fa-question text-center" data-toggle="collapse" href="#helpCollapse" aria-expanded="false"></i></span>
+        </div>
+        <div id='helpCollapse' class="collapse list-tutorials text-center">
+            <h3>FAQs</h3>
+            <ul>
+                {{#each faqsEntries}}
+                    <li>{{text}}</li>
+                {{/each}}
+            </ul>
         </div>
     </div>
 </template>

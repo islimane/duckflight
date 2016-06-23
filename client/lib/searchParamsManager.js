@@ -49,7 +49,7 @@ SearchParamsManager = function(){
                     console.log(currentSearch);
                     break;
                 case 'category':
-                    currentSearch.category = p.value;
+                    currentSearch.category = (p.value === 'recordings')? 'records' : p.value;
                     break;
             }
         });
@@ -81,7 +81,7 @@ SearchParamsManager = function(){
             paramsOmited.query = _(params.query).omit('$exists');
 
             switch (params.category){
-                case 'recordings':
+                case 'records':
                     results.records = Records.find(params.query,params.options).fetch();
                     break;
                 case 'channels':

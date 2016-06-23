@@ -5,6 +5,7 @@
   background-repeat: no-repeat;
   background-size: cover;
   overflow: auto;
+  position: relative;
 }
 
 #main-page-content{
@@ -20,6 +21,44 @@
     @include align-items(center);
     @include justify-content(center);
     height: 100%;
+  }
+  .main-box{
+    margin-top: -70px;
+  }
+  #main-feature{
+    position: relative;
+    background: rgba(255,255,255,0.4);
+    margin-bottom: 5px;
+    max-width: 400px;
+    @include border-radius(10px);
+    h3{
+      font-size: 20px;
+      color: #2B1B1B;
+      text-shadow: none;
+      margin-top: 10px;
+      text-shadow: 0px 5px 10px rgba(0,0,0,.5);
+      padding: 0px 15px 10px;
+    }
+    .list-icons{
+      background: rgba(0,0,0,0.5);
+      padding: 10px 20px;
+      @include flexbox();
+      @include align-content(center);
+      @include justify-content(center);
+      @include border-radius(10px 10px 0px 0px);
+      span{
+        @include flex(1);
+        i{
+          @include size(40px);
+          @include border-radius(50%);
+          line-height: 40px;
+          text-align: center;
+          font-size: 16px;
+          background: rgba(255,255,255,0.8);
+          color: #955F5F;
+        }
+      }
+    }
   }
   #main-logo{
     @include border-radius(50%);
@@ -73,29 +112,29 @@
       outline: 0px;
     }
   }
-  .navigation-message{
-    p{
-      font-size: 20px;
-      color: rgba(255,255,255,0.5);
-      text-shadow: 0px 5px 10px rgba(0,0,0,.5);
-    }
-    button.navigation-down{
-      margin-bottom: 59px;
-      background: rgba(255,255,255,0.6);
-      border: none;
-      @include size(50px);
-      @include border-radius(50%);
-      font-size: 20px;
-      line-height: 40px;
-      i{vertical-align: middle;}
-      &:focus{outline: 0px;}
-      @include box-shadow(0px 5px 10px rgba(0,0,0,.5));
-    }
-  }
-
+  .navigation-down{margin-bottom: 50px;}
 }
-
+.navigation-message{
+  p{
+    font-size: 20px;
+    color: rgba(255,255,255,0.5);
+    text-shadow: 0px 5px 10px rgba(0,0,0,.5);
+  }
+  button.navigation-down{
+    margin-bottom: 20px;
+    background: rgba(255,255,255,0.6);
+    border: none;
+    @include size(45px);
+    @include border-radius(50%);
+    font-size: 17px;
+    line-height: 45px;
+    &:focus{outline: 0px;}
+    &:hover{background: rgba(255,255,255,0.8)}
+    @include box-shadow(0px 5px 10px rgba(0,0,0,.5));
+  }
+}
 .feature-wrapper{
+  position: relative;
   padding: 40px 40px;
   height: 100%;
   min-height: 650px;
@@ -265,7 +304,12 @@
       }
     }
   }
-
+  button.navigation-down{
+    background: rgba(255,255,255,0.4) !important;
+    &:hover{
+    background: rgba(255,255,255,0.6) !important;
+    }
+  }
 }
 #tutorials-wrapper{
   height: 100%;
@@ -324,6 +368,7 @@
       .feature-image{
         @include size(100% !important, 300px);
         img{
+          margin-top: -30px;
           max-height: 100%;
           width: auto;
         }
@@ -336,8 +381,7 @@
     }
   }
 }
-
-@include mquery(480px){
+@include mquery(700px){
   .feature-wrapper{
     padding: 15px;
   }

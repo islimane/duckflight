@@ -55,6 +55,19 @@ Template.record.helpers({
 	},
 	voted: function(){
 		return (Votes.findOne({user_id: Meteor.userId()}))? 'active' : '';
+	},
+	helpEntries: function(){
+		return [
+			{text: 'How can I play this record?', url: 'tutorials?section=records-section&subsection=3'},
+			{text: 'How can I create a reply for this recording?', url: 'tutorials?section=records-section&subsection=5'},
+			{text: 'How can I use playlist controls?', url: 'tutorials?section=lessons-section&subsection=6'},
+			{text: 'How can I write a comment for this recording', url: 'tutorials?section=records-section&subsection=4'},
+			{text: 'How can I browse the replies from this recording', url: 'tutorials?section=records-section&subsection=6'},
+			{text: 'How can I browse the related recordings', url: 'tutorials?section=records-section&subsection=7'}
+		];
+	},
+	isEnrolled: function(){
+		return UsersEnrolled.find().count();
 	}
 });
 
@@ -201,5 +214,15 @@ Template.relatedTabContent.helpers({
 	},
 	relatedRecords: function(){
 		return Records.find({_id: {$ne: this._id}, isReply: false,tags: {$in: this.tags}},{limit: 10, sort: {votes_count: -1}});
+	}
+});
+
+Template.enrollHelp.events({
+	'click button': function(){
+		var record_id = Router.current().params._id;
+		var lesson_id = Records.findOne(record_id).lesson_id;
+		Meteor.call('insertUserEnrolledLesson',lesson_id,Meteor.userId(),function(err,res){
+			if (err) throw new Meteor.Error('ERROR: while insert UserEnrolled');
+		});
 	}
 });

@@ -168,3 +168,52 @@
     }
   }
 }
+
+.help-section{
+  background: #D1D1D1;
+  @include border-radius(10px);
+  color: #5C5B5B;
+  font-size: 16px;
+  padding: 10px;
+  margin-bottom: 20px;
+  h4{color: #5D5C5C;}
+  p{margin: 0;}
+  a{
+    color: #473D3D;
+    text-decoration: underline;
+    &:hover{
+      color: #261B1B;
+      text-decoration: underline;
+    }
+  }
+  img{
+    @include size(60px);
+    width: 60px;
+    padding: 5px;
+    @include border-radius(50%);
+    border: 2px solid black;
+    @include opacity(.5);
+  }
+  .help-item{
+    @include flexbox();
+    @include align-items(center);
+    padding: 10px;
+    margin-top: 5px;
+    background: #B5AAAA;
+    .help-msg{
+      @include flex(1);
+      padding: 0px 10px;
+    };
+    .help-icon-header{
+      i{
+        color: #DAD8D8;
+        @include size(40px);
+        line-height: 40px;
+        font-size: 20px;
+        @include border-radius(50%);
+        background: rgba(0,0,0,0.6);
+      }
+    }
+    @include border-radius(5px);
+  }
+}

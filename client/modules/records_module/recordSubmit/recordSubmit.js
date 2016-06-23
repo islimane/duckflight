@@ -279,6 +279,12 @@ Template.recordSubmit.helpers ({
     },
     supported: function(){
         return Session.get('supported');
+    },
+    helpEntries: function(){
+        return [
+            {text: 'How can I create a recording?', url: 'tutorials?section=records-section&subsection=1'},
+            {text: 'How can I upload my recording?', url: 'tutorials?section=records-section&subsection=2'}
+        ];
     }
 });
 
@@ -752,5 +758,11 @@ Tracker.autorun(function(){
                 ])
             }
         });
+    }
+});
+
+Template.helpModule.events({
+    'click li': function(){
+        window.open(Meteor.absoluteUrl() + this.url);
     }
 });

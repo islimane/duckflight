@@ -161,6 +161,7 @@ Template.navResults.helpers({
 Template.navResults.destroyed = function(){
     Session.set('currentResultTab',null);
     Session.set('resultTemplate',null);
+    Session.set('results',null);
 };
 //---------------------------------------------------------------
 

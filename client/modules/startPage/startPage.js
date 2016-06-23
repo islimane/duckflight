@@ -11,6 +11,22 @@ Template.startPage.helpers({
     },
     contextData: function(){
         return {contextSearch: {context: 'all'} };
+    },
+    requiresAttention: function(){
+        return !Meteor.user().emails ||
+                Meteor.user().emails.length == 0 ||
+                _(Meteor.user().emails).any(function(e){return !e.verified;});
+    },
+    helpEntries: function(){
+        return [
+            {text: 'How can I browse the recordings?', url: 'tutorials?section=records-section&subsection=0'},
+            {text: 'How can I browse the channels', url: 'tutorials?section=channels-section&subsection=0'},
+            {text: 'How can I browse the lessons', url: 'tutorials?section=lessons-section&subsection=0'},
+            {text: 'How can I create a recording?', url: 'tutorials?section=records-section&subsection=1'},
+            {text: 'How can I create a lesson?', url: 'tutorials?section=lessons-section&subsection=1'},
+            {text: 'How can I create a channel?', url: 'tutorials?section=channels-section&subsection=1'},
+            {text: 'How can I browse my profile?', url: 'tutorials?section=profile-section&subsection=0'},
+        ];
     }
 });
 
@@ -257,6 +273,18 @@ Template.subtaskItem.helpers({
 Template.subtaskItem.events({
     'click .task-item': function(){
         Router.go(this.linkAction.name,this.linkAction.params,this.linkAction.query);
+    }
+});
+
+
+//HELP INFO
+
+Template.helpInfo.helpers({
+    hasEmails: function(){
+        return Meteor.user().emails.length;
+    },
+    hasVerifiedEmails: function(){
+        return _(Meteor.user().emails).any(function(e){return e.verified;});
     }
 });
 

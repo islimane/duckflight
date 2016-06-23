@@ -542,6 +542,36 @@
     }
   }
 }
+#enroll-help{
+  color: #525252;
+  h3,h4{font-weight: 300 !important;}
+  padding: 20px 15px;
+  img{
+    @include size(60px);
+    padding: 5px;
+    border: 1px solid black;
+    opacity: .7;
+    @include border-radius(50%);
+  }
+  @include flexbox();
+  @include justify-content(center);
+  @include align-items(center);
+  @include align-content(center);
+  button{
+    margin-top: 10px;
+    &:focus{outline: 0px};
+    background: transparent;
+    padding: 5px 15px;
+    font-size: 18px;
+    color: #646464;
+    border: 1px solid #646464;
+    @include border-radius(30px);
+    &:hover{
+      color: #969696;
+      border: 1px solid #969696;
+    }
+  }
+}
 
 @include keyframes(twinkle){
   50%  {@include opacity(1);}

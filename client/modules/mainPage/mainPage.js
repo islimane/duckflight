@@ -2,7 +2,7 @@ Template.mainPage.events({
     'click .navigation-down': function(){
         $('#main-page-wrapper')
             .animate(
-                {scrollTop: $(window).height()},
+                {scrollTop: $(window).height() + $('#main-page-wrapper').scrollTop()},
                 '500',
                 'swing',
                 function(){console.log('finish');}
