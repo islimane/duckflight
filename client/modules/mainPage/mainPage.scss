@@ -1,4 +1,6 @@
+
 @import '../../mixins';
+
 #main-page-wrapper{
   @include size(100%);
   background-image: url('/MainPageBG.jpg');
