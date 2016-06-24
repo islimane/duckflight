@@ -48,7 +48,9 @@
                     </div>
                     <div class="row">
                         {{>player playerObjectData}}
-
+                        {{#if hasReplies}}
+                            {{>suggestedReplies}}
+                        {{/if}}
                         <div class="col-xs-12 creator-box text-center">
                             <img src="{{authorAvatar}}">
                             <span class="username">{{username}}</span>
@@ -152,6 +154,45 @@
             <h3>You are not subscribed to the lesson to which this record belongs.</h3>
             <h4>Please subscribe it to watch the recordings!</h4>
             <button><i class="fa fa-plus"></i> Subscribe</button>
+        </div>
+    </div>
+</template>
+
+<template name="suggestedReplies">
+    <div class="col-xs-12 suggested-box">
+        <div class="title">
+            <i class="fa fa-code-fork"></i>
+            <p>This recording has replies that will be suggested during play process.</p>
+        </div>
+        {{#if counter}}
+            <p class="text-center">Suggested Replies ({{counter}})</p>
+            <div class="suggested-list-wrapper">
+                <div id="suggested-list">
+                    {{#each suggested}}
+                        {{> suggestedItem}}
+                    {{/each}}
+                </div>
+            </div>
+        {{/if}}
+    </div>
+</template>
+
+<template name='suggestedItem'>
+    <div class="suggested-item fade-in">
+        <div class="image-wrapper">
+            <span class="time-mark-tag"><i class="fa fa-map-marker"></i> {{instant timeMark}}</span>
+            <span class="duration-tag"><i class="fa fa-clock-o"></i> {{instant duration}}</span>
+            <img src="/recordImgDefault.png"/>
+        </div>
+        <div class="suggested-body">
+            <p>{{title}}</p>
+            <span>by {{username}}</span>
+            <p>
+                <span class="counter"><i class="fa fa-file"></i> {{docs_count}}</span>
+                <span class="counter"><i class="fa fa-comments"></i> {{comments_count}}</span>
+                <span class="counter"><i class="fa fa-heart"></i> {{votes_count}}</span>
+                <span class="counter"><i class="fa fa-code-fork"></i> {{replies_count}}</span>
+            </p>
         </div>
     </div>
 </template>

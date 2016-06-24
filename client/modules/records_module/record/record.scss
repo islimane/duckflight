@@ -633,6 +633,109 @@
     }
   }
 }
+.suggested-box{
+  background: #2D2D2D;
+  padding: 10px !important;
+  color: #BCBBBB;
+  font-size: 14px;
+  font-weight: lighter;
+  .suggested-list-wrapper{
+    padding-bottom: 20px;
+    #suggested-list{
+      border-top: 1px solid #595959;
+      border-bottom: 1px solid #595959;
+      max-height: 200px;
+      overflow-y: scroll;
+      padding: 10px 15px;
+      .suggested-item{
+        margin-bottom: 5px;
+        background: rgba(0,0,0,0.2);
+        cursor: pointer;
+        @include transition(all,.5s,ease-in);
+        .image-wrapper{
+          position: relative;
+          @include size(150px,80px);
+          img{
+            @include size(150px,80px);
+            @include filter(brightness,60%);
+          }
+          span{
+            position: absolute;
+            z-index: 5;
+            &.time-mark-tag{
+              top: 0;
+              left: -15px;
+              background: #FC6C6C;
+              color: white;
+              padding: 5px;
+              padding-right: 10px;
+              @include border-radius(20px);
+              i{
+                vertical-align: text-bottom;
+                background: white;
+                color: red;
+                font-size: 10px;
+                line-height: 15px;
+                text-align: center;
+                @include size(15px);
+                @include border-radius(50%);
+              }
+            }
+            &.duration-tag{
+              background: rgba(0,0,0,0.4);
+              padding: 5px;
+              bottom: 0;
+              right: 0;
+            }
+          }
+        }
+        @include flexbox();
+        .suggested-body{
+          p{margin: 0px;}
+          span{font-size: 12px;}
+          @include flex(1);
+          .counter{
+
+          }
+          padding: 5px 10px;
+          @include animation(0s,1s,bgtransparentize,ease-in);
+        }
+        &:hover{
+          img{
+            @include filter(brightness,80%);
+          }
+          @include transition(all,.5s,ease-in);
+        }
+      }
+    }
+  }
+  .title{
+    i{
+      background: #232323;
+      color: #FC6A6A;
+      @include size(70px);
+      @include border-radius(50%);
+      line-height: 70px;
+      font-size: 23px;
+      @include box-shadow(0px 2px 10px rgba(0,0,0,0.2));
+      margin-bottom: 5px;
+    }
+    background: #5C5B5B;
+    color: #202020;
+    padding: 5px 10px;
+    text-align: center;
+    font-size: 17px;
+    margin-bottom: 10px;
+    @include border-radius(30px);
+  }
+
+}
+
+@include keyframes(bgtransparentize){
+  50% {
+    background: #FD7575;
+  }
+};
 
 @include keyframes(twinkle){
   50%  {@include opacity(1);}
@@ -652,6 +755,19 @@
   .player-wrapper{
     .box-options button{
       content: '';
+    }
+  }
+  .suggested-item{
+    @include flex-direction(column);
+    .image-wrapper{
+      width: 100% !important;
+      img{
+        width: 100% !important;
+        object-fit: cover;
+      }
+    }
+    .suggested-body{
+      text-align: center;
     }
   }
 }

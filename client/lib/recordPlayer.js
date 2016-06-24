@@ -53,6 +53,7 @@ RecordPlayer = function(){
 
     function updatePlayer(){
         var current = getCurrentTime();
+        Session.set('currentInstant',$audio.currentTime());
         $timer.text(current.min + ':' + current.sec);
         $seeker.width($progress.width());
         var progressVal = ($audio.currentTime() * 100) / duration;

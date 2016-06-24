@@ -102,6 +102,9 @@ Template.record.helpers({
 		}else{
 			false;
 		}
+	},
+	hasReplies: function(){
+		return Records.find({isReply: true, parent_id: this._id}).count();
 	}
 });
 
@@ -201,6 +204,7 @@ Template.record.created = function(){
 	Session.set('loaded',false);
 	Session.set('playerObjectData',null);
 	Session.set('currentRecordId',this.data._id);
+	Session.set('currentInstant',0);
 };
 
 Template.record.rendered = function(){
@@ -272,3 +276,39 @@ Template.enrollHelp.events({
 		});
 	}
 });
+
+
+Template.suggestedReplies.helpers({
+	suggested: function(){
+		return Records.find({isReply: true, parent_id: Session.get('currentRecordId'), timeMark: {$lte: parseInt(Session.get('currentInstant'))}}, {sort: {timeMark: 1}});
+	},
+
+	counter: function(){
+		return Records.find({isReply: true, parent_id: Session.get('currentRecordId'), timeMark: {$lte: parseInt(Session.get('currentInstant'))}}).count();
+	}
+});
+
+Template.suggestedItem.helpers({
+	username: function(){
+		return Meteor.users.findOne(this.author).username;
+	},
+	instant: function(timeMark){
+		var d = new Date(parseInt(timeMark));
+		var timeObj = {
+			min: (d.getMinutes() > 9)? '' + d.getMinutes(): '0' + d.getMinutes(),
+			sec: (d.getSeconds() > 9)? '' + d.getSeconds(): '0' + d.getSeconds()
+		};
+		return timeObj.min + ':' + timeObj.sec;
+	}
+});
+
+Template.suggestedItem.events({
+	'click .suggested-item': function(){
+		Router.go('record',{_id: this._id});
+	}
+});
+
+Template.suggestedItem.rendered = function(){
+	var content = document.getElementById("suggested-list");
+	content.scrollTop = content.scrollHeight;
+};
