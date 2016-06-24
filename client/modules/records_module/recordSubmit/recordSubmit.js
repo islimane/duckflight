@@ -117,6 +117,7 @@ var DocsManagerRecorder = function(){
 
     this.reset = function(){
         Session.set("titleAct","");
+        docs.set([]);
         docs.set(startDocsValue);
         docsRC.set([]);
         functions = [];
@@ -216,7 +217,7 @@ Template.docEntry.events({
 Template.docEntry.rendered = function(){
     $('.doc-item').removeClass('selected');
     $(this.firstNode).addClass('selected');
-
+    console.log(editor);
     if (!editor){
         console.log('no hay editor');
         editor = ace.edit("editor-recorder");
@@ -230,6 +231,30 @@ Template.docEntry.rendered = function(){
     editor.setShowPrintMargin(false);
 
     Session.set('titleAct',this.data.title);
+
+    var docs = docsManagerRecorder.getDocs().get();
+    var index = _(docs).indexOf(this.data);
+
+    if (Router.current().params.query &&
+        Router.current().params.query.parent &&
+        Session.get('startDocument') &&
+        !Session.get('loadedDocuments')){
+        //cuando se trata de una respuesta en la que hay un documento inicial y no se han cargado los documentos.
+        if(index == docs.length -1){
+            //cojo el documenot de inicio y lo selecciono estableciendo su contenido en el editor.
+            var initialDoc = Session.get('startDocument');
+            $('.doc-item').removeClass('selected');
+            var indexInitial = _(docs).indexOf(_(docs).find(function(d){return d.title == initialDoc.title;}));
+            $($('.doc-item')[indexInitial]).addClass('selected');
+            editor.setValue(initialDoc.value);
+            editor.setTheme(initialDoc.theme);
+            editor.getSession().setMode(initialDoc.mode);
+            editor.setShowPrintMargin(false);
+
+            Session.set('titleAct',initialDoc.title);
+            Session.set('loadedDocuments',true);
+        }
+    }
 };
 
 //ACTIONS
@@ -445,6 +470,9 @@ Template.recordSubmit.events = {
         Session.set("stop",false);
         Session.set('formType','formDoc');
         editor = '';
+        if(this.parent_id && this.dataRecordObject){
+            Session.set('loadedDocuments',false);
+        }
         docsManagerRecorder.reset();
     },
 
@@ -599,14 +627,20 @@ Template.recordSubmit.created = function(){
     var arrayDocs = [];
     currentAudio = new ReactiveVar();
     docsManagerRecorder = new DocsManagerRecorder();
+    Session.set('startDocument',null);
 
     if (this.data.parent_id && !this.data.dataRecordObject){
         //es una respuesta pero no hay datos sobre el instante ni los documentos
         //los buscamos en la collección.
         arrayDocs = docsManagerRecorder.copyDocsFromCollection();
+        Session.set('loadedDocuments',true);
     }else{
         //es una respuesta y si estan los documentos o no es una respuesta
         //si es una respuesta entonces extraemos los documentos.
+        if (this.data.dataRecordObject){
+            Session.set('startDocument',this.data.dataRecordObject.docActual);
+            Session.set('loadedDocuments',false);
+        }
         arrayDocs = (this.data.dataRecordObject)? this.data.dataRecordObject.docs : [];
     };
 
@@ -647,6 +681,8 @@ Template.recordSubmit.rendered = function(){
     Session.set("editDoc",'');
     Session.set('uploading',false);
     Session.set('audioDuration','');
+    Session.set('loadedDocuments',false);
+    editor = null;
 };
 
 Template.recordSubmit.destroyed = function(){
@@ -656,6 +692,8 @@ Template.recordSubmit.destroyed = function(){
     Session.set('audioDuration',null);
     Session.set('tagsChoosen',null);
     Session.set('loading',false);
+    Session.set('startDocument',null);
+    Session.set('loadedDocuments',false);
 };
 
 /**

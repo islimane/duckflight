@@ -227,6 +227,7 @@
       }
     }
   }
+
   .play-list-wrapper{
     position: absolute;
     top: 0;
@@ -373,6 +374,65 @@
           }
         }
       }
+      .player-help-wrapper{
+        position: absolute;
+        top: 0;
+        right: 0;
+        .player-help{
+          &.active{
+            @include opacity(1);
+          }
+          padding: 10px;
+          i{
+            background: rgba(32, 32, 30, 0.5);
+            @include size(45px);
+            line-height: 45px;
+            text-align: center;
+            color: white;
+            @include border-radius(50%);
+          }
+          @include opacity(0);
+          @include transition(opacity, 0.5s, ease);
+        }
+      }
+      .player-help-items{
+        position: absolute;
+        bottom: 40px;
+        right: 0px;
+        @include opacity(0);
+        visibility: hidden;
+        @include transition(all, 0.5s, ease);
+        &.active{
+          visibility: visible;
+          @include opacity(.7);
+          @include transition(all, 0.5s, ease);
+        }
+        ul{
+          list-style: none;
+          padding-left: 0px;
+          padding-right: 5px;
+          li{
+            background: #EEECEC;
+            max-width: 100%;
+            padding: 5px 10px;
+            @include align-items(center);
+            @include border-radius(20px 5px 5px 20px);
+            margin-bottom: 5px;
+            i.main{
+              color: white;
+              background: black;
+              @include size(30px);
+              @include border-radius (50%);
+              line-height: 30px;
+              text-align: center;
+            }
+            @include flexbox();
+            span{
+              padding-left: 10px;
+            }
+          }
+        }
+      }
       .player-actions-wrapper{
         position: absolute;
         bottom: 0;
@@ -450,7 +510,7 @@
         }
       }
       &:hover{
-        .player-actions{
+        .player-actions, .player-help{
           @include opacity(1);
           @include transition(opacity, 0.5s, ease);
         }

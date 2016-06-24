@@ -52,6 +52,10 @@ Template.player.helpers({
 });
 
 Template.player.events({
+    'click .player-help i': function(){
+        $helpList = $('.player-help-items');
+        ($helpList.hasClass('active'))? $helpList.removeClass('active') : $helpList.addClass('active');
+    },
     'click #play': function(){
         this.recordPlayer.play();
     },
@@ -157,7 +161,8 @@ Template.player.rendered = function(){
                         playedProgress: $('#played-bar'),
                         timer: $('#timer'),
                         touchScreenWrapper: $('.touch'),
-                        playerActionsWrapper: $('.player-actions')
+                        playerActionsWrapper: $('.player-actions'),
+                        playerHelpWrapper: $('.player-help')
                     };
 
                     //params to editorPlayer

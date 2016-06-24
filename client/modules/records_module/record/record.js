@@ -67,7 +67,13 @@ Template.record.helpers({
 		];
 	},
 	isEnrolled: function(){
-		return UsersEnrolled.find().count();
+		if (this.lesson_id && UsersEnrolled.find().count()){
+			return true;
+		}else if(!this.lesson_id){
+			return true;
+		}else{
+			false;
+		}
 	}
 });
 
@@ -223,6 +229,18 @@ Template.enrollHelp.events({
 		var lesson_id = Records.findOne(record_id).lesson_id;
 		Meteor.call('insertUserEnrolledLesson',lesson_id,Meteor.userId(),function(err,res){
 			if (err) throw new Meteor.Error('ERROR: while insert UserEnrolled');
+		});
+		var paramsNotification = {
+			to: [Records.findOne(record_id).author],
+			from: Meteor.userId(),
+			createdAt: new Date(),
+			contextTitle: Lessons.findOne(lesson_id).title,
+			type: 'lesson',
+			action: 'subscription',
+			urlParameters: {template: 'lesson', _id: lesson_id}
+		};
+		NotificationsCreator.createNotification(paramsNotification,function(err){
+			if(err) console.log('subscriptionLesson Notification ERROR: ' + err.reason);
 		});
 	}
 });

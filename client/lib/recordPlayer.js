@@ -8,6 +8,7 @@ RecordPlayer = function(){
         $timer,
         $touchScreenWrapper,
         $playerActionsWrapper,
+        $playerHelpWrapper,
         intervalAudio,
         duration,
         editorManager,
@@ -34,6 +35,8 @@ RecordPlayer = function(){
     function changeStatePlayer(){
         ($touchScreenWrapper.hasClass('active'))? $touchScreenWrapper.removeClass('active') : $touchScreenWrapper.addClass('active');
         ($playerActionsWrapper.hasClass('active'))? $playerActionsWrapper.removeClass('active') : $playerActionsWrapper.addClass('active');
+        ($playerHelpWrapper.hasClass('active'))? $playerHelpWrapper.removeClass('active') : $playerHelpWrapper.addClass('active');
+
     }
 
 //METHODS
@@ -48,6 +51,7 @@ RecordPlayer = function(){
         $timer = $elements.timer;
         $touchScreenWrapper = $elements.touchScreenWrapper;
         $playerActionsWrapper = $elements.playerActionsWrapper;
+        $playerHelpWrapper = $elements.playerHelpWrapper;
         Session.set('playing',false);
         Session.set('ended',false);
         Session.set('audioVolume','normal');
@@ -65,6 +69,9 @@ RecordPlayer = function(){
         $audio.on('metadata',function(){
             Session.set('errorLoad',false);
             Session.set('loading',false);
+        });
+        $audio.on('destroyed',function(){
+            console.log('destroyed audio');
         });
         ended = false;
     };
@@ -106,6 +113,7 @@ RecordPlayer = function(){
         changeStatePlayer();
         Session.set('playing',false);
         $audio.pause();
+        while($audio._isPlaying) $audio.pause();
     };
 
     this.seek = function(){
