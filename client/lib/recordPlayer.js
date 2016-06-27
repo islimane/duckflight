@@ -145,11 +145,11 @@ RecordPlayer = function(){
         while($audio._isPlaying) $audio.pause();
     };
 
-    this.seek = function(){
+    this.seek = function(pos){
+        if (pos) $seeker.val((pos * 100)/duration);
         $audio.seek(($seeker.val() * duration)/100);
         updatePlayer();
         editorManager.seek($audio.currentTime());
-
     };
 
     this.ended = function(){

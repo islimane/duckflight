@@ -76,6 +76,9 @@ Template.player.helpers({
             time: 15000,
             record: this
         }
+    },
+    seekByReply: function(){
+        return Router.current().params.query.startInstant;
     }
 });
 
@@ -101,7 +104,7 @@ Template.player.events({
     },
     'click #view-parent': function(){
         console.log(this);
-        Router.go('record',{_id: this.parent_id});
+        Router.go('record',{_id: this.parent_id},{query: 'startInstant=' + this.timeMark});
     },
     'click #browse-channel': function(){
         console.log(this);
@@ -153,6 +156,13 @@ Template.player.events({
     },
     'click #auto-repeat-set input': function(e){
         Meteor.call('updateSectionPlayOption',Meteor.userId(),'auto-repeat',$(e.currentTarget).is(':checked'));
+    },
+    'click #yes': function(){
+        this.recordPlayer.seek(parseFloat(Router.current().params.query.startInstant));
+        $('.seek-reply-dialog').fadeOut();
+    },
+    'click #no': function(){
+        $('.seek-reply-dialog').fadeOut();
     }
 });
 Template.player.created = function(){
@@ -165,6 +175,7 @@ Template.player.rendered = function(){
     var editorPlayerManager = this.data.editorPlayerManager;
     var record = Records.findOne(this.data.recordId);
     var trackId = this.data.trackId;
+    $('.seek-reply-dialog').fadeIn();
 
     //SoundCloud initialization.
     Meteor.call('getClientSC',function(err,res){
@@ -266,6 +277,7 @@ Template.countDown.events({
 });
 
 Template.countDown.rendered = function(){
+    $('.seek-reply-dialog').hide();
     var CountDownObject = function(){
         var interval,
             record,
@@ -294,6 +306,7 @@ Template.countDown.rendered = function(){
         this.abort = function(){
             window.clearInterval(interval);
             Session.set('ended',false);
+            $('.seek-reply-dialog').fadeIn();
         };
     };
     Session.set('timeOut',null);

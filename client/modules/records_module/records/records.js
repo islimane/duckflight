@@ -123,7 +123,7 @@ Template.recordItemHorizontal.events({
 			Router.go('lesson',{_id: this.lesson_id});
 		}
 		if($(e.currentTarget).hasClass('link-parent')){
-			Router.go('record',{_id: this.parent_id});
+			Router.go('record',{_id: this.parent_id},{query: 'startInstant=' + this.timeMark});
 		}
 	}
 });
@@ -170,7 +170,7 @@ Template.recordItemVertical.events({
 			Router.go('lesson',{_id: this.lesson_id});
 		}
 		if($(e.currentTarget).hasClass('link-parent')){
-			Router.go('record',{_id: this.parent_id});
+			Router.go('record',{_id: this.parent_id},{query: 'startInstant=' + this.timeMark});
 		}
 	}
 });
