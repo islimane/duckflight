@@ -306,10 +306,10 @@ Template.recordSubmit.helpers ({
         console.log(Session.get('titleAct'));
         return Session.get('titleAct');
     },
-    'recording': function(){ 
-        return Session.get("recording"); 
+    'recording': function(){
+        return Session.get("recording");
     },
-    'stop': function(){ 
+    'stop': function(){
         return Session.get("stop");
     },
     hasDocs: function(){
@@ -382,10 +382,10 @@ Template.recordSubmit.events = {
         var mode = $(e.target).find('.lang.active')[0].id;
         var theme = $(e.target).find('.theme.active')[0].id;
 
-        var validTitle = docsManagerRecorder.isTitleValid(title);
-
-        if (validTitle){
-            if (Session.get('createDoc')){
+        var validTitle = false;
+        if (Session.get('createDoc')){
+            validTitle = docsManagerRecorder.isTitleValid(title);
+            if (validTitle){
                 docsManagerRecorder.createDoc(title,mode,theme);
 
                 if (Session.get('recording')){
@@ -403,6 +403,17 @@ Template.recordSubmit.events = {
                     ]);
                 }
             }else{
+                $('.title-document-input').append('<p class="errormsg">Sorry, already exists a document with this title!</p>');
+                $('.form-body').animate(
+                    {scrollTop: - $('.form-body').height()},
+                    '500',
+                    'swing',
+                    function(){console.log('finish');}
+                );
+            }
+        }else{
+            validTitle = (Session.get('editDoc') == title)? true : docsManagerRecorder.isTitleValid(title);
+            if (validTitle){
                 docsManagerRecorder.updateDoc(Session.get('editDoc'),title,mode,theme);
                 editor.setTheme("ace/theme/" + theme);
                 editor.getSession().setMode("ace/mode/" + mode);
@@ -428,8 +439,19 @@ Template.recordSubmit.events = {
                         }
                     ]);
                 }
-            }
 
+            }else{
+                $('.title-document-input').append('<p class="errormsg">Sorry, already exists a document with this title!</p>');
+                $('.form-body').animate(
+                    {scrollTop: - $('.form-body').height()},
+                    '500',
+                    'swing',
+                    function(){console.log('finish');}
+                );
+            }
+        }
+
+        if(validTitle){
             var docForm = $('.form-doc-editor');
             docForm.find('[name="title"]').val('');
             docForm.find('.lang').removeClass('active');
@@ -438,16 +460,7 @@ Template.recordSubmit.events = {
             $('.documents-editor').removeClass('active');
             Session.set('editDoc','');
             $(".errormsg").remove();
-        }else{
-            $('.title-document-input').append('<p class="errormsg">Sorry, already exists a document with this title!</p>');
-            $('.form-body').animate(
-                {scrollTop: - $('.form-body').height()},
-                '500',
-                'swing',
-                function(){console.log('finish');}
-            );
         }
-
 
     },
 
@@ -732,9 +745,6 @@ Tracker.autorun(function(){
         console.log("esta grabando y voy a crear los eventos del editor");
         date = new Date(); //actualizo la fecha de inicio de grabación.
         console.log("he actualizado la fecha de inicio");
-
-        //situamos el inicio de la reproduccion con el documento seleccionado al inicio de la grabación.
-
 
         //eventos del editor
 
