@@ -384,6 +384,8 @@ Template.recordSubmit.events = {
 
         var validTitle = false;
         if (Session.get('createDoc')){
+            // We are creating the record document
+            // before starting to record
             validTitle = docsManagerRecorder.isTitleValid(title);
             if (validTitle){
                 docsManagerRecorder.createDoc(title,mode,theme);
