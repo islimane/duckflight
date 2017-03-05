@@ -414,6 +414,7 @@ Template.recordSubmit.events = {
                 );
             }
         }else{
+            // Creating a document in the middle of a record process
             validTitle = (Session.get('editDoc') == title)? true : docsManagerRecorder.isTitleValid(title);
             if (validTitle){
                 docsManagerRecorder.updateDoc(Session.get('editDoc'),title,mode,theme);
@@ -779,7 +780,7 @@ Tracker.autorun(function(){
             }
         });
 
-        //selection events
+        //selection events: Cambia la selección del cursor
         editor.getSession().selection.on('changeSelection', function(e) {
             var selection = editor.getSession().selection;
 
@@ -802,7 +803,7 @@ Tracker.autorun(function(){
             }
         });
 
-        //cursor events
+        //cursor events: Cambia la posición del cursor
         editor.getSession().selection.on('changeCursor',function(e){
             docsManagerRecorder.insertFunctions([
                 {
@@ -813,7 +814,7 @@ Tracker.autorun(function(){
             ]);
         });
 
-        //scroll events
+        //scroll events: Cambia la altura del scroll verticalmente
         editor.getSession().on('changeScrollTop',function(sT){
             if (Session.get('recording')){
                 docsManagerRecorder.insertFuncions([
@@ -825,6 +826,7 @@ Tracker.autorun(function(){
                 ])
             }
         });
+        //scroll events: Cambia la altura del scroll horizontalmente
         editor.getSession().on('changeScrollLeft',function(sL){
             if (Session.get('recording')){
                 docsManagerRecorder.insertFuncions([
